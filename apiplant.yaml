@@ -1,0 +1,344 @@
+openapi: 3.0.1
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+
+tags:
+  - name: plantas
+    description: Operaciones con plantas
+  - name: cuidados
+    description: Operaciones con cuidados
+
+servers:
+  - url: 'https://apiplant.com'
+
+paths:
+
+  /plantas:
+    get:
+      tags:
+        - plantas
+      summary: Obtención de un listado de plantas
+      description: Devuelve una lista completa de todas las plantas registradas en la Api. 
+                  Admite la posibilidad de aplicar filtros de búsqueda (género, especie o toxicidad).
+      parameters:
+        - name: genero
+          in: query
+          description: filtro por genero de planta.
+          required: false
+          schema:
+            type: string
+        - name: especie
+          in: query
+          description: filtro por especie de planta.
+          required: false
+          schema:
+            type: string
+        - name: esToxica
+          in: query
+          description: filtro por toxicidad de la planta
+          required: false
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+        '404':
+          description: Not Found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '400':
+          description: Bad Request
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        '500':
+          description: Internal Server Error
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+  /plantas/{plantaId}:
+    get:
+      tags:
+        - plantas
+      summary: Obtención de una planta concreta
+      description: Devuelve una planta concreta buscándola a través de su Id.
+      parameters:
+        - name: plantaId
+          in: path
+          description: identificador de la planta
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+        '404':
+          description: Not Found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '400':
+          description: Bad Request
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+    put:
+      tags:
+        - plantas
+      summary: Modificación de una planta.
+      description: Modificación y registro de atributos de la una planta concreta encontrada a través de su Id.
+      parameters:
+        - name: plantaId
+          in: path
+          description: identificador de la planta
+          required: true
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        description: Nuevos detalles de la planta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantaInDto'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantaOutDto'
+        '400':
+          description: Bad Request
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal Server Error
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - plantas
+      summary: Borrar planta por ID
+      description: Eliminación de una planta a través de su Id y actualización del listado completo de plantas.
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+        '400':
+          description: Bad Request
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal Server Error
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+  /cuidados/{cuidadoId}/plantas:
+    post:
+      tags:
+        - plantas
+      summary: Añadir planta con id de cuidado como campo obligatorio.
+      description: Añadir una planta a través de un Id y actualización del listado completo de plantas.
+      parameters:
+        - name: cuidadoId
+          in: path
+          description: identificador de la cuidado de la planta
+          required: true
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        description: Nueva planta
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantaInDto'
+      responses:
+        '201':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+        '400':
+          description: Bad Request
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+components:
+
+
+  schemas:
+    PlantaOutDto:
+      type: object
+      properties:
+        id_planta:
+          type: number
+          format: int64
+          description: Identificador de la planta
+          example: 1
+        nombre:
+          type: string
+          description: Nombre de la planta
+          example: Monstera adasonii
+        imagen:
+          type: string
+          description: Url de la ubicación de la imagen de la planta
+          example:
+        alturaMaxima:
+          type: number
+          format: float
+          description: Altura máxima de la planta con desarrollo en maceta.
+          example: 1.50
+        esToxica:
+          type: boolean
+          description: Indicativo si la planta es tóxica o no
+          example: true
+        fechaRegistro:
+          type: string
+          format: date
+          description: Fecha de registro de la planta.
+          example: 2025-07-17
+        cuidadoId:
+          type: number
+          format: int64
+          description: Identificador del cuidado concreto que debe recibir la planta
+          example: 1
+
+    PlantaInDto:
+      type: object
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la planta
+          example: Monstera adasonii
+        imagen:
+          type: string
+          description: Url de la ubicación de la imagen de la planta
+          example:
+        alturaMaxima:
+          type: number
+          format: float
+          description: Altura máxima de la planta con desarrollo en maceta.
+          example: 1.50
+        esToxica:
+          type: boolean
+          description: Indicativo si la planta es tóxica o no
+          example: true
+
+
+    BadRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de error
+          example: 400
+        message:
+          type: string
+          description: Código de error
+          example: Bad Request
+        errorMessage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+
+    ErrorMessage:
+      type: object
+      properties:
+        fieldName:
+          type: string
+          description: campo donde está el error
+          example: model
+        message:
+          type: string
+          description: mensaje de error asociado a campo
+          example: El dato es obligatorio
+
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de error
+          example: 404
+        message:
+          type: string
+          description: Código de error
+          example: Not found
+
+    InternalServerError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código de error
+          example: 500
+        message:
+          type: string
+          description: Código de error
+          example: Internal Server Error
+
+

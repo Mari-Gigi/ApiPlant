@@ -1,4 +1,4 @@
-package com.svalero.ApiPlant.domain;
+/*package com.svalero.ApiPlant.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,14 +28,12 @@ public class Categoria {
     private float nivelDificultad;
     @Column
     private boolean paraPrincipiantes;
-    @Column (name="fecha_creacion")  //normalizacion del nombre de la columna de la tabla
-    private LocalDate fechaCreacion;
+    @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+    private LocalDate fechaRegistro;
 
-    // 1:N → Plantas
     @OneToMany(mappedBy = "categoria")
     private List<Planta> plantas;
 
-    // 1:N → Consejos (opcional)
-    @OneToMany(mappedBy = "categoria")
-    private List<Consejo> consejos;
+
 }
+*/

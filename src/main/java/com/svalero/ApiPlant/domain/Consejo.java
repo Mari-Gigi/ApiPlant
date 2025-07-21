@@ -1,4 +1,4 @@
-package com.svalero.ApiPlant.domain;
+/*package com.svalero.ApiPlant.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,17 +28,12 @@ public class Consejo {
     private boolean verificado;
     @Column
     private float importancia;
-    @Column(name = "fecha_publicacion")  //normalizacion del nombre de la columna de la tabla
-    private LocalDate fechaPublicacion;
+   @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+    private LocalDate fechaRegistro;
 
-    // N:1 → Planta (opcional)
-    @ManyToOne
-    @JoinColumn(name = "planta_id")
-    private Planta planta;
+    @ManyToMany(mappedBy = "consejos")
+    private List<Planta> plantas;
 
-    // N:1 → Categoria (opcional)
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
 
 }
+*/

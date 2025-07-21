@@ -1,4 +1,16 @@
 package com.svalero.ApiPlant.exception;
 
-public class CuidadoNotFoundException {
+import com.svalero.ApiPlant.domain.Cuidado;
+
+public class CuidadoNotFoundException extends Exception {
+
+    public CuidadoNotFoundException() {
+        super ("Care does not exist");
+    }
+
+    public CuidadoNotFoundException(String message){
+        super (message);
+    }
+
+
 }

@@ -1,4 +1,5 @@
-package com.svalero.ApiPlant.exception;
+/*package com.svalero.ApiPlant.exception;
 
 public class CategoriaNotFoundException {
 }
+*/

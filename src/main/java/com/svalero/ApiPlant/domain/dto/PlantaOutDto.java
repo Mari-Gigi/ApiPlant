@@ -1,4 +1,4 @@
-package com.svalero.ApiPlant.dto;
+package com.svalero.ApiPlant.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class PlantaOutDto {
 
     private long id_planta;
-    private String nombre;
-    private String imagenPlanta;
-    private boolean esToxica;
+    private String genero;
+    private String especie;
+    private Boolean esToxica;
     private float alturaMaxima;
-    private String imagen;
+    private String tipoCrecimiento;
+   //private Cuidado cuidado; - devolveria toda la info desarrollada de cuidados
     private long cuidadoId;
-    private long plagaId;
 
 
 

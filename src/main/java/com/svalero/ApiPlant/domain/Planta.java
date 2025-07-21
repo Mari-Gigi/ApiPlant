@@ -1,5 +1,7 @@
+//Aqui en domain se introduce el modelo de datos, cada clase con cada atributo
 package com.svalero.ApiPlant.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,41 +19,45 @@ import java.util.List;
 public class Planta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // para que sea autonumerico
     private long id_planta;
     @Column
-    private String nombre;
-    @Column (name="altura_maxima")
-    private float alturaMaxima;
+    private String genero;
     @Column
-    private String imagen;
+    private String especie;
+    @Column(name = "altura_maxima", nullable = true) // o false si quieres que sea obligatorio //nullable xq al no rellenar el campo, devolvia null y daba fallo
+    private Float alturaMaxima;
+    @Column (name="tipo-crecimiento")
+    private String tipoCrecimiento;
     @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
     private LocalDate fechaRegistro;
     @Column (name="toxicidad")
-    private boolean esToxica;
+    private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
 
-
-    // N:1 → Categoria
-    @ManyToOne
+    /*@ManyToOne // relacion N:1 - muchas plantas pueden pertenecer a uan categoria
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    // 1:N → Cuidados
-    @OneToMany(mappedBy = "planta", cascade = CascadeType.ALL)
-    private List<Cuidado> cuidados;
-
-    // N:N → Plagas
-    @ManyToMany
-    @JoinTable(
-            name = "planta_plaga",
+    @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
+    @JoinTable
+            (name = "planta_plaga",
             joinColumns = @JoinColumn(name = "planta_id"),
-            inverseJoinColumns = @JoinColumn(name = "plaga_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "plaga_id"))
     private List<Plaga> plagas;
 
-    // 1:N → Consejos (opcional)
-    @OneToMany(mappedBy = "planta")
-    private List<Consejo> consejos;
+    @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
+    @JoinTable
+            (name = "planta_consejo",
+            joinColumns = @JoinColumn(name = "planta_id"),
+            inverseJoinColumns = @JoinColumn(name = "consejo_id"))
+    private List<Consejo> consejos;*/
+
+
+
+    @ManyToOne // relacion 1:1 - una planta tiene un cuidado
+    @JoinColumn(name = "cuidado_id")
+    private Cuidado cuidado;
+
 
 }
 

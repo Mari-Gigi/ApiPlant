@@ -20,8 +20,6 @@ public class Cuidado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_cuidado;
     @Column
-    private int plantaId;
-    @Column
     private boolean esInterior;
     @Column
     private String riego;
@@ -29,13 +27,14 @@ public class Cuidado {
     private String sustrato;
     @Column
     private float humedad;
-    @Column(name = "fecha_abono")  //normalizacion del nombre de la columna de la tabla
-    private LocalDate fechaAbono;
+    @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+    private LocalDate fechaRegistro;
 
-    // N:1 → Planta
-    @ManyToOne
-    @JoinColumn(name = "planta_id")
-    private Planta planta;
+
+   /* @OneToMany(mappedBy = "cuidado")*/
+    @OneToMany(mappedBy = "cuidado", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference (value = "cuidados_plantas") //para el bucle que se genera xq el cuidado apunta a una planta, qeu apunta a un cuidado...
+    private List<Planta> plantas;
 
 }
 

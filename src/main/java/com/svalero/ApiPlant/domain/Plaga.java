@@ -1,4 +1,4 @@
-package com.svalero.ApiPlant.domain;
+/*package com.svalero.ApiPlant.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,12 +27,14 @@ public class Plaga {
     private float riesgo;
     @Column (name="letalidad")
     private boolean esLetal;
-    @Column (name="fecha_aparicion")  //normalizacion del nombre de la columna de la tabla
-    private LocalDate fechaAparicion;
+    @Column
+    private String tratamiento;
+   @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+    private LocalDate fechaRegistro;
 
-    // N:N → Plantas (relación inversa)
     @ManyToMany(mappedBy = "plagas")
     private List<Planta> plantas;
 }
 
 
+*/
