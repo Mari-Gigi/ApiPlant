@@ -34,11 +34,17 @@ public class Planta {
     @Column (name="toxicidad")
     private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
 
-    /*@ManyToOne // relacion N:1 - muchas plantas pueden pertenecer a uan categoria
+
+
+    @ManyToOne // relacion 1:1 - una planta tiene un cuidado
+    @JoinColumn(name = "cuidado_id")
+    private Cuidado cuidado;
+
+    @ManyToOne // relacion 1:1 - muchas plantas pueden pertenecer a uan categoria
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
+   /* @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
     @JoinTable
             (name = "planta_plaga",
             joinColumns = @JoinColumn(name = "planta_id"),
@@ -54,9 +60,6 @@ public class Planta {
 
 
 
-    @ManyToOne // relacion 1:1 - una planta tiene un cuidado
-    @JoinColumn(name = "cuidado_id")
-    private Cuidado cuidado;
 
 
 }

@@ -18,7 +18,7 @@ public class CuidadoInDto {
     private boolean esInterior;
     @NotNull(message = "Watering frecuency is required")
     private String riego;
-    @NotNull(message = " Recommended substrate type is required")
+    @NotNull(message = "Recommended substrate type is required")
     private String sustrato;
     @Max(value = 100)
     private float humedad;

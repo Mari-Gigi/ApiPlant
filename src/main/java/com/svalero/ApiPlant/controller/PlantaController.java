@@ -2,6 +2,7 @@ package com.svalero.ApiPlant.controller;
 
 import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
+import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
 import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
 import com.svalero.ApiPlant.exception.PlantaNotFoundException;
 import com.svalero.ApiPlant.service.PlantaService;
@@ -43,7 +44,7 @@ public class PlantaController {
 
 
     @PostMapping("/plantas")
-    public ResponseEntity<PlantaOutDto> addPlanta(@RequestBody PlantaInDto plantaInDto) throws CuidadoNotFoundException {
+    public ResponseEntity<PlantaOutDto> addPlanta(@RequestBody PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException {
         PlantaOutDto newPlanta = plantaService.add(plantaInDto);
         return new ResponseEntity<>(newPlanta, HttpStatus.CREATED);
     }

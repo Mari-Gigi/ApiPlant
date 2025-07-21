@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 public class CuidadoOutDto {
 
-    private long id_cuidado;
+    private long idCuidado;
     private boolean esInterior;
     private String riego;
     private String sustrato;

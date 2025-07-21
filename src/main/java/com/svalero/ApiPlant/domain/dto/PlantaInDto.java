@@ -23,6 +23,8 @@ public class PlantaInDto {
     private float alturaMaxima;
     private String tipoCrecimiento;
     private long cuidadoId;
+    private long categoriaId;
+
 }
 
 

@@ -17,13 +17,9 @@ public class CuidadoConflictException extends Exception {
 
 package com.svalero.ApiPlant.exception;
 
-public class CuidadoConflictException extends RuntimeException {
-
-    public CuidadoConflictException() {
-        super ("plant-associated care");
-    }
-
+public class CuidadoConflictException extends Exception {
     public CuidadoConflictException(String message) {
         super(message);
     }
 }
+

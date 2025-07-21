@@ -33,11 +33,6 @@ public class CuidadoService {
     @Autowired
     private ModelMapper modelMapper;
 
- /*   //LISTA TODOS LOS CUIDADOS
-    public List<Cuidado> getAll() {
-        List<Cuidado> allCuidados = cuidadoRepository.findAll();
-        return allCuidados;
-    } */
 
     public List<CuidadoOutDto> getAll(String riego, String sustrato, Boolean esInterior) {
         List<Cuidado> cuidadoList;
@@ -55,13 +50,9 @@ public class CuidadoService {
             // Solo filtro por esInterior
             cuidadoList = cuidadoRepository.findByEsInterior(esInterior);
         } else if (!riegoVacio && sustratoVacio) {
-            cuidadoList = esInterior != null
-                    ? cuidadoRepository.findByRiegoContainingIgnoreCaseAndEsInterior(riego, esInterior)
-                    : cuidadoRepository.findByRiegoContainingIgnoreCase(riego);
-        } else if (riegoVacio && !sustratoVacio) {
-            cuidadoList = esInterior != null
-                    ? cuidadoRepository.findBySustratoContainingIgnoreCaseAndEsInterior(sustrato, esInterior)
-                    : cuidadoRepository.findBySustratoContainingIgnoreCase(sustrato);
+            cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCaseAndEsInterior(riego, esInterior);
+        } else if (riegoVacio) {
+            cuidadoList = cuidadoRepository.findBySustratoContainingIgnoreCaseAndEsInterior(sustrato, esInterior);
         } else if (esInterior != null) {
             cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCaseAndSustratoContainingIgnoreCaseAndEsInterior(riego, sustrato, esInterior);
         } else {
@@ -76,9 +67,8 @@ public class CuidadoService {
     }
 
 
-    //MUESTRA LA PLANTA POR ID
-    public Cuidado get(long id_cuidado)throws CuidadoNotFoundException{
-        return cuidadoRepository.findById(id_cuidado)
+    public Cuidado get(long idCuidado)throws CuidadoNotFoundException{
+        return cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
     }
 
@@ -89,8 +79,8 @@ public class CuidadoService {
     }
 
     // MODIFICA CUIDADO POR ID
-    public CuidadoOutDto modify(long id_cuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException {
-        Cuidado cuidado = cuidadoRepository.findById(id_cuidado)
+    public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException {
+        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
 
         modelMapper.map(cuidadoInDto, cuidado);
@@ -100,15 +90,23 @@ public class CuidadoService {
     }
 
 
- //BORRA CUIDADO POR ID
- public void remove (long id_cuidado) throws CuidadoConflictException {
-     Cuidado cuidado = cuidadoRepository.findById(id_cuidado)
-             .orElseThrow(CuidadoConflictException::new);
-     if (cuidado.getPlantas()!=null &&cuidado.getPlantas().isEmpty()) {
-         throw new CuidadoConflictException("El cuidado está en uso por una o más plantas.");
-     }
-     cuidadoRepository.deleteById(id_cuidado);
- }
+    public void remove(Long idCuidado) throws CuidadoNotFoundException, CuidadoConflictException {
+        // 1. Verifica que el cuidado exista
+        cuidadoRepository.findById(idCuidado)
+                .orElseThrow(CuidadoNotFoundException::new);
+
+        // 2. Verifica si hay plantas asociadas a ese cuidado
+        List<Planta> plantasConCuidado = plantaRepository.findByCuidado_IdCuidado(idCuidado);
+
+        if (!plantasConCuidado.isEmpty()) {
+            // Si hay plantas que lo usan, lanzar excepción 409
+            throw new CuidadoConflictException("No se puede eliminar el cuidado, está en uso por una o más plantas.");
+        }
+
+        // 3. Si no está en uso, eliminar el cuidado
+        cuidadoRepository.deleteById(idCuidado);
+    }
+
 
 
 }

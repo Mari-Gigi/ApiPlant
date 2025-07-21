@@ -1,7 +1,5 @@
 package com.svalero.ApiPlant.exception;
 
-import com.svalero.ApiPlant.domain.Cuidado;
-
 public class CuidadoNotFoundException extends Exception {
 
     public CuidadoNotFoundException() {

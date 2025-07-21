@@ -1,5 +1,6 @@
-/*package com.svalero.ApiPlant.domain;
+package com.svalero.ApiPlant.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,21 +20,22 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_categoria;
-    @Column (name="nombre_categoria")  //normalizacion del nombre de la columna de la tabla
-    private String nombreCategoria;
+    private long idCategoria;
+    @Column
+    private String nombre;
     @Column
     private String descripcion;
     @Column (name="nivel_dificultad")
     private float nivelDificultad;
     @Column
     private boolean paraPrincipiantes;
-    @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+    @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "categoria_plantas")
     private List<Planta> plantas;
 
-
 }
-*/
+
+

@@ -38,11 +38,6 @@ public class CuidadoController {
     private PlantaService plantaService;
 
 
- /*  @GetMapping("/cuidados") //esto es una Operacion o endpoint, y cada uno tiene una url
-    public ResponseEntity<List<Cuidado>> getAll() {
-        return new ResponseEntity<>(cuidadoService.getAll(), HttpStatus.OK); //Devuelve la lista de Cuidados seguido del código de estado 200
-    } */
-
     @GetMapping("/cuidados")
     public ResponseEntity<List<CuidadoOutDto>> getAll(
             @RequestParam(value = "riego", defaultValue = "") String riego,
@@ -73,12 +68,19 @@ public class CuidadoController {
         return new ResponseEntity<>(modifiedCuidado, HttpStatus.NOT_FOUND);
     }
 
-//revisar ********************
-    @DeleteMapping ("/cuidados/:cuidadoId")
-    public ResponseEntity <Void> removeCuidado (@PathVariable long cuidadoId) throws CuidadoConflictException {
-        cuidadoService.remove(cuidadoId);
-        return ResponseEntity.noContent().build();  //Estado 204
+
+    @DeleteMapping("/cuidados/:cuidadoId")
+    public ResponseEntity<Void> deleteCuidado(long cuidadoId) {
+        try {
+            cuidadoService.remove(cuidadoId);
+            return ResponseEntity.noContent().build();
+        } catch (CuidadoConflictException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409
+        } catch (CuidadoNotFoundException e) {
+            return ResponseEntity.notFound().build(); // 404
+        }
     }
+
 
 
 //CONTROL DE EXCEPCIONES ******************
@@ -90,7 +92,7 @@ public class CuidadoController {
 
     //ESTE NO SALTA *****************************
     @ExceptionHandler(CuidadoConflictException.class)
-    public ResponseEntity<String> handleCuidadoAlreadyInUse(CuidadoConflictException ex) {
+    public ResponseEntity<String> handleCuidadoConflictException(CuidadoConflictException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // ← Aquí el 409
     }
 

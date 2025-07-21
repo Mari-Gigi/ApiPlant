@@ -18,7 +18,7 @@ public class Cuidado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_cuidado;
+    private long idCuidado;
     @Column
     private boolean esInterior;
     @Column

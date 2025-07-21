@@ -17,9 +17,12 @@ public class PlantaOutDto {
     private Boolean esToxica;
     private float alturaMaxima;
     private String tipoCrecimiento;
-   //private Cuidado cuidado; - devolveria toda la info desarrollada de cuidados
+  /* private Cuidado cuidado; asi devolveria el objeto completo cuidado con todo su desarrollo*/
     private long cuidadoId;
+    private long categoriaId;
 
-
+   /* public void setCuidadoId(long cuidadoId) {
+        this.cuidadoId = cuidadoId;
+    }*/
 
 }
