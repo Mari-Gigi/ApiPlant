@@ -1,14 +1,11 @@
-//Aqui en domain se introduce el modelo de datos, cada clase con cada atributo
 package com.svalero.ApiPlant.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data  //genera getters y setters
@@ -34,32 +31,33 @@ public class Planta {
     @Column (name="toxicidad")
     private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
 
-
-
+    //RELACIONES ENTRE ENTIDADES **********************
     @ManyToOne // relacion 1:1 - una planta tiene un cuidado
     @JoinColumn(name = "cuidado_id")
+    @ToString.Exclude  // EVITAR BUCLES AL APUNTAR A VARIAS CLASES
     private Cuidado cuidado;
 
     @ManyToOne // relacion 1:1 - muchas plantas pueden pertenecer a uan categoria
     @JoinColumn(name = "categoria_id")
+    @ToString.Exclude
     private Categoria categoria;
 
-   /* @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
+    @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
     @JoinTable
             (name = "planta_plaga",
             joinColumns = @JoinColumn(name = "planta_id"),
             inverseJoinColumns = @JoinColumn(name = "plaga_id"))
+    @JsonBackReference
+    @ToString.Exclude
     private List<Plaga> plagas;
 
-    @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
+
+  /*  @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
     @JoinTable
             (name = "planta_consejo",
             joinColumns = @JoinColumn(name = "planta_id"),
             inverseJoinColumns = @JoinColumn(name = "consejo_id"))
     private List<Consejo> consejos;*/
-
-
-
 
 
 }

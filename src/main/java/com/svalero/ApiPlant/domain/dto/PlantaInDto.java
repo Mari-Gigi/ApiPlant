@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,7 @@ public class PlantaInDto {
     private String tipoCrecimiento;
     private long cuidadoId;
     private long categoriaId;
+    private List<Long> plagaIds;
 
 }
 

@@ -33,7 +33,7 @@ public class CuidadoService {
     @Autowired
     private ModelMapper modelMapper;
 
-
+    // MUESTRA CUIDADOS CON FILTROS ***********************
     public List<CuidadoOutDto> getAll(String riego, String sustrato, Boolean esInterior) {
         List<Cuidado> cuidadoList;
 
@@ -66,19 +66,20 @@ public class CuidadoService {
         return modelMapper.map(cuidadoList, new TypeToken<List<CuidadoOutDto>>() {}.getType());
     }
 
-
+    // MUESTRA CUIDADOS POR ID ***********************
     public Cuidado get(long idCuidado)throws CuidadoNotFoundException{
         return cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
     }
 
+    // AÑADE CUIDADO CON INDTO ***********************
     public Cuidado add(Cuidado cuidado) {
         cuidado.setFechaRegistro(LocalDate.now());
         return cuidadoRepository.save(cuidado);
 
     }
 
-    // MODIFICA CUIDADO POR ID
+    // MODIFICA CUIDADO POR ID  **********************   REVISAR ******************************
     public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException {
         Cuidado cuidado = cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
@@ -89,21 +90,16 @@ public class CuidadoService {
         return modelMapper.map(cuidado, CuidadoOutDto.class);
     }
 
-
+    //BORRA CUIDADO POR ID CON REVISION DE CONFLICTO CON PLANTA **********************
     public void remove(Long idCuidado) throws CuidadoNotFoundException, CuidadoConflictException {
-        // 1. Verifica que el cuidado exista
         cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
-
-        // 2. Verifica si hay plantas asociadas a ese cuidado
         List<Planta> plantasConCuidado = plantaRepository.findByCuidado_IdCuidado(idCuidado);
 
         if (!plantasConCuidado.isEmpty()) {
-            // Si hay plantas que lo usan, lanzar excepción 409
-            throw new CuidadoConflictException("No se puede eliminar el cuidado, está en uso por una o más plantas.");
+            throw new CuidadoConflictException("plant-associated care");
         }
 
-        // 3. Si no está en uso, eliminar el cuidado
         cuidadoRepository.deleteById(idCuidado);
     }
 

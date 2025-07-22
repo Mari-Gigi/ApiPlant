@@ -14,6 +14,7 @@ public interface CategoriaRepository  extends CrudRepository<Categoria,Long>{
     List<Categoria> findByNombreContainingIgnoreCase(String nombre);
     List<Categoria> findByNivelDificultad(Float nivelDificultad);
     List<Categoria> findByParaPrincipiantes(Boolean paraPrincipiantes);
+
     List<Categoria> findByNombreContainingIgnoreCaseAndNivelDificultad(String nombre, Float nivelDificultad);
     List<Categoria> findByNombreContainingIgnoreCaseAndParaPrincipiantes(String nombre, Boolean paraPrincipiantes);
     List<Categoria> findByNivelDificultadAndParaPrincipiantes(Float nivelDificultad, Boolean paraPrincipiantes);

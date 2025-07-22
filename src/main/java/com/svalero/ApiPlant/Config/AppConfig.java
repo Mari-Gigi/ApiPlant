@@ -4,9 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-
-
 //es una clase para no tener que crear cada vez el objeto model mapper e instanciarlo
 
 @Configuration
@@ -21,11 +18,12 @@ public class AppConfig {
 
 
 
-
 /*
+
 package com.svalero.ApiPlant.Config;
 
 import com.svalero.ApiPlant.domain.Planta;
+import com.svalero.ApiPlant.domain.dto.PlantaInDto;
 import com.svalero.ApiPlant.domain.dto.PlantaOutDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -36,15 +34,16 @@ public class AppConfig {
 
     @Bean
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
 
-        // Mapeo personalizado Planta -> PlantaOutDto para coger solo los IDs
-        modelMapper.typeMap(Planta.class, PlantaOutDto.class).addMappings(mapper -> {
-            mapper.map(src -> src.getCuidado().getId_cuidado(), PlantaOutDto::setCuidadoId);
-            mapper.map(src -> src.getCategoria().getId_categoria(), PlantaOutDto::setCategoriaId);
+        // Evita el mapeo automático que confunde el idPlanta con otras IDs
+        mapper.typeMap(PlantaInDto.class, Planta.class).addMappings(m -> {
+            m.skip(Planta::setIdPlanta); // Esto evita el conflicto con idPlanta
         });
 
-        return modelMapper;
+        return mapper;
     }
 }
 */
+
+

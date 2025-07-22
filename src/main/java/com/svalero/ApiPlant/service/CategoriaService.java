@@ -6,8 +6,6 @@ import com.svalero.ApiPlant.domain.dto.CategoriaInDto;
 import com.svalero.ApiPlant.domain.dto.CategoriaOutDto;
 import com.svalero.ApiPlant.exception.CategoriaConflictException;
 import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
-import com.svalero.ApiPlant.exception.CuidadoConflictException;
-import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
 import com.svalero.ApiPlant.repository.CategoriaRepository;
 import com.svalero.ApiPlant.repository.CuidadoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
@@ -32,6 +30,8 @@ public class CategoriaService {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    //MUESTRA CATEGORIAS CON FILTROS ************************
     public List<CategoriaOutDto> getAll(String nombre, Float nivelDificultad, Boolean paraPrincipiantes) {
         List<Categoria> categoriaList;
 
@@ -59,18 +59,21 @@ public class CategoriaService {
         return modelMapper.map(categoriaList, new TypeToken<List<CategoriaOutDto>>() {}.getType());
     }
 
+
+    //MUESTRA CATEGORIA POR ID CON OUTDTO *****************
     public Categoria get(long idCategoria)throws CategoriaNotFoundException {
         return categoriaRepository.findById(idCategoria)
                 .orElseThrow(CategoriaNotFoundException::new);
     }
 
+    //AÑADE CATETGORIA CON INDTO *****************
     public Categoria add(Categoria categoria) {
         categoria.setFechaRegistro(LocalDate.now());
         return categoriaRepository.save(categoria);
 
     }
 
-    // MODIFICA CUIDADO POR ID
+    // MODIFICA CATEGORIA POR ID ************************** REVISAR *********************************
     public CategoriaOutDto modify(long idCategoria, CategoriaInDto categoriaInDto) throws CategoriaNotFoundException {
         Categoria categoria = categoriaRepository.findById(idCategoria)
                 .orElseThrow(CategoriaNotFoundException::new);
@@ -82,6 +85,7 @@ public class CategoriaService {
     }
 
 
+    //BORRA CATEGORIA CON REVISION DE CONFLICTO CON PLANTA ****************************
     public void remove(Long idCategoria) throws CategoriaNotFoundException, CategoriaConflictException {
         categoriaRepository.findById(idCategoria)
                 .orElseThrow(CategoriaNotFoundException::new);
@@ -89,7 +93,7 @@ public class CategoriaService {
         List<Planta> plantasConCategoria = plantaRepository.findByCategoria_IdCategoria(idCategoria);
 
         if (!plantasConCategoria.isEmpty()) {
-            throw new CategoriaConflictException("No se puede eliminar la categoria, está en uso por una o más plantas.");
+            throw new CategoriaConflictException();
         }
 
         categoriaRepository.deleteById(idCategoria);

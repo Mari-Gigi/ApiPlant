@@ -1,9 +1,11 @@
-/*package com.svalero.ApiPlant.domain;
+package com.svalero.ApiPlant.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,23 +20,24 @@ public class Plaga {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_plaga;
-    @Column (name="nombre_plaga")  //normalizacion del nombre de la columna de la tabla
-    private String nombrePlaga;
-    @Column (name="url_imagen_plaga")
-    private String imagenPlaga;
+    private long idPlaga;
+    @Column
+    private String nombre;
+    @Column
+    private String sintomas;
     @Column
     private float riesgo;
     @Column (name="letalidad")
     private boolean esLetal;
     @Column
     private String tratamiento;
-   @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+   @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
 
     @ManyToMany(mappedBy = "plagas")
+    @JsonBackReference
+  /*  @JasonManagedReference*/
+    @ToString.Exclude
     private List<Planta> plantas;
 }
 
-
-*/

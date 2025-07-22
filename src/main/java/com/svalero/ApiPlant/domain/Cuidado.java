@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +35,7 @@ public class Cuidado {
    /* @OneToMany(mappedBy = "cuidado")*/
     @OneToMany(mappedBy = "cuidado", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference (value = "cuidados_plantas") //para el bucle que se genera xq el cuidado apunta a una planta, qeu apunta a un cuidado...
+    @ToString.Exclude
     private List<Planta> plantas;
 
 }

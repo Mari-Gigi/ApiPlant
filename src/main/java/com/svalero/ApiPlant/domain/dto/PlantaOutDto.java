@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -20,9 +22,7 @@ public class PlantaOutDto {
   /* private Cuidado cuidado; asi devolveria el objeto completo cuidado con todo su desarrollo*/
     private long cuidadoId;
     private long categoriaId;
+    private List<PlagaOutDto> plagas;
 
-   /* public void setCuidadoId(long cuidadoId) {
-        this.cuidadoId = cuidadoId;
-    }*/
 
 }

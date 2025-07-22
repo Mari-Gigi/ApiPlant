@@ -58,7 +58,7 @@ public class CuidadoController {
     @PostMapping ("/cuidados")
     public ResponseEntity <Cuidado> addCuidado (@RequestBody Cuidado cuidado) {
         Cuidado newCuidado = cuidadoService.add(cuidado);
-        return new ResponseEntity<>(newCuidado, HttpStatus.CREATED); //código de estado 201
+        return new ResponseEntity<>(newCuidado, HttpStatus.CREATED);
     }
 
 //REVISAR ********************
@@ -90,7 +90,6 @@ public class CuidadoController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    //ESTE NO SALTA *****************************
     @ExceptionHandler(CuidadoConflictException.class)
     public ResponseEntity<String> handleCuidadoConflictException(CuidadoConflictException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // ← Aquí el 409

@@ -4,6 +4,7 @@ import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
 import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
+import com.svalero.ApiPlant.exception.PlagaNotFoundException;
 import com.svalero.ApiPlant.exception.PlantaNotFoundException;
 import com.svalero.ApiPlant.service.PlantaService;
 import jakarta.validation.Valid;
@@ -44,11 +45,10 @@ public class PlantaController {
 
 
     @PostMapping("/plantas")
-    public ResponseEntity<PlantaOutDto> addPlanta(@RequestBody PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException {
+    public ResponseEntity<PlantaOutDto> addPlanta(@RequestBody PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException {
         PlantaOutDto newPlanta = plantaService.add(plantaInDto);
         return new ResponseEntity<>(newPlanta, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/plantas/:plantaId")
     public ResponseEntity<PlantaOutDto> modifyPlanta (@PathVariable long plantaId, @Valid @RequestBody PlantaInDto planta) throws  PlantaNotFoundException {
@@ -60,10 +60,8 @@ public class PlantaController {
     @DeleteMapping ("/plantas/:plantaId")
     public ResponseEntity <Void> removePlanta (long plantaId) throws PlantaNotFoundException {
         plantaService.remove(plantaId);
-        return ResponseEntity.noContent().build();  //Estado 204
+        return ResponseEntity.noContent().build();
     }
-
-
 
 
 //CONTROL DE EXCEPCIONES ****************
@@ -79,6 +77,13 @@ public class PlantaController {
         ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler  (PlagaNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlagaNotFoundException(PlagaNotFoundException exception) {
+        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
 
     @ExceptionHandler (MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> MethodArgumentNotValidException(MethodArgumentNotValidException exception) {

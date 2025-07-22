@@ -4,13 +4,16 @@ package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.Categoria;
 import com.svalero.ApiPlant.domain.Cuidado;
+import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.PlantaInDto;
 import com.svalero.ApiPlant.domain.dto.PlantaOutDto;
 import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
 import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
+import com.svalero.ApiPlant.exception.PlagaNotFoundException;
 import com.svalero.ApiPlant.exception.PlantaNotFoundException;
 import com.svalero.ApiPlant.repository.CuidadoRepository;
+import com.svalero.ApiPlant.repository.PlagaRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.repository.CategoriaRepository;
 
@@ -20,8 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PlantaService {
@@ -31,11 +36,14 @@ public class PlantaService {
     @Autowired
     private CuidadoRepository cuidadoRepository;
     @Autowired
-    private CategoriaRepository categoriaRepository; //para que pueda acceder a Repository
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private PlagaRepository plagaRepository;
     @Autowired
     private ModelMapper modelMapper;  //para los Dto
 
-    // MUESTRA PLANTAS CON FILTROS***********************
+
+    // MUESTRA PLANTAS CON FILTROS ***********************
     public List<PlantaOutDto> getAll(String genero, String especie, Boolean esToxica) {
         List<Planta> plantaList;
 
@@ -68,33 +76,54 @@ public class PlantaService {
                     .collect(Collectors.toList());
         }
 
-        return modelMapper.map(plantaList, new TypeToken<List<PlantaOutDto>>() {}.getType());
+        return modelMapper.map(plantaList, new TypeToken<List<PlantaOutDto>>() {
+        }.getType());
     }
 
-
-    //PLANTA POR ID**************** DEVUELVE CATEGORIAID COMO NULL
-    public Planta get(long id_planta)throws PlantaNotFoundException{
+    //DEVUELVE PLANTA CON OUTDTO ******************************
+    public Planta get(long id_planta) throws PlantaNotFoundException {
         return plantaRepository.findById(id_planta)
                 .orElseThrow(PlantaNotFoundException::new);
     }
 
 
-    //AÑADE PLANTA CON INDTO
-    public PlantaOutDto add(PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException {
+    //AÑADE PLANTA CON INDTO **********************************
+    public PlantaOutDto add(PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException {
+        // Extraer IDs
         Long cuidadoId = plantaInDto.getCuidadoId();
         Long categoriaId = plantaInDto.getCategoriaId();
+        List<Long> plagaIds = plantaInDto.getPlagaIds();
 
+        // Obtener entidades obligatorias
         Cuidado cuidado = cuidadoRepository.findById(cuidadoId).orElseThrow(CuidadoNotFoundException::new);
         Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow(CategoriaNotFoundException::new);
 
+        // Crear entidad Planta
         Planta planta = modelMapper.map(plantaInDto, Planta.class);
         planta.setFechaRegistro(LocalDate.now());
         planta.setCuidado(cuidado);
         planta.setCategoria(categoria);
 
+        // Plagas: si se especificaron
+        if (plagaIds != null && !plagaIds.isEmpty()) {
+            Iterable<Plaga> iterablePlagas = plagaRepository.findAllById(plagaIds);
+            List<Plaga> plagas = StreamSupport.stream(iterablePlagas.spliterator(), false)
+                    .collect(Collectors.toList());
+
+            if (plagas.size() != plagaIds.size()) {
+                throw new PlagaNotFoundException();
+            }
+
+            planta.setPlagas(plagas);
+        } else {
+            planta.setPlagas(new ArrayList<>()); // No se especificaron plagas
+        }
+
+        // Guardar y devolver
         Planta newPlanta = plantaRepository.save(planta);
         return modelMapper.map(newPlanta, PlantaOutDto.class);
     }
+
 
 
     //MODIFICA PLANTA***********  REVISAR ***************************************************
