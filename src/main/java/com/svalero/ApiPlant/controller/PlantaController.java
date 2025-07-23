@@ -1,11 +1,8 @@
 package com.svalero.ApiPlant.controller;
 
-import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
-import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
-import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
-import com.svalero.ApiPlant.exception.PlagaNotFoundException;
-import com.svalero.ApiPlant.exception.PlantaNotFoundException;
+import com.svalero.ApiPlant.exception.*;
+import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.service.PlantaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,8 @@ public class PlantaController {
 
     @Autowired
     private PlantaService plantaService;
+    @Autowired
+    private PlantaRepository plantaRepository;
 
 
     @GetMapping("/plantas")
@@ -34,27 +33,35 @@ public class PlantaController {
             @RequestParam(value = "esToxica", required = false) Boolean esToxica) {
 
             return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
-             }
-
+     }
 
     @GetMapping("/plantas/:plantaId")  //recoge la planta por id y devuelve Ok si la encuentra
-    public ResponseEntity <Planta> getPlanta(long plantaId) throws PlantaNotFoundException {
-        Planta planta = plantaService.get(plantaId);
-        return new ResponseEntity<>(planta, HttpStatus.OK);
+    public ResponseEntity <PlantaOutDto> getPlanta(long plantaId) throws PlantaNotFoundException {
+        PlantaOutDto plantaOutDto = plantaService.get(plantaId);
+        return new ResponseEntity<>(plantaOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/plantas")
-    public ResponseEntity<PlantaOutDto> addPlanta(@RequestBody PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException {
+    public ResponseEntity<PlantaOutDto> addPlanta(@Valid @RequestBody PlantaInDto plantaInDto)
+            throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
         PlantaOutDto newPlanta = plantaService.add(plantaInDto);
         return new ResponseEntity<>(newPlanta, HttpStatus.CREATED);
     }
 
-    @PutMapping("/plantas/:plantaId")
+/*    @PutMapping("/plantas/:plantaId")
     public ResponseEntity<PlantaOutDto> modifyPlanta (@PathVariable long plantaId, @Valid @RequestBody PlantaInDto planta) throws  PlantaNotFoundException {
         PlantaOutDto modifiedPlanta = plantaService.modify(plantaId, planta);
         return new ResponseEntity<>(modifiedPlanta, HttpStatus.OK);
+    }*/
+
+    @PutMapping("/plantas/:plantaId")
+    public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @RequestBody @Valid PlantaInDto plantaInDto)
+            throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
+        PlantaOutDto updatedPlanta = plantaService.modify(plantaId, plantaInDto);
+        return ResponseEntity.ok(updatedPlanta);
     }
+
 
 
     @DeleteMapping ("/plantas/:plantaId")
@@ -78,12 +85,23 @@ public class PlantaController {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler  (CategoriaNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCategoriaNotFoundException(CategoriaNotFoundException exception) {
+        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler  (PlagaNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlagaNotFoundException(PlagaNotFoundException exception) {
         ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler  (ConsejoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleConsejoNotFoundException(ConsejoNotFoundException exception) {
+        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler (MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> MethodArgumentNotValidException(MethodArgumentNotValidException exception) {

@@ -1,14 +1,9 @@
 package com.svalero.ApiPlant.controller;
 
-
-import com.svalero.ApiPlant.domain.Categoria;
-import com.svalero.ApiPlant.domain.Cuidado;
 import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.service.PlagaService;
-import com.svalero.ApiPlant.service.PlantaService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +24,7 @@ public class PlagaController {
 
 
     @GetMapping("/plagas")
-    public ResponseEntity<List<PlagaOutDto>> getAll(
+    public ResponseEntity<List<Plaga>> getAll(
             @RequestParam(value = "nombre", defaultValue = "") String nombre,
             @RequestParam(value = "riesgo", required = false) Float riesgo,
             @RequestParam(value = "esLetal", required = false) Boolean esLetal) {
@@ -43,12 +38,11 @@ public class PlagaController {
         return new ResponseEntity<>(plagaOutDto, HttpStatus.OK);
     }
 
-    @PostMapping("/plagas")
-    public ResponseEntity <PlagaOutDto> addPlaga (@RequestBody PlagaInDto plagaInDto) {
-        PlagaOutDto plagaOutDto = plagaService.add(plagaInDto);
-        return new ResponseEntity<>(plagaOutDto, HttpStatus.CREATED);
-    }
 
+    @PostMapping("/plagas")
+    public ResponseEntity<Plaga> addPlaga(@RequestBody PlagaInDto plagaInDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(plagaService.add(plagaInDto));
+    }
 
   /*  //REVISAR ********************
     @PutMapping("/cuidados/:cuidadoId")

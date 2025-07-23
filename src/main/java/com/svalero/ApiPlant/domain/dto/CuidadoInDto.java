@@ -1,6 +1,5 @@
 package com.svalero.ApiPlant.domain.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

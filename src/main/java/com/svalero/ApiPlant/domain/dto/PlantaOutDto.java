@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -19,10 +20,10 @@ public class PlantaOutDto {
     private Boolean esToxica;
     private float alturaMaxima;
     private String tipoCrecimiento;
-  /* private Cuidado cuidado; asi devolveria el objeto completo cuidado con todo su desarrollo*/
     private long cuidadoId;
     private long categoriaId;
-    private List<PlagaOutDto> plagas;
+    private List<Long> plagaIds;
+    private List<Long> consejoIds;
 
 
 }

@@ -6,21 +6,25 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class PlagaOutDto {
+public class ConsejoOutDto {
 
-    private long idPlaga;
-    private String nombre;
-    private String sintomas;
-    private float riesgo;
-    private boolean esLetal;
-    private String tratamiento;
+    private long idConsejo;
+    private String titulo;
+    private String explicacion;
+    private boolean verificado;
+    private float importancia;
     private List<Long> plantaIds;
 
 }
+
+
+
+
 
 
 

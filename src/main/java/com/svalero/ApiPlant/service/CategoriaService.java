@@ -7,7 +7,6 @@ import com.svalero.ApiPlant.domain.dto.CategoriaOutDto;
 import com.svalero.ApiPlant.exception.CategoriaConflictException;
 import com.svalero.ApiPlant.exception.CategoriaNotFoundException;
 import com.svalero.ApiPlant.repository.CategoriaRepository;
-import com.svalero.ApiPlant.repository.CuidadoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -16,23 +15,22 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 public class CategoriaService {
 
     @Autowired
-    CategoriaRepository categoriaRepository;
-    @Autowired
-    private CuidadoRepository cuidadoRepository;
+    private CategoriaRepository categoriaRepository;
     @Autowired
     private PlantaRepository plantaRepository;
     @Autowired
     private ModelMapper modelMapper;
 
 
-    //MUESTRA CATEGORIAS CON FILTROS ************************
-    public List<CategoriaOutDto> getAll(String nombre, Float nivelDificultad, Boolean paraPrincipiantes) {
+    //MUESTRA CATEGORIAS CON FILTROS SIN OUTDTO************************
+    public List<Categoria> getAll(String nombre, Float nivelDificultad, Boolean paraPrincipiantes) {
         List<Categoria> categoriaList;
 
         boolean nombreVacio = (nombre == null || nombre.isEmpty());
@@ -56,17 +54,35 @@ public class CategoriaService {
             categoriaList = categoriaRepository.findByNivelDificultadAndParaPrincipiantes(nivelDificultad, paraPrincipiantes);
         }
 
-        return modelMapper.map(categoriaList, new TypeToken<List<CategoriaOutDto>>() {}.getType());
+        return modelMapper.map(categoriaList, new TypeToken<List<Categoria>>() {}.getType());
     }
 
 
     //MUESTRA CATEGORIA POR ID CON OUTDTO *****************
-    public Categoria get(long idCategoria)throws CategoriaNotFoundException {
-        return categoriaRepository.findById(idCategoria)
-                .orElseThrow(CategoriaNotFoundException::new);
+    public CategoriaOutDto get(long idCategoria)throws CategoriaNotFoundException {
+       Categoria categoria = categoriaRepository.findById(idCategoria)
+               .orElseThrow(CategoriaNotFoundException::new);
+
+       CategoriaOutDto dto = new CategoriaOutDto();
+       dto.setIdCategoria(categoria.getIdCategoria());
+       dto.setNombre(categoria.getNombre());
+       dto.setDescripcion(categoria.getDescripcion());
+       dto.setNivelDificultad(categoria.getNivelDificultad());
+       dto.setParaPrincipiantes(categoria.isParaPrincipiantes());
+
+        // Aquí obtienes los IDs de plantas asociadas
+        List<Long> plantaIds = categoria.getPlantas().stream()
+                .map(Planta::getId_planta)
+                .collect(Collectors.toList());
+
+        dto.setPlantaIds(plantaIds);
+
+        return dto;
+
     }
 
-    //AÑADE CATETGORIA CON INDTO *****************
+
+    //AÑADE CATEGORIA CON INDTO *****************
     public Categoria add(Categoria categoria) {
         categoria.setFechaRegistro(LocalDate.now());
         return categoriaRepository.save(categoria);

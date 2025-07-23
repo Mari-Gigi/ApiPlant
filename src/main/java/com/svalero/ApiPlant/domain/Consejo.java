@@ -1,9 +1,11 @@
-/*package com.svalero.ApiPlant.domain;
+package com.svalero.ApiPlant.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class Consejo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_consejo;
+    private long idConsejo;
     @Column
     private String titulo;
     @Column
@@ -28,12 +30,13 @@ public class Consejo {
     private boolean verificado;
     @Column
     private float importancia;
-   @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
+   @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
 
     @ManyToMany(mappedBy = "consejos")
+    @JsonBackReference
+    @ToString.Exclude
     private List<Planta> plantas;
 
 
 }
-*/

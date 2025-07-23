@@ -36,8 +36,8 @@ public class Plaga {
 
     @ManyToMany(mappedBy = "plagas")
     @JsonBackReference
-  /*  @JasonManagedReference*/
     @ToString.Exclude
     private List<Planta> plantas;
+
 }
 

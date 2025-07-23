@@ -1,13 +1,12 @@
 package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.Cuidado;
+import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
-import com.svalero.ApiPlant.domain.dto.CuidadoInDto;
-import com.svalero.ApiPlant.domain.dto.CuidadoOutDto;
-import com.svalero.ApiPlant.domain.dto.PlantaInDto;
-import com.svalero.ApiPlant.domain.dto.PlantaOutDto;
+import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.CuidadoConflictException;
 import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
+import com.svalero.ApiPlant.exception.PlagaNotFoundException;
 import com.svalero.ApiPlant.exception.PlantaNotFoundException;
 import com.svalero.ApiPlant.repository.CuidadoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
@@ -34,7 +33,7 @@ public class CuidadoService {
     private ModelMapper modelMapper;
 
     // MUESTRA CUIDADOS CON FILTROS ***********************
-    public List<CuidadoOutDto> getAll(String riego, String sustrato, Boolean esInterior) {
+    public List<Cuidado> getAll(String riego, String sustrato, Boolean esInterior) {
         List<Cuidado> cuidadoList;
 
         boolean riegoVacio = (riego == null || riego.isEmpty());
@@ -63,13 +62,30 @@ public class CuidadoService {
                     .collect(Collectors.toList());
         }
 
-        return modelMapper.map(cuidadoList, new TypeToken<List<CuidadoOutDto>>() {}.getType());
+        return modelMapper.map(cuidadoList, new TypeToken<List<Cuidado>>() {}.getType());
     }
 
-    // MUESTRA CUIDADOS POR ID ***********************
-    public Cuidado get(long idCuidado)throws CuidadoNotFoundException{
-        return cuidadoRepository.findById(idCuidado)
+
+    //MUESTRA CUIDADOS POR ID CON OUTDTO ********************************
+    public CuidadoOutDto get(long idCuidado) throws CuidadoNotFoundException {
+        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
                 .orElseThrow(CuidadoNotFoundException::new);
+
+        CuidadoOutDto dto = new CuidadoOutDto();
+        dto.setIdCuidado(cuidado.getIdCuidado());
+        dto.setEsInterior(cuidado.isEsInterior());
+        dto.setRiego(cuidado.getRiego());
+        dto.setSustrato(cuidado.getSustrato());
+        dto.setHumedad(cuidado.getHumedad());
+
+        // Aquí obtienes los IDs de plantas asociadas
+        List<Long> plantaIds = cuidado.getPlantas().stream()
+                .map(Planta::getId_planta)
+                .collect(Collectors.toList());
+
+        dto.setPlantaIds(plantaIds);
+
+        return dto;
     }
 
     // AÑADE CUIDADO CON INDTO ***********************

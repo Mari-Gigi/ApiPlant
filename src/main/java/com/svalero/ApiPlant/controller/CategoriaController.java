@@ -37,7 +37,7 @@ public class CategoriaController {
 
 
     @GetMapping("/categorias")
-    public ResponseEntity<List<CategoriaOutDto>> getAll(
+    public ResponseEntity<List<Categoria>> getAll(
             @RequestParam(value = "nombre", defaultValue = "") String nombre,
             @RequestParam(value = "nivelDificultad", required = false) Float nivelDificultad,
             @RequestParam(value = "paraPrincipiantes", required = false) Boolean paraPrincipiantes) {
@@ -47,9 +47,9 @@ public class CategoriaController {
 
 
     @GetMapping("/categorias/:categoriaId")
-    public ResponseEntity <Categoria> getCategoria(long categoriaId) throws CategoriaNotFoundException {
-        Categoria categoria = categoriaService.get(categoriaId);
-        return new ResponseEntity<>(categoria, HttpStatus.OK);
+    public ResponseEntity <CategoriaOutDto> getCategoria(long categoriaId) throws CategoriaNotFoundException {
+        CategoriaOutDto categoriaOutDto = categoriaService.get(categoriaId);
+        return new ResponseEntity<>(categoriaOutDto, HttpStatus.OK);
     }
 
 

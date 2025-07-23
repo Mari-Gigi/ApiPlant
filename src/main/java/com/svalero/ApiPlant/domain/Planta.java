@@ -1,7 +1,6 @@
 package com.svalero.ApiPlant.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +30,9 @@ public class Planta {
     @Column (name="toxicidad")
     private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
 
+
+
+
     //RELACIONES ENTRE ENTIDADES **********************
     @ManyToOne // relacion 1:1 - una planta tiene un cuidado
     @JoinColumn(name = "cuidado_id")
@@ -39,6 +41,7 @@ public class Planta {
 
     @ManyToOne // relacion 1:1 - muchas plantas pueden pertenecer a uan categoria
     @JoinColumn(name = "categoria_id")
+    @JsonBackReference
     @ToString.Exclude
     private Categoria categoria;
 
@@ -52,12 +55,14 @@ public class Planta {
     private List<Plaga> plagas;
 
 
-  /*  @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
+    @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
     @JoinTable
             (name = "planta_consejo",
             joinColumns = @JoinColumn(name = "planta_id"),
             inverseJoinColumns = @JoinColumn(name = "consejo_id"))
-    private List<Consejo> consejos;*/
+    @JsonBackReference
+    @ToString.Exclude
+    private List<Consejo> consejos;
 
 
 }

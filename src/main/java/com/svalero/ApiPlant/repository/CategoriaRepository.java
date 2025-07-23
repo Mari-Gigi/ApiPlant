@@ -1,9 +1,7 @@
 package com.svalero.ApiPlant.repository;
 
 import com.svalero.ApiPlant.domain.Categoria;
-import com.svalero.ApiPlant.domain.Cuidado;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

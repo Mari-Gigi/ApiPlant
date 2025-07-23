@@ -7,20 +7,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+public class ConsejoInDto {
 
-public class CategoriaInDto {
-
-    @NotNull(message = "Nombre is required")
-    private String nombre;
-    @NotNull(message = "Description is required")
-    private String descripcion;
+    @NotNull(message = "titulo is required")
+    private String titulo;
+    private String explicacion;
+    @NotNull (message = "Verification is required")
+    private boolean verificado;
     @Min(value = 1, message = "Must be between 1 and 10")
     @Max(value = 10, message = "Must be between 1 and 10")
-    private float nivelDificultad;
-    private boolean paraPincipiantes;
-
+    private float importancia;
 
 }
+
+
+

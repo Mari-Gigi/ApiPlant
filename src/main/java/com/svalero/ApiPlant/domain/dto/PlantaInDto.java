@@ -20,12 +20,13 @@ public class PlantaInDto {
     private String especie;
     @NotNull (message = "Toxicity is required")
     private Boolean esToxica;
-    @Min(value = 0)
+    @Min(value = 0, message = "Must be greater than 0")
     private float alturaMaxima;
     private String tipoCrecimiento;
     private long cuidadoId;
     private long categoriaId;
     private List<Long> plagaIds;
+    private List<Long> consejoIds;
 
 }
 

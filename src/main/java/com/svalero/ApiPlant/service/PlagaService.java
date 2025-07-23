@@ -1,12 +1,10 @@
 package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.Categoria;
+import com.svalero.ApiPlant.domain.Consejo;
 import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
-import com.svalero.ApiPlant.domain.dto.CategoriaInDto;
-import com.svalero.ApiPlant.domain.dto.CategoriaOutDto;
-import com.svalero.ApiPlant.domain.dto.PlagaInDto;
-import com.svalero.ApiPlant.domain.dto.PlagaOutDto;
+import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.CategoriaRepository;
 import com.svalero.ApiPlant.repository.CuidadoRepository;
@@ -33,7 +31,7 @@ public class PlagaService {
     private ModelMapper modelMapper;
 
     //MUESTRA PLAGAS CON FILTROS **************************
-    public List<PlagaOutDto> getAll(String nombre, Float riesgo, Boolean esLetal) {
+    public List<Plaga> getAll(String nombre, Float riesgo, Boolean esLetal) {
         List<Plaga> plagaList;
 
         boolean nombreVacio = (nombre == null || nombre.isEmpty());
@@ -58,7 +56,7 @@ public class PlagaService {
             plagaList = plagaRepository.findByNombreContainingIgnoreCaseAndRiesgoAndEsLetal(nombre, riesgo, esLetal);
         }
 
-        return modelMapper.map(plagaList, new TypeToken<List<PlagaOutDto>>() {
+        return modelMapper.map(plagaList, new TypeToken<List<Plaga>>() {
         }.getType());
     }
 
@@ -74,7 +72,6 @@ public class PlagaService {
         dto.setRiesgo(plaga.getRiesgo());
         dto.setEsLetal(plaga.isEsLetal());
         dto.setTratamiento(plaga.getTratamiento());
-        dto.setFechaRegistro(plaga.getFechaRegistro());
 
 
         // Aquí obtienes los IDs de plantas asociadas
@@ -89,15 +86,14 @@ public class PlagaService {
 
 
     //AÑADE PLAGA CON INDTO *******************************
-    public PlagaOutDto add(PlagaInDto plagaInDto) {
+    public Plaga add(PlagaInDto plagaInDto) {
         Plaga plaga= modelMapper.map(plagaInDto, Plaga.class);
         plaga.setFechaRegistro(LocalDate.now());
 
-        Plaga nuevaPlaga = plagaRepository.save(plaga);
-
-        return modelMapper.map (nuevaPlaga, PlagaOutDto.class);
+        return plagaRepository.save(plaga);
 
     }
+
 
     //MODIFICA PLAGA POR ID **************** REVISAR ***************************
     public PlagaOutDto modify(long idPlaga, PlagaInDto plagaInDto) throws PlagaNotFoundException {

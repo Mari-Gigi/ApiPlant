@@ -15,6 +15,7 @@ public interface PlantaRepository extends CrudRepository<Planta,Long> {
     List<Planta> findByCuidado_IdCuidado(Long idCuidado);
     List<Planta> findByCategoria_IdCategoria(Long idCategoria);
     List<Planta> findByPlagas_IdPlaga(Long idPlaga);
+    List<Planta> findByConsejos_IdConsejo(Long idConsejo);
 
 
     List<Planta> findByGeneroContainingIgnoreCase(String genero);
