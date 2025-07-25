@@ -5,6 +5,8 @@ import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.service.PlantaService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +24,9 @@ public class PlantaController {
 
     @Autowired
     private PlantaService plantaService;
-    @Autowired
-    private PlantaRepository plantaRepository;
-
+   /* @Autowired
+    private final Logger logger = LoggerFactory.getLogger(PlantaController.class);*/
+    /*añadir en cada enppoint ellogger.*/
 
     @GetMapping("/plantas")
     public ResponseEntity<List<PlantaOutDto>> getAll(
@@ -49,11 +51,6 @@ public class PlantaController {
         return new ResponseEntity<>(newPlanta, HttpStatus.CREATED);
     }
 
-/*    @PutMapping("/plantas/:plantaId")
-    public ResponseEntity<PlantaOutDto> modifyPlanta (@PathVariable long plantaId, @Valid @RequestBody PlantaInDto planta) throws  PlantaNotFoundException {
-        PlantaOutDto modifiedPlanta = plantaService.modify(plantaId, planta);
-        return new ResponseEntity<>(modifiedPlanta, HttpStatus.OK);
-    }*/
 
     @PutMapping("/plantas/:plantaId")
     public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @RequestBody @Valid PlantaInDto plantaInDto)

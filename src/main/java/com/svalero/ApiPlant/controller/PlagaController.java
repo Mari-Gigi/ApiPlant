@@ -4,6 +4,7 @@ import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.service.PlagaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +45,12 @@ public class PlagaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(plagaService.add(plagaInDto));
     }
 
-  /*  //REVISAR ********************
-    @PutMapping("/cuidados/:cuidadoId")
-    public ResponseEntity<CuidadoOutDto> modifyCuidado (long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado) throws CuidadoNotFoundException {
-        CuidadoOutDto modifiedCuidado = cuidadoService.modify(cuidadoId, cuidado);
-        return new ResponseEntity<>(modifiedCuidado, HttpStatus.NOT_FOUND);
-    }*/
+
+    @PutMapping("/plagas/:plagaId")
+    public ResponseEntity<PlagaOutDto> modifyPlaga(long plagaId, @Valid @RequestBody PlagaInDto plaga) throws  PlagaNotFoundException {
+        PlagaOutDto modifiedPlaga = plagaService.modify(plagaId, plaga);
+        return new ResponseEntity<>(modifiedPlaga, HttpStatus.NOT_FOUND);
+    }
 
     @DeleteMapping("/plagas/:plagaId")
     public ResponseEntity<Void> removePlaga(long plagaId) {
@@ -71,6 +72,12 @@ public class PlagaController {
     public ResponseEntity<String> handlePlagaNotFoundException(PlagaNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(PlagaConflictException.class)
+    public ResponseEntity<String> handlePlagaNotFoundException(PlagaConflictException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
 
     @ExceptionHandler(PlantaNotFoundException.class)
     public ResponseEntity<String> handlePlantaNotFoundException(PlantaNotFoundException ex) {

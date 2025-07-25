@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -94,18 +96,40 @@ public class ConsejoService {
     }
 
 
-
-
-    // MODIFICA CATEGORIA POR ID ************************** REVISAR *********************************
+    // MODIFICA CONSEJO POR ID CON OUTDTO *******************
     public ConsejoOutDto modify(long idConsejo, ConsejoInDto consejoInDto) throws ConsejoNotFoundException {
         Consejo consejo = consejoRepository.findById(idConsejo)
                 .orElseThrow(ConsejoNotFoundException::new);
 
         modelMapper.map(consejoInDto, consejo);
+
+        // Actualización de la lista de plantas (añadir o eliminar)
+        if (consejoInDto.getPlantaIds() != null && !consejoInDto.getPlantaIds().isEmpty()) {
+            List<Planta> plantas = StreamSupport
+                    .stream(plantaRepository.findAllById(consejoInDto.getPlantaIds()).spliterator(), false)
+                    .collect(Collectors.toList());
+            consejo.setPlantas(plantas);
+        } else {
+            consejo.setPlantas(new ArrayList<>()); // elimina asociaciones si se envía vacío
+        }
+
         consejoRepository.save(consejo);
 
-        return modelMapper.map(consejo, ConsejoOutDto.class);
+        // Convertir a OutDto y rellenar IDs
+        ConsejoOutDto consejoOutDto = modelMapper.map(consejo, ConsejoOutDto.class);
+
+        if (consejo.getPlantas() != null) {
+            List<Long> plantaIds = consejo.getPlantas().stream()
+                    .map(Planta::getId_planta)
+                    .collect(Collectors.toList());
+            consejoOutDto.setPlantaIds(plantaIds);
+        } else {
+            consejoOutDto.setPlantaIds(new ArrayList<>());
+        }
+
+        return consejoOutDto;
     }
+
 
 
     //BORRA CATEGORIA CON REVISION DE CONFLICTO CON PLANTA ****************************

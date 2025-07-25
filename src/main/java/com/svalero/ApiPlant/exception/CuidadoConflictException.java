@@ -1,6 +1,5 @@
 package com.svalero.ApiPlant.exception;
 
-import com.svalero.ApiPlant.domain.Cuidado;
 
 public class CuidadoConflictException extends Exception {
 

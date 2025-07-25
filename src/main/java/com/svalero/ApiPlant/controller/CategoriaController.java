@@ -54,14 +54,15 @@ public class CategoriaController {
 
 
     @PostMapping ("/categorias")
-    public ResponseEntity <Categoria> addCategoria (@RequestBody Categoria categoria) {
-        Categoria newCategoria = categoriaService.add(categoria);
+    public ResponseEntity <CategoriaOutDto> addCategoria (@RequestBody CategoriaInDto categoriaInDto) {
+        CategoriaOutDto newCategoria = categoriaService.addCategoria(categoriaInDto);
         return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
     }
 
-    //REVISAR ********************
+
     @PutMapping ("/categorias/:categoriaId")
-    public ResponseEntity<CategoriaOutDto> modifyCategoria (long categoriaId, @Valid @RequestBody CategoriaInDto categoria) throws  CategoriaNotFoundException {
+    public ResponseEntity<CategoriaOutDto> modifyCategoria (long categoriaId, @Valid @RequestBody CategoriaInDto categoria)
+            throws  CategoriaNotFoundException, CategoriaConflictException {
         CategoriaOutDto modifiedCategoria = categoriaService.modify(categoriaId, categoria);
         return new ResponseEntity<>(modifiedCategoria, HttpStatus.NOT_FOUND);
     }
@@ -87,7 +88,6 @@ public class CategoriaController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    //ESTE NO SALTA *****************************
     @ExceptionHandler(CategoriaConflictException.class)
     public ResponseEntity<String> handleCategoriaConflictException(CategoriaConflictException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // ← Aquí el 409

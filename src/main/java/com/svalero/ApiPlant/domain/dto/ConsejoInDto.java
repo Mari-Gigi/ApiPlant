@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class ConsejoInDto {
     @Min(value = 1, message = "Must be between 1 and 10")
     @Max(value = 10, message = "Must be between 1 and 10")
     private float importancia;
+    private List<Long> plantaIds;
 
 }
 

@@ -14,11 +14,17 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class CuidadoService {
@@ -89,22 +95,63 @@ public class CuidadoService {
     }
 
     // AÑADE CUIDADO CON INDTO ***********************
-    public Cuidado add(Cuidado cuidado) {
+  /*public Cuidado add(Cuidado cuidado) {
         cuidado.setFechaRegistro(LocalDate.now());
         return cuidadoRepository.save(cuidado);
 
+    }*/
+
+    public CuidadoOutDto  addCuidado(CuidadoInDto dto) {
+        Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
+        cuidado.setFechaRegistro(LocalDate.now());
+        // Aquí puedes manejar relaciones con plantas, validaciones, etc.
+        Cuidado saved = cuidadoRepository.save(cuidado);
+        return modelMapper.map(saved, CuidadoOutDto.class);
     }
 
-    // MODIFICA CUIDADO POR ID  **********************   REVISAR ******************************
-    public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException {
-        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
-                .orElseThrow(CuidadoNotFoundException::new);
 
-        modelMapper.map(cuidadoInDto, cuidado);
-        cuidadoRepository.save(cuidado);
+    // MODIFICA CUIDADO POR ID  CON REVISION DE OCNFLICTO POR PLANTA**********************
+   public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException, CuidadoConflictException {
+       Cuidado cuidado = cuidadoRepository.findById(idCuidado)
+               .orElseThrow(CuidadoNotFoundException::new);
+       //recupero los actuales plantaIds asociados
+       List<Long> actualesIds = Optional.ofNullable(cuidado.getPlantas())
+               .orElseGet(Collections::emptyList)
+               .stream()
+               .map(Planta::getId_planta)
+               .toList();
+       //agrupo los nuevos plantaIds
+       List<Long> nuevosIds = Optional.ofNullable(cuidadoInDto.getPlantaIds())
+               .orElseGet(Collections::emptyList);
 
-        return modelMapper.map(cuidado, CuidadoOutDto.class);
-    }
+       // Reviso los nuevos plantaIds para ver si hay conflicto
+       if (actualesIds.stream().anyMatch(id -> !nuevosIds.contains(id))) {throw new CuidadoConflictException();}
+
+       // Incluye los nuevos plantaIds a ese cuidado
+       List<Long> idsParaAnadir = nuevosIds.stream()
+               .filter(id -> !actualesIds.contains(id))
+               .toList();
+
+       if (!idsParaAnadir.isEmpty()) {
+           List<Planta> plantasParaAnadir = StreamSupport.stream(plantaRepository.findAllById(idsParaAnadir).spliterator(), false)
+                   .toList();
+           if (cuidado.getPlantas() == null) cuidado.setPlantas(new ArrayList<>());
+           cuidado.getPlantas().addAll(plantasParaAnadir);
+       }
+
+       modelMapper.map(cuidadoInDto, cuidado);
+       cuidadoRepository.save(cuidado);
+
+       CuidadoOutDto outDto = modelMapper.map(cuidado, CuidadoOutDto.class);
+       outDto.setPlantaIds(Optional.ofNullable(cuidado.getPlantas())
+               .orElseGet(Collections::emptyList)
+               .stream()
+               .map(Planta::getId_planta)
+               .toList());
+
+       return outDto;
+   }
+
 
     //BORRA CUIDADO POR ID CON REVISION DE CONFLICTO CON PLANTA **********************
     public void remove(Long idCuidado) throws CuidadoNotFoundException, CuidadoConflictException {

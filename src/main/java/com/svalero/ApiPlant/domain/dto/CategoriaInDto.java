@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class CategoriaInDto {
     @Max(value = 10, message = "Must be between 1 and 10")
     private float nivelDificultad;
     private boolean paraPincipiantes;
+    private List<Long> plantaIds;
 
 
 }

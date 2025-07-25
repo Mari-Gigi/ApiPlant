@@ -148,154 +148,107 @@ public class PlantaService {
     }
 
 
-
     // AÑADE PLANTA CON INDTO **********************************
-    public PlantaOutDto add(PlantaInDto plantaInDto) throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
-        // Extraer IDs
-        Long cuidadoId = plantaInDto.getCuidadoId();
-        Long categoriaId = plantaInDto.getCategoriaId();
-        List<Long> plagaIds = plantaInDto.getPlagaIds();
-        List<Long> consejoIds = plantaInDto.getConsejoIds();
+    public PlantaOutDto add(PlantaInDto plantaInDto) throws
+            CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
 
-        // Obtener entidades obligatorias
-        Cuidado cuidado = cuidadoRepository.findById(cuidadoId).orElseThrow(CuidadoNotFoundException::new);
-        Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow(CategoriaNotFoundException::new);
+        // Obtener entidades obligatorias (cuidado y categoría)
+        Cuidado cuidado = cuidadoRepository.findById(plantaInDto.getCuidadoId()).orElseThrow(CuidadoNotFoundException::new);
+        Categoria categoria = categoriaRepository.findById(plantaInDto.getCategoriaId()).orElseThrow(CategoriaNotFoundException::new);
 
-        // Crear entidad Planta
+        // Crear entidad planta desde el DTO
         Planta planta = modelMapper.map(plantaInDto, Planta.class);
         planta.setFechaRegistro(LocalDate.now());
         planta.setCuidado(cuidado);
         planta.setCategoria(categoria);
 
-        // Plagas: si se especificaron
-        if (plagaIds != null && !plagaIds.isEmpty()) {
-            Iterable<Plaga> iterablePlagas = plagaRepository.findAllById(plagaIds);
-            List<Plaga> plagas = StreamSupport.stream(iterablePlagas.spliterator(), false)
+        // Asociar plagas si se especificaron
+        if (plantaInDto.getPlagaIds() != null && !plantaInDto.getPlagaIds().isEmpty()) {
+            List<Plaga> plagas = StreamSupport.stream(
+                            plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false)
                     .collect(Collectors.toList());
 
-            if (plagas.size() != plagaIds.size()) {
+            if (plagas.size() != plantaInDto.getPlagaIds().size())
                 throw new PlagaNotFoundException();
-            }
 
             planta.setPlagas(plagas);
         } else {
             planta.setPlagas(new ArrayList<>());
         }
 
-        // Consejos: si se especificaron
-        if (consejoIds != null && !consejoIds.isEmpty()) {
-            Iterable<Consejo> iterableConsejos = consejoRepository.findAllById(consejoIds);
-            List<Consejo> consejos = StreamSupport.stream(iterableConsejos.spliterator(), false)
+        // Asociar consejos si se especificaron
+        if (plantaInDto.getConsejoIds() != null && !plantaInDto.getConsejoIds().isEmpty()) {
+            List<Consejo> consejos = StreamSupport.stream(
+                            consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false)
                     .collect(Collectors.toList());
 
-            if (consejos.size() != consejoIds.size()) {
+            if (consejos.size() != plantaInDto.getConsejoIds().size())
                 throw new ConsejoNotFoundException();
-            }
 
             planta.setConsejos(consejos);
         } else {
             planta.setConsejos(new ArrayList<>());
         }
 
-        // Guardar entidad
+        // Guardar planta y mapear a DTO de salida
         Planta newPlanta = plantaRepository.save(planta);
+        PlantaOutDto plantaOutDto = modelMapper.map(newPlanta, PlantaOutDto.class);
 
-        // Mapear manualmente a PlantaOutDto
-        PlantaOutDto plantaOutDto = new PlantaOutDto();
-        plantaOutDto.setId_planta(newPlanta.getId_planta());
-        plantaOutDto.setGenero(newPlanta.getGenero());
-        plantaOutDto.setEspecie(newPlanta.getEspecie());
-        plantaOutDto.setEsToxica(newPlanta.getEsToxica());
-        plantaOutDto.setAlturaMaxima(newPlanta.getAlturaMaxima());
-        plantaOutDto.setTipoCrecimiento(newPlanta.getTipoCrecimiento());
-        plantaOutDto.setCuidadoId(newPlanta.getCuidado().getIdCuidado());
-        plantaOutDto.setCategoriaId(newPlanta.getCategoria().getIdCategoria());
+        // Asegurar que los IDs de plagas y consejos estén en el DTO de salida
+        plantaOutDto.setPlagaIds(
+                newPlanta.getPlagas().stream().map(Plaga::getIdPlaga).collect(Collectors.toList()));
 
-        // Mapear plagaIds
-        List<Long> mappedPlagaIds = newPlanta.getPlagas().stream()
-                .map(Plaga::getIdPlaga)
-                .collect(Collectors.toList());
-        plantaOutDto.setPlagaIds(mappedPlagaIds);
-
-        // Mapear consejoIds
-        List<Long> mappedConsejoIds = newPlanta.getConsejos().stream()
-                .map(Consejo::getIdConsejo)
-                .collect(Collectors.toList());
-        plantaOutDto.setConsejoIds(mappedConsejoIds);
+        plantaOutDto.setConsejoIds(
+                newPlanta.getConsejos().stream().map(Consejo::getIdConsejo).collect(Collectors.toList()));
 
         return plantaOutDto;
     }
 
 
-
-  /*  //MODIFICA PLANTA***********  REVISAR ***************************************************
-    public PlantaOutDto modify (long plantaId, PlantaInDto plantaInDto) throws PlantaNotFoundException {
+    //MODIFICA PLANTA POR ID ***********
+    public PlantaOutDto modify(long plantaId, PlantaInDto plantaInDto) throws PlantaNotFoundException {
+        // Buscar planta existente o lanzar excepción si no se encuentra
         Planta planta = plantaRepository.findById(plantaId)
-            .orElseThrow(PlantaNotFoundException::new);
-
-        modelMapper.map(plantaInDto, planta);
-        plantaRepository.save(planta);
-
-        return modelMapper.map(planta, PlantaOutDto.class);
-
-}*/
-
-    public PlantaOutDto modify(long id, PlantaInDto plantaInDto)
-            throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
-
-        Planta existingPlanta = plantaRepository.findById(id)
                 .orElseThrow(PlantaNotFoundException::new);
 
-        // Map fields from DTO
-        existingPlanta.setGenero(plantaInDto.getGenero());
-        existingPlanta.setEspecie(plantaInDto.getEspecie());
-        existingPlanta.setAlturaMaxima(plantaInDto.getAlturaMaxima());
-        existingPlanta.setTipoCrecimiento(plantaInDto.getTipoCrecimiento());
-        existingPlanta.setEsToxica(plantaInDto.getEsToxica());
+        // Mapear campos básicos desde el DTO de entrada a la entidad
+        modelMapper.map(plantaInDto, planta);
 
-        // Relaciones
-        Cuidado cuidado = cuidadoRepository.findById(plantaInDto.getCuidadoId())
-                .orElseThrow(CuidadoNotFoundException::new);
-        existingPlanta.setCuidado(cuidado);
-
-        Categoria categoria = categoriaRepository.findById(plantaInDto.getCategoriaId())
-                .orElseThrow(CategoriaNotFoundException::new);
-        existingPlanta.setCategoria(categoria);
-
-        // Plagas
+        // Asignar plagas a la planta (si hay IDs recibidos)
         if (plantaInDto.getPlagaIds() != null) {
             List<Plaga> plagas = StreamSupport.stream(
-                    plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false
-            ).collect(Collectors.toList());
-
-            if (plagas.size() != plantaInDto.getPlagaIds().size()) {
-                throw new PlagaNotFoundException();
-            }
-            existingPlanta.setPlagas(plagas);
-        } else {
-            existingPlanta.setPlagas(new ArrayList<>());
+                            plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false)
+                    .collect(Collectors.toList());
+            planta.setPlagas(plagas);
         }
 
-        // Consejos
+        // Asignar consejos a la planta (si hay IDs recibidos)
         if (plantaInDto.getConsejoIds() != null) {
             List<Consejo> consejos = StreamSupport.stream(
-                    consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false
-            ).collect(Collectors.toList());
-
-            if (consejos.size() != plantaInDto.getConsejoIds().size()) {
-                throw new ConsejoNotFoundException();
-            }
-            existingPlanta.setConsejos(consejos);
-        } else {
-            existingPlanta.setConsejos(new ArrayList<>());
+                            consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false)
+                    .collect(Collectors.toList());
+            planta.setConsejos(consejos);
         }
 
-        // Guardar cambios
-        plantaRepository.save(existingPlanta);
+        // Guardar la planta con las relaciones actualizadas
+        plantaRepository.save(planta);
 
-        return convertToDto(existingPlanta); // usa el mismo método que en get
+        // Mapear la entidad modificada al DTO de salida
+        PlantaOutDto plantaOutDto = modelMapper.map(planta, PlantaOutDto.class);
+
+        // Asegurar que los IDs de plagas y consejos estén presentes en el DTO de salida
+        plantaOutDto.setPlagaIds(
+                planta.getPlagas() != null ?
+                        planta.getPlagas().stream().map(Plaga::getIdPlaga).collect(Collectors.toList()) :
+                        new ArrayList<>());
+
+        plantaOutDto.setConsejoIds(
+                planta.getConsejos() != null ?
+                        planta.getConsejos().stream().map(Consejo::getIdConsejo).collect(Collectors.toList()) :
+                        new ArrayList<>());
+
+        return plantaOutDto;
     }
-
 
 
     //BORRA PLANTA POR ID ***********************

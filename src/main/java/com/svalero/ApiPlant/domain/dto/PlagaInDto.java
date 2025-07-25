@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -23,5 +25,6 @@ public class PlagaInDto {
     @NotNull (message = "Letality is required")
     private boolean esLetal;
     private String tratamiento;
+    private List<Long> plantaIds;
 
 }

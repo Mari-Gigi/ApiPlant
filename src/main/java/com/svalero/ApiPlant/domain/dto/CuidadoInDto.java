@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class CuidadoInDto {
     private String sustrato;
     @Max(value = 100)
     private float humedad;
+    private List<Long> plantaIds;
 
 }
 

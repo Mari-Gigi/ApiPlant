@@ -53,15 +53,16 @@ public class CuidadoController {
     }
 
 
-    @PostMapping ("/cuidados")
-    public ResponseEntity <Cuidado> addCuidado (@RequestBody Cuidado cuidado) {
-        Cuidado newCuidado = cuidadoService.add(cuidado);
-        return new ResponseEntity<>(newCuidado, HttpStatus.CREATED);
+    @PostMapping("/cuidados")
+    public ResponseEntity<CuidadoOutDto> addCuidado(@RequestBody CuidadoInDto cuidadoInDto) {
+        CuidadoOutDto nuevoCuidado = cuidadoService.addCuidado(cuidadoInDto);
+        return new ResponseEntity<>(nuevoCuidado, HttpStatus.CREATED);
     }
 
-//REVISAR ********************
+
+
     @PutMapping("/cuidados/:cuidadoId")
-    public ResponseEntity<CuidadoOutDto> modifyCuidado (long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado) throws  CuidadoNotFoundException {
+    public ResponseEntity<CuidadoOutDto> modifyCuidado (long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado) throws  CuidadoNotFoundException, CuidadoConflictException {
         CuidadoOutDto modifiedCuidado = cuidadoService.modify(cuidadoId, cuidado);
         return new ResponseEntity<>(modifiedCuidado, HttpStatus.NOT_FOUND);
     }
@@ -73,9 +74,9 @@ public class CuidadoController {
             cuidadoService.remove(cuidadoId);
             return ResponseEntity.noContent().build();
         } catch (CuidadoConflictException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (CuidadoNotFoundException e) {
-            return ResponseEntity.notFound().build(); // 404
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -90,7 +91,7 @@ public class CuidadoController {
 
     @ExceptionHandler(CuidadoConflictException.class)
     public ResponseEntity<String> handleCuidadoConflictException(CuidadoConflictException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // ← Aquí el 409
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(PlantaNotFoundException.class)
