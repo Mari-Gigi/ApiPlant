@@ -3,7 +3,7 @@ package com.svalero.ApiPlant.exception;
 public class ConsejoNotFoundException extends Exception {
 
     public ConsejoNotFoundException() {
-        super ("Advice does not exist");
+        super ();
     }
 
     public ConsejoNotFoundException(String message){

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -29,7 +31,7 @@ public class PlagaService {
     private ModelMapper modelMapper;
 
     //MUESTRA PLAGAS CON FILTROS **************************
-    public List<Plaga> getAll(String nombre, Float riesgo, Boolean esLetal) {
+    public List<PlagaOutDto> getAll(String nombre, Float riesgo, Boolean esLetal) throws PlagaNotFoundException {
         List<Plaga> plagaList;
 
         boolean nombreVacio = (nombre == null || nombre.isEmpty());
@@ -54,8 +56,17 @@ public class PlagaService {
             plagaList = plagaRepository.findByNombreContainingIgnoreCaseAndRiesgoAndEsLetal(nombre, riesgo, esLetal);
         }
 
-        return modelMapper.map(plagaList, new TypeToken<List<Plaga>>() {
-        }.getType());
+        if (plagaList.isEmpty()) { throw new PlagaNotFoundException(); }
+        return plagaList.stream().map(plaga -> {
+            PlagaOutDto dto = modelMapper.map(plaga, PlagaOutDto.class);
+            List<Long> plantaIds = Optional.ofNullable(plaga.getPlantas())
+                    .orElseGet(Collections::emptyList)
+                    .stream()
+                    .map(Planta::getId_planta)
+                    .toList();
+            dto.setPlantaIds(plantaIds);
+            return dto;
+        }).toList();
     }
 
     //MUESTRA PLAGAS POR ID CON OUTDTO ********************************
@@ -85,6 +96,7 @@ public class PlagaService {
 
     //AÑADE PLAGA CON INDTO *******************************
     public Plaga add(PlagaInDto plagaInDto) {
+
         Plaga plaga = modelMapper.map(plagaInDto, Plaga.class);
         plaga.setFechaRegistro(LocalDate.now());
 
@@ -93,51 +105,60 @@ public class PlagaService {
     }
 
     //MODIFICA PLAGA POR ID CON OUTDTO *******************
-    public PlagaOutDto modify(long idPlaga, PlagaInDto plagaInDto) throws PlagaNotFoundException {
-        Plaga plaga = plagaRepository.findById(idPlaga)
-                .orElseThrow(PlagaNotFoundException::new);
 
-        modelMapper.map(plagaInDto, plaga);
+    public PlagaOutDto modify(long idPlaga, PlagaInDto dto) throws PlagaNotFoundException, PlantaNotFoundException {
+        // Buscar la plaga por ID, lanzar excepción si no existe
+        Plaga plaga = plagaRepository.findById(idPlaga).orElseThrow(PlagaNotFoundException::new);
 
-        // Actualización de la lista de plantas (añadir o eliminar)
-        if (plagaInDto.getPlantaIds() != null && !plagaInDto.getPlantaIds().isEmpty()) {
-            List<Planta> plantas = StreamSupport
-                    .stream(plantaRepository.findAllById(plagaInDto.getPlantaIds()).spliterator(), false)
-                    .collect(Collectors.toList());
-            plaga.setPlantas(plantas);
-        } else {
-            plaga.setPlantas(new ArrayList<>()); // elimina asociaciones si se envía vacío
+        // Copiar los campos del DTO a la entidad Plaga
+        modelMapper.map(dto, plaga);
+
+        // Eliminar la relación actual con las plantas (en ambos sentidos)
+        if (plaga.getPlantas() != null)
+            plaga.getPlantas().forEach(p -> p.getPlagas().remove(plaga));
+
+        // Obtener la lista de IDs enviada (si hay)
+        List<Long> plantaIds = Optional.ofNullable(dto.getPlantaIds()).orElse(List.of());
+
+        // Cargar las nuevas plantas desde la base de datos y asociarlas a la plaga
+        List<Planta> nuevasPlantas = StreamSupport
+                .stream(plantaRepository.findAllById(plantaIds).spliterator(), false)
+                .peek(p -> p.getPlagas().add(plaga))  // Relación bidireccional
+                .collect(Collectors.toList());
+
+        // Verificar si todos los IDs de plantas enviados existen
+        if (nuevasPlantas.size() != plantaIds.size()) {
+            List<Long> encontrados = nuevasPlantas.stream().map(Planta::getId_planta).toList();
+            List<Long> faltantes = plantaIds.stream().filter(id -> !encontrados.contains(id)).toList();
+            throw new PlantaNotFoundException("No se encontraron plantas con IDs: " + faltantes);
         }
 
+        // Asignar las nuevas plantas a la plaga
+        plaga.setPlantas(nuevasPlantas);
+
+        // Guardar los cambios en la base de datos
         plagaRepository.save(plaga);
 
-        // Convertir a OutDto y rellenar IDs
-        PlagaOutDto plagaOutDto = modelMapper.map(plaga, PlagaOutDto.class);
+        // Convertir la plaga modificada a DTO de salida
+        PlagaOutDto out = modelMapper.map(plaga, PlagaOutDto.class);
+        out.setPlantaIds(nuevasPlantas.stream().map(Planta::getId_planta).toList());
 
-        if (plaga.getPlantas() != null) {
-            List<Long> plantaIds = plaga.getPlantas().stream()
-                    .map(Planta::getId_planta)
-                    .collect(Collectors.toList());
-            plagaOutDto.setPlantaIds(plantaIds);
-        } else {
-            plagaOutDto.setPlantaIds(new ArrayList<>());
-        }
-
-        return plagaOutDto;
+        return out;
     }
+
 
 
     //BORRA PLAGA POR ID ********************************
     public void remove(long idPlaga) throws PlagaNotFoundException, PlagaConflictException {
-        plagaRepository.findById(idPlaga)
-                .orElseThrow(PlagaNotFoundException::new);
+
+        plagaRepository.findById(idPlaga).orElseThrow(PlagaNotFoundException::new);
         List<Planta> plantasConPlaga = plantaRepository.findByPlagas_IdPlaga(idPlaga);
 
-        if (!plantasConPlaga.isEmpty()) {
-            throw new PlagaConflictException("plant-associated pest");
-        }
+        if (!plantasConPlaga.isEmpty()) { throw new PlagaConflictException();}
 
         plagaRepository.deleteById(idPlaga);
     }
 
 }
+
+

@@ -1,6 +1,7 @@
 package com.svalero.ApiPlant.controller;
 
 import com.svalero.ApiPlant.domain.Consejo;
+import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.service.ConsejoService;
@@ -9,13 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class ConsejoController {
@@ -24,13 +29,22 @@ public class ConsejoController {
     private ConsejoService consejoService;
 
     @GetMapping("/consejos")
-    public ResponseEntity<List<Consejo>> getAll(
+    public ResponseEntity<List<ConsejoOutDto>> getAll(
             @RequestParam(value = "titulo", defaultValue = "") String titulo,
             @RequestParam(value = "verificado", required = false) Boolean verificado,
-            @RequestParam(value = "importancia", required = false) Float importancia) {
+            @RequestParam(value = "importancia", required = false) Float importancia,  /*la Exc que devuelve es de tipo 404 xq no convierte bien el float*/
+            @RequestParam Map<String, String> allParams) throws ConsejoNotFoundException {
 
-        return new ResponseEntity<>(consejoService.getAll(titulo, verificado, importancia), HttpStatus.OK);
-    }
+            Set<String> validParams = Set.of("titulo", "verificado", "importancia");
+            for (String param : allParams.keySet()) {
+                if (!validParams.contains(param)) {
+                    throw new InvalidParameterException("Parámetro inválido: " + param);
+                }
+            }
+
+            return new ResponseEntity<>(consejoService.getAll(titulo, verificado, importancia), HttpStatus.OK);
+        }
+
 
     @GetMapping("/consejos/:consejoId")
     public ResponseEntity <ConsejoOutDto> getConsejo(long consejoId) throws ConsejoNotFoundException {
@@ -40,45 +54,46 @@ public class ConsejoController {
 
 
     @PostMapping("/consejos")
-    public ResponseEntity <Consejo> addConsejo (@RequestBody ConsejoInDto consejoInDto) {
+    public ResponseEntity <Consejo> addConsejo (@Valid @RequestBody ConsejoInDto consejoInDto) {
         Consejo consejo = consejoService.add(consejoInDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(consejoService.add(consejoInDto));
     }
 
+
+
     @PutMapping("/consejos/:consejoId")
-    public ResponseEntity<ConsejoOutDto> modifyConsejo(long consejoId, @Valid @RequestBody ConsejoInDto consejo) throws  ConsejoNotFoundException {
+    public ResponseEntity<ConsejoOutDto> modifyConsejo(long consejoId, @Valid @RequestBody ConsejoInDto consejo) throws  ConsejoNotFoundException, PlantaNotFoundException {
         ConsejoOutDto modifiedConsejo = consejoService.modify(consejoId, consejo);
-        return new ResponseEntity<>(modifiedConsejo, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(modifiedConsejo, HttpStatus.OK);
     }
 
 
     @DeleteMapping("/consejos/:consejoId")
-    public ResponseEntity<Void> removeConsejo(long consejoId) {
-        try {
+    public ResponseEntity<Void> removeConsejo(long consejoId) throws ConsejoNotFoundException, ConsejoConflictException {
             consejoService.remove(consejoId);
-            return ResponseEntity.noContent().build();
-        } catch (ConsejoConflictException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (ConsejoNotFoundException e) {
-            return ResponseEntity.notFound().build(); // 404
-        }
+        return ResponseEntity.noContent().build();
     }
+
 
 //CONTROL DE EXCEPCIONES ******************
 
     @ExceptionHandler(ConsejoNotFoundException.class)
-    public ResponseEntity<String> handleConsejoNotFoundException(ConsejoNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleConsejoNotFoundException(ConsejoNotFoundException ex) {
+        ErrorResponse error = ErrorResponse.generalError(404, "Consejo no encontrado con esos parámetros");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
 
     @ExceptionHandler(ConsejoConflictException.class)
-    public ResponseEntity<String> handleConsejoNotFoundException(ConsejoConflictException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponse> handleConsejoNotFoundException(ConsejoConflictException ex) {
+        ErrorResponse error = ErrorResponse.generalError(409, "Consejo asociado a una planta.");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(PlantaNotFoundException.class)
-    public ResponseEntity<String> handlePlantaNotFoundException(PlantaNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler (PlantaNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlantaNotFoundException(PlantaNotFoundException exception) {
+        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
 
@@ -93,6 +108,30 @@ public class ConsejoController {
 
         return new ResponseEntity<>(ErrorResponse.validationError(errors), HttpStatus.BAD_REQUEST);
     }
+
+    // 400 para cuerpos (json) mal especificados
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        ErrorResponse error = ErrorResponse.generalError(400, "Json inválido o mal especificado.");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // 400 para parametros mal especificados (query)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String message = String.format("El parámetro '%s' tiene un valor inválido: %s", paramName, ex.getValue());
+        ErrorResponse error = ErrorResponse.generalError(400, message);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // 500 (meter el nombre del query parametro mal y peta)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception) {
+        ErrorResponse error = ErrorResponse.generalError(500, "Error interno del servidor.");
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }
 

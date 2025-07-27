@@ -3,7 +3,7 @@ package com.svalero.ApiPlant.exception;
 public class PlagaNotFoundException extends Exception {
 
     public PlagaNotFoundException() {
-        super ("Pest does not exist");
+        super ();
     }
 
     public PlagaNotFoundException(String message){

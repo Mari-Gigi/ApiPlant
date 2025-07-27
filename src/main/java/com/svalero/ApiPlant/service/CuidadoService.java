@@ -39,7 +39,7 @@ public class CuidadoService {
     private ModelMapper modelMapper;
 
     // MUESTRA CUIDADOS CON FILTROS ***********************
-    public List<Cuidado> getAll(String riego, String sustrato, Boolean esInterior) {
+    public List<Cuidado> getAll(String riego, String sustrato, Boolean esInterior) throws CuidadoNotFoundException {
         List<Cuidado> cuidadoList;
 
         boolean riegoVacio = (riego == null || riego.isEmpty());
@@ -68,14 +68,14 @@ public class CuidadoService {
                     .collect(Collectors.toList());
         }
 
+        if (cuidadoList.isEmpty()) { throw new CuidadoNotFoundException(); }
         return modelMapper.map(cuidadoList, new TypeToken<List<Cuidado>>() {}.getType());
     }
 
 
     //MUESTRA CUIDADOS POR ID CON OUTDTO ********************************
     public CuidadoOutDto get(long idCuidado) throws CuidadoNotFoundException {
-        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
-                .orElseThrow(CuidadoNotFoundException::new);
+        Cuidado cuidado = cuidadoRepository.findById(idCuidado).orElseThrow(CuidadoNotFoundException::new);
 
         CuidadoOutDto dto = new CuidadoOutDto();
         dto.setIdCuidado(cuidado.getIdCuidado());
@@ -94,17 +94,11 @@ public class CuidadoService {
         return dto;
     }
 
-    // AÑADE CUIDADO CON INDTO ***********************
-  /*public Cuidado add(Cuidado cuidado) {
-        cuidado.setFechaRegistro(LocalDate.now());
-        return cuidadoRepository.save(cuidado);
-
-    }*/
 
     public CuidadoOutDto  addCuidado(CuidadoInDto dto) {
         Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
         cuidado.setFechaRegistro(LocalDate.now());
-        // Aquí puedes manejar relaciones con plantas, validaciones, etc.
+
         Cuidado saved = cuidadoRepository.save(cuidado);
         return modelMapper.map(saved, CuidadoOutDto.class);
     }
@@ -155,12 +149,11 @@ public class CuidadoService {
 
     //BORRA CUIDADO POR ID CON REVISION DE CONFLICTO CON PLANTA **********************
     public void remove(Long idCuidado) throws CuidadoNotFoundException, CuidadoConflictException {
-        cuidadoRepository.findById(idCuidado)
-                .orElseThrow(CuidadoNotFoundException::new);
+        cuidadoRepository.findById(idCuidado).orElseThrow(CuidadoNotFoundException::new);
         List<Planta> plantasConCuidado = plantaRepository.findByCuidado_IdCuidado(idCuidado);
 
         if (!plantasConCuidado.isEmpty()) {
-            throw new CuidadoConflictException("plant-associated care");
+            throw new CuidadoConflictException();
         }
 
         cuidadoRepository.deleteById(idCuidado);

@@ -14,16 +14,18 @@ import java.util.List;
 
 public class PlantaInDto {
 
-    @NotNull (message = "Genre is required")
+    @NotNull (message = "El género es obligatorio")
     private String genero;
-    @NotNull (message = "Species is required")
+    @NotNull (message = "La especie es obligatoria")
     private String especie;
-    @NotNull (message = "Toxicity is required")
+    @NotNull (message = "La toxicidad es obligatoria")
     private Boolean esToxica;
-    @Min(value = 0, message = "Must be greater than 0")
+    @Min(value = 0, message = "Debe ser mayor que 0.")
     private float alturaMaxima;
     private String tipoCrecimiento;
+    @NotNull(message = "cuidadoId es obligatorio")
     private long cuidadoId;
+    @NotNull(message = "categoriaId es obligatorio")
     private long categoriaId;
     private List<Long> plagaIds;
     private List<Long> consejoIds;

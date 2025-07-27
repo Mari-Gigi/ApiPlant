@@ -15,14 +15,14 @@ import java.util.List;
 
 public class CategoriaInDto {
 
-    @NotNull(message = "Nombre is required")
+    @NotNull(message = "El nombre es obligatorio")
     private String nombre;
-    @NotNull(message = "Description is required")
+    @NotNull(message = "Descripción obligatoria")
     private String descripcion;
-    @Min(value = 1, message = "Must be between 1 and 10")
-    @Max(value = 10, message = "Must be between 1 and 10")
-    private float nivelDificultad;
-    private boolean paraPincipiantes;
+    @Min(value = 0, message = "Debe estar entre 0 y 10")
+    @Max(value = 10, message = "Debe estar entre 0 y 10")
+    private Float nivelDificultad;
+    private Boolean paraPrincipiantes;
     private List<Long> plantaIds;
 
 

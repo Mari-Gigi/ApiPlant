@@ -2,7 +2,6 @@ package com.svalero.ApiPlant.controller;
 
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
-import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.service.PlantaService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -10,13 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class PlantaController {
@@ -32,12 +35,22 @@ public class PlantaController {
     public ResponseEntity<List<PlantaOutDto>> getAll(
             @RequestParam(value = "genero", defaultValue = "") String genero,
             @RequestParam(value = "especie", defaultValue = "") String especie,
-            @RequestParam(value = "esToxica", required = false) Boolean esToxica) {
+            @RequestParam(value = "esToxica", required = false) Boolean esToxica,
+            @RequestParam Map<String, String> allParams) throws PlantaNotFoundException {
 
-            return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
-     }
+            Set<String> validParams = Set.of("genero", "especie", "esToxica");
+            for (String param : allParams.keySet()) {
+                if (!validParams.contains(param)) {
+                    throw new InvalidParameterException("Parámetro inválido: " + param);
+                }
+            }
 
-    @GetMapping("/plantas/:plantaId")  //recoge la planta por id y devuelve Ok si la encuentra
+        return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/plantas/:plantaId")
     public ResponseEntity <PlantaOutDto> getPlanta(long plantaId) throws PlantaNotFoundException {
         PlantaOutDto plantaOutDto = plantaService.get(plantaId);
         return new ResponseEntity<>(plantaOutDto, HttpStatus.OK);
@@ -53,12 +66,11 @@ public class PlantaController {
 
 
     @PutMapping("/plantas/:plantaId")
-    public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @RequestBody @Valid PlantaInDto plantaInDto)
+    public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @Valid @RequestBody PlantaInDto plantaInDto)
             throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
         PlantaOutDto updatedPlanta = plantaService.modify(plantaId, plantaInDto);
         return ResponseEntity.ok(updatedPlanta);
     }
-
 
 
     @DeleteMapping ("/plantas/:plantaId")
@@ -70,27 +82,27 @@ public class PlantaController {
 
 //CONTROL DE EXCEPCIONES ****************
 
-    @ExceptionHandler (PlantaNotFoundException.class) //Es un gestor de excepciones. Si encuentra PlantaNotFoundException generado por el removePlanta, lanzará un Not Found
+    @ExceptionHandler (PlantaNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlantaNotFoundException(PlantaNotFoundException exception) {
-        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        ErrorResponse error = ErrorResponse.generalError(404, "Planta no encontrada con esos parámetros.");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler  (CuidadoNotFoundException.class)//Es un gestor de excepciones. Si encuentra CuidadoNotFoundException generado por el removePlanta, lanzará un Not Found
+    @ExceptionHandler  (CuidadoNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCuidadoNotFoundException(CuidadoNotFoundException exception) {
-        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        ErrorResponse error = ErrorResponse.generalError(404, "Cuidado no encontrada con esos parámetros.");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler  (CategoriaNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCategoriaNotFoundException(CategoriaNotFoundException exception) {
-        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        ErrorResponse error = ErrorResponse.generalError(404,"Categoría no encontrada con esos parámetros.");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler  (PlagaNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlagaNotFoundException(PlagaNotFoundException exception) {
-        ErrorResponse error = ErrorResponse.generalError(404, exception.getMessage());
+        ErrorResponse error = ErrorResponse.generalError(404, "Plaga no encontrada con esos parámetros.");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
@@ -100,6 +112,7 @@ public class PlantaController {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // 400 para especificaciones que no se cumplen en los dto (los @NotNull)
     @ExceptionHandler (MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> MethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
@@ -111,5 +124,33 @@ public class PlantaController {
 
         return new ResponseEntity<>(ErrorResponse.validationError(errors), HttpStatus.BAD_REQUEST);
     }
+
+    // 400 para cuerpos (json) mal especificados
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        ErrorResponse error = ErrorResponse.generalError(400, "Json inválido o mal especificado.");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // 400 para parametros mal especificados (query)
+   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String message = String.format("El parámetro '%s' tiene un valor inválido: %s", paramName, ex.getValue()); //si hay booleano y pongo kjsdhfjk
+        ErrorResponse error = ErrorResponse.generalError(400, message);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // 500 (meter el nombre del query parametro mal y peta)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception) {
+        ErrorResponse error = ErrorResponse.generalError(500, "Error interno del servidor.");
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
+
+
 
 }
