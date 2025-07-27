@@ -15,14 +15,14 @@ import java.util.List;
 
 public class CuidadoInDto {
 
-    @NotNull(message = "Location is required")
-    private boolean esInterior;
-    @NotNull(message = "Watering frecuency is required")
+    @NotNull(message = "Ubicación es obligatoria")
+    private Boolean esInterior;
+    @NotNull(message = "Frecuencia de riego obligatoria")
     private String riego;
-    @NotNull(message = "Recommended substrate type is required")
+    @NotNull(message = "Sustrato obligatorio")
     private String sustrato;
-    @Max(value = 100)
-    private float humedad;
+    @Max(value = 100, message = "Debe estar entre 0 y 100")
+    private Float humedad;
     private List<Long> plantaIds;
 
 }

@@ -3,7 +3,7 @@ package com.svalero.ApiPlant.exception;
 public class CategoriaConflictException extends RuntimeException {
 
     public CategoriaConflictException() {
-        super ("plant-associated category");
+        super ();
     }
 
     public CategoriaConflictException(String message) {

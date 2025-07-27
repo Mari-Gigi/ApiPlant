@@ -1,10 +1,8 @@
 package com.svalero.ApiPlant.repository;
-
 import com.svalero.ApiPlant.domain.Plaga;
-
 import java.util.List;
 
-import com.svalero.ApiPlant.domain.Planta;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

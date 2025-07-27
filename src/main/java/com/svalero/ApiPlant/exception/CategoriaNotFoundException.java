@@ -3,7 +3,7 @@ package com.svalero.ApiPlant.exception;
 public class CategoriaNotFoundException extends Exception {
 
     public CategoriaNotFoundException() {
-        super ("Category does not exist");
+        super ();
     }
 
     public CategoriaNotFoundException(String message){
