@@ -14,7 +14,8 @@ import java.util.List;
 @Data  //genera getters y setters
 @NoArgsConstructor  //genera metodo constructor vacio
 @AllArgsConstructor  //genera constructor con argumentos para todos los campos de la clase
-@Entity (name="plagas") //nombre de la tabla //Para añadir en H2 tengo introducir el nombre de la tabla y los atributos con "", sino no reconoce
+@Entity
+@Table(name="plagas") //nombre de la tabla //Para añadir en H2 tengo introducir el nombre de la tabla y los atributos con "", sino no reconoce
 
 public class Plaga {
 

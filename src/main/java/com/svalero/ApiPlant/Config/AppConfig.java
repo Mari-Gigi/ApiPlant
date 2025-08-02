@@ -17,33 +17,3 @@ public class AppConfig {
 
 
 
-
-/*
-
-package com.svalero.ApiPlant.Config;
-
-import com.svalero.ApiPlant.domain.Planta;
-import com.svalero.ApiPlant.domain.dto.PlantaInDto;
-import com.svalero.ApiPlant.domain.dto.PlantaOutDto;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class AppConfig {
-
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper mapper = new ModelMapper();
-
-        // Evita el mapeo automático que confunde el idPlanta con otras IDs
-        mapper.typeMap(PlantaInDto.class, Planta.class).addMappings(m -> {
-            m.skip(Planta::setIdPlanta); // Esto evita el conflicto con idPlanta
-        });
-
-        return mapper;
-    }
-}
-*/
-
-

@@ -1,12 +1,9 @@
 package com.svalero.ApiPlant.service;
 
-import com.svalero.ApiPlant.domain.Categoria;
 import com.svalero.ApiPlant.domain.Consejo;
-import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
-import com.svalero.ApiPlant.repository.CategoriaRepository;
 import com.svalero.ApiPlant.repository.ConsejoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
 import org.modelmapper.ModelMapper;
@@ -15,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,7 +30,7 @@ public class ConsejoService {
 
 
     //MUESTRA CONSEJOS CON FILTROS SIN OUTDTO************************
-    public List<Consejo> getAll(String titulo, Boolean verificado, Float importancia) {
+    public List<ConsejoOutDto> getAll(String titulo, Boolean verificado, Float importancia) throws ConsejoNotFoundException{
         List<Consejo> consejoList;
 
         boolean tituloVacio = (titulo == null || titulo.isEmpty());
@@ -57,14 +54,24 @@ public class ConsejoService {
             consejoList = consejoRepository.findByImportanciaAndVerificado(importancia, verificado);
         }
 
-        return consejoList;
+        if (consejoList.isEmpty()) { throw new ConsejoNotFoundException(); }
+
+        // Convertir a DTOs
+        return consejoList.stream().map(consejo -> {
+            ConsejoOutDto dto = modelMapper.map(consejo, ConsejoOutDto.class);
+            dto.setPlantaIds(Optional.ofNullable(consejo.getPlantas())
+                    .orElse(List.of())
+                    .stream()
+                    .map(Planta::getId_planta)
+                    .toList());
+            return dto;
+        }).toList();
     }
 
 
     //MUESTRA CONSEJO POR ID CON OUTDTO *****************
     public ConsejoOutDto get(long idConsejo)throws ConsejoNotFoundException {
-        Consejo consejo = consejoRepository.findById(idConsejo)
-                .orElseThrow(ConsejoNotFoundException::new);
+        Consejo consejo = consejoRepository.findById(idConsejo).orElseThrow(ConsejoNotFoundException::new);
 
         ConsejoOutDto dto = new ConsejoOutDto();
         dto.setIdConsejo(consejo.getIdConsejo());
@@ -96,40 +103,47 @@ public class ConsejoService {
     }
 
 
+
     // MODIFICA CONSEJO POR ID CON OUTDTO *******************
-    public ConsejoOutDto modify(long idConsejo, ConsejoInDto consejoInDto) throws ConsejoNotFoundException {
-        Consejo consejo = consejoRepository.findById(idConsejo)
-                .orElseThrow(ConsejoNotFoundException::new);
+    public ConsejoOutDto modify(long idConsejo, ConsejoInDto dto) throws ConsejoNotFoundException, PlantaNotFoundException {
+        // Buscar el consejo por ID o lanzar excepción
+        Consejo consejo = consejoRepository.findById(idConsejo).orElseThrow(ConsejoNotFoundException::new);
 
-        modelMapper.map(consejoInDto, consejo);
+        // Copiar los campos del DTO a la entidad Consejo
+        modelMapper.map(dto, consejo);
 
-        // Actualización de la lista de plantas (añadir o eliminar)
-        if (consejoInDto.getPlantaIds() != null && !consejoInDto.getPlantaIds().isEmpty()) {
-            List<Planta> plantas = StreamSupport
-                    .stream(plantaRepository.findAllById(consejoInDto.getPlantaIds()).spliterator(), false)
-                    .collect(Collectors.toList());
-            consejo.setPlantas(plantas);
-        } else {
-            consejo.setPlantas(new ArrayList<>()); // elimina asociaciones si se envía vacío
+        // Eliminar relaciones antiguas con plantas (bidireccional)
+        if (consejo.getPlantas() != null)
+            consejo.getPlantas().forEach(p -> p.getConsejos().remove(consejo));
+
+        // Obtener la lista de plantaIds enviada (si existe)
+        List<Long> plantaIds = Optional.ofNullable(dto.getPlantaIds()).orElse(List.of());
+
+        // Cargar nuevas plantas desde BD y asociarlas al consejo
+        List<Planta> nuevasPlantas = StreamSupport
+                .stream(plantaRepository.findAllById(plantaIds).spliterator(), false)
+                .peek(p -> p.getConsejos().add(consejo)) // Relación bidireccional
+                .collect(Collectors.toList());
+
+        // Verificar si todos los plantaIds existen
+        if (nuevasPlantas.size() != plantaIds.size()) {
+            List<Long> encontrados = nuevasPlantas.stream().map(Planta::getId_planta).toList();
+            List<Long> faltantes = plantaIds.stream().filter(id -> !encontrados.contains(id)).toList();
+            throw new PlantaNotFoundException("No se encontraron plantas con IDs: " + faltantes);
         }
 
+        // Asociar las nuevas plantas al consejo
+        consejo.setPlantas(nuevasPlantas);
+
+        // Guardar los cambios
         consejoRepository.save(consejo);
 
-        // Convertir a OutDto y rellenar IDs
-        ConsejoOutDto consejoOutDto = modelMapper.map(consejo, ConsejoOutDto.class);
+        // Convertir a DTO de salida y añadir los IDs de planta
+        ConsejoOutDto out = modelMapper.map(consejo, ConsejoOutDto.class);
+        out.setPlantaIds(nuevasPlantas.stream().map(Planta::getId_planta).toList());
 
-        if (consejo.getPlantas() != null) {
-            List<Long> plantaIds = consejo.getPlantas().stream()
-                    .map(Planta::getId_planta)
-                    .collect(Collectors.toList());
-            consejoOutDto.setPlantaIds(plantaIds);
-        } else {
-            consejoOutDto.setPlantaIds(new ArrayList<>());
-        }
-
-        return consejoOutDto;
+        return out;
     }
-
 
 
     //BORRA CATEGORIA CON REVISION DE CONFLICTO CON PLANTA ****************************

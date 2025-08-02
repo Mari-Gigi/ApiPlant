@@ -16,14 +16,14 @@ import java.util.List;
 
 public class PlagaInDto {
 
-    @NotNull(message = "Name is required")
+    @NotNull(message = "Nombre obligatorio")
     private String nombre;
     private String sintomas;
-    @Min(value = 1, message = "Must be between 1 and 10")
-    @Max(value = 10, message = "Must be between 1 and 10")
-    private float riesgo;
-    @NotNull (message = "Letality is required")
-    private boolean esLetal;
+    @Min(value = 0, message = "Debe estar entre 0 y 10")
+    @Max(value = 10, message = "Debe estar entre 0 y 10")
+    private Float riesgo;
+    @NotNull (message = "Letalidad obligatoria")
+    private Boolean esLetal;
     private String tratamiento;
     private List<Long> plantaIds;
 

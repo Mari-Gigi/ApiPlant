@@ -1,6 +1,7 @@
 package com.svalero.ApiPlant.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,6 @@ public class Planta {
     private LocalDate fechaRegistro;
     @Column (name="toxicidad")
     private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
-
 
 
 

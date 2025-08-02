@@ -3,7 +3,7 @@ package com.svalero.ApiPlant.exception;
 public class CuidadoNotFoundException extends Exception {
 
     public CuidadoNotFoundException() {
-        super ("Care does not exist");
+        super ();
     }
 
     public CuidadoNotFoundException(String message){
