@@ -397,3 +397,51 @@ Consider defining a bean of type 'org.slf4j.Logger' in your configuration.
 2025-08-02 16:02:24,231 INFO c.s.A.c.PlantaController {getAll} [http-nio-8080-exec-5] END getAll
 2025-08-02 16:02:35,989 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-3] BEGIN getById
 2025-08-02 16:02:35,997 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-3] END getById
+2025-08-02 16:48:09,158 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 16:48:09,208 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 24280 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 16:48:09,212 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 16:48:09,635 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 16:48:09,682 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 40 ms. Found 5 JPA repository interfaces.
+2025-08-02 16:48:10,087 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 16:48:10,137 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 16:48:10,137 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 892 ms
+2025-08-02 16:48:10,245 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 16:48:10,279 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 16:48:10,304 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 16:48:10,492 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 16:48:10,516 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 16:48:10,694 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 16:48:10,696 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 16:48:10,713 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 16:48:10,735 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 16:48:11,468 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 16:48:11,512 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 16:48:11,520 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CategoriaController.logger
+2025-08-02 16:48:11,770 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.ConsejoController.logger
+2025-08-02 16:48:11,787 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CuidadoController.logger
+2025-08-02 16:48:11,801 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlagaController.logger
+2025-08-02 16:48:11,816 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlantaController.logger
+2025-08-02 16:48:11,841 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 16:48:12,044 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 16:48:12,084 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 16:48:12,105 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 16:48:12,115 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.261 seconds (process running for 3.461)
+2025-08-02 16:53:13,149 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 16:53:13,149 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 16:53:13,151 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-08-02 16:53:13,252 INFO c.s.A.c.CuidadoController {addCuidado} [http-nio-8080-exec-1] BEGIN addCuidado
+2025-08-02 16:53:13,323 INFO c.s.A.c.CuidadoController {addCuidado} [http-nio-8080-exec-1] END addCuidado
+2025-08-02 16:53:28,124 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-8] BEGIN deleteCuidado
+2025-08-02 16:53:28,221 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-8] END deleteCuidado
+2025-08-02 16:53:33,010 INFO c.s.A.c.ConsejoController {getAll} [http-nio-8080-exec-2] BEGIN getAll
+2025-08-02 16:53:33,010 INFO c.s.A.c.ConsejoController {getAll} [http-nio-8080-exec-2] END getAll
