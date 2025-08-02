@@ -95,9 +95,17 @@ public class CuidadoService {
     }
 
 
-    public CuidadoOutDto  addCuidado(CuidadoInDto dto) {
+    public CuidadoOutDto  addCuidado(CuidadoInDto dto)  throws PlantaNotFoundException{
         Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
         cuidado.setFechaRegistro(LocalDate.now());
+
+        // Mapear manualmente los IDs a entidades
+        if (dto.getPlantaIds() != null) {
+            List<Planta> plantas = dto.getPlantaIds().stream()
+                    .map(id -> plantaRepository.findById(id).orElseThrow(PlantaNotFoundException::new))
+                    .collect(Collectors.toList());
+            cuidado.setPlantas(plantas);
+        }
 
         Cuidado saved = cuidadoRepository.save(cuidado);
         return modelMapper.map(saved, CuidadoOutDto.class);

@@ -9,23 +9,28 @@ tags:
     description: Operaciones con plantas
   - name: cuidados
     description: Operaciones con cuidados
+  - name: categorias
+    description: Operaciones con categorias
+  - name: plagas
+    description: Operaciones con plagas
+  - name: consjeos
+    description: Operaciones con consejos
 
 servers:
   - url: 'https://apiplant.com'
 
-paths:
-
-  /plantas:
+paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
+  /plantas: #parametro para el get             ###################################################################################################
     get:
       tags:
         - plantas
       summary: Obtención de un listado de plantas
       description: Devuelve una lista completa de todas las plantas registradas en la Api. 
-                  Admite la posibilidad de aplicar filtros de búsqueda (género, especie o toxicidad).
-      parameters:
+                  Admite filtros opcionales (género, especie o toxicidad).
+      parameters: # son Query porque hay que pasarlos en la URL para aplicar los filtros. Son opcionales
         - name: genero
           in: query
-          description: filtro por genero de planta.
+          description: filtro por género de planta.
           required: false
           schema:
             type: string
@@ -41,7 +46,6 @@ paths:
           required: false
           schema:
             type: boolean
-
       responses:
         '200':
           description: OK
@@ -49,31 +53,65 @@ paths:
             application/json:
               schema:
                 type: array
-        '404':
-          description: Not Found
+                items:
+                  $ref: '#/components/schemas/PlantaOutDto'
+        '400': #PONIENDO UN XXX EN EL VALOR DEL BOOLEANO
+          description:  El parámetro tiene un valor inválido
           content:
-            aplication/json:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404': #PONIENDO UN XXX EN EL VALOR PATH DE LA URL
+          description: Planta no encontrada con esos parámetros
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+        '500': #PONIENDO UN XXX EN EL NOMBRE DEL QUERY
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - plantas
+      summary: Crear una planta nueva.
+      description: Añadir una planta nueva con parámetro obligatorios.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantaInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlantaOutDto'
         '400':
           description: Bad Request
           content:
-            aplication/json:
+            application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerError'
+                $ref: '#/components/schemas/BadRequest'
         '500':
-          description: Internal Server Error
+          description: Error interno del servidor
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 
-
-  /plantas/{plantaId}:
+  /plantas/{plantaId}:            ###################################################################################################
     get:
       tags:
         - plantas
-      summary: Obtención de una planta concreta
+      summary: Obtención de una planta concreta por su Id
       description: Devuelve una planta concreta buscándola a través de su Id.
       parameters:
         - name: plantaId
@@ -90,31 +128,32 @@ paths:
             application/json:
               schema:
                 type: array
-        '404':
-          description: Not Found
+                items:
+                  $ref: '#/components/schemas/PlantaOutDto'
+        '400': #NO PONIENDO UN VALOR DE PLANTAID ERRONEO
+          description: El parámetro tiene un valor inválido
           content:
-            aplication/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-        '400':
-          description: Bad Request
-          content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-        '500':
-          description: Internal Server Error
+        '404': #PONIENDO UN PARAMETRO PLANTAID QUE NO EXISTA
+          description: Planta no encontrada con esos parámetros
           content:
-            aplication/json:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500': #PONIENDO UN XXX EN EL NOMBRE DEL PARAMETRO PLANTAID
+          description: Error interno del servidor
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
-
 
     put:
       tags:
         - plantas
-      summary: Modificación de una planta.
-      description: Modificación y registro de atributos de la una planta concreta encontrada a través de su Id.
+      summary: Modificación de una planta existente.
+      description: Modificación y nuevo registro de una planta a través de su Id.
       parameters:
         - name: plantaId
           in: path
@@ -125,6 +164,7 @@ paths:
             format: int64
       requestBody:
         description: Nuevos detalles de la planta
+        required: true
         content:
           application/json:
             schema:
@@ -135,31 +175,94 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PlantaOutDto'
-        '400':
-          description: Bad Request
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlantaOutDto'
+        '400': #NO PONIENDO UN VALOR DE PLANTAID ERRONEO
+          description: El parámetro tiene un valor inválido
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-        '404':
-          description: Not Found
+        '404': #PONIENDO UN PARAMETRO PLANTAID QUE NO EXISTA
+          description: Planta no encontrada con esos parámetros
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-        '500':
-          description: Internal Server Error
+        '500': #PONIENDO UN XXX EN EL NOMBRE DEL PARAMETRO PLANTAID
+          description: Error interno del servidor
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 
     delete:
       tags:
         - plantas
-      summary: Borrar planta por ID
+      summary: Eliminar planta por ID
       description: Eliminación de una planta a través de su Id y actualización del listado completo de plantas.
+      parameters:
+        - name: plantaId
+          in: path
+          description: identificador de la planta
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlantaOutDto'
+        '400': #NO PONIENDO UN VALOR DE PLANTAID ERRONEO
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404': #PONIENDO UN PARAMETRO PLANTAID QUE NO EXISTA
+          description: Planta no encontrada con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500': #PONIENDO UN XXX EN EL NOMBRE DEL PARAMETRO PLANTAID
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /cuidados:            ###################################################################################################
+    get:
+      tags:
+        - cuidados
+      summary: Obtención de un listado de cuidados
+      description: Devuelve una lista de todos los cuidados registrados en la API. Se pueden aplicar filtros opcionales.
+      parameters:
+        - name: riego
+          in: query
+          description: Filtro por tipo o frecuencia de riego
+          required: false
+          schema:
+            type: string
+        - name: sustrato
+          in: query
+          description: Filtro por tipo de sustrato
+          required: false
+          schema:
+            type: string
+        - name: esInterior
+          in: query
+          description: Filtro para indicar si el cuidado es de interior
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: Ok
@@ -167,71 +270,824 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  $ref: '#/components/schemas/CuidadoOutDto'
         '400':
-          description: Bad Request
+          description: El parámetro tiene un valor inválido
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
         '404':
-          description: Not Found
+          description: Cuidado no encontrado con esos parámetros
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
         '500':
-          description: Internal Server Error
+          description: Error interno del servidor
           content:
-            aplication/json:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - cuidados
+      summary: Crear un nuevo cuidado
+      description: Registra un nuevo cuidado para plantas en la base de datos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CuidadoInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuidadoOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 
 
-  /cuidados/{cuidadoId}/plantas:
-    post:
+  /cuidados/{cuidadoId}:            ###################################################################################################
+    get:
       tags:
-        - plantas
-      summary: Añadir planta con id de cuidado como campo obligatorio.
-      description: Añadir una planta a través de un Id y actualización del listado completo de plantas.
+        - cuidados
+      summary: Obtener un cuidado específico por ID
+      description: Devuelve la información detallada del cuidado indicado por su identificador único.
       parameters:
         - name: cuidadoId
           in: path
-          description: identificador de la cuidado de la planta
           required: true
+          description: ID del cuidado a consultar
           schema:
-            type: number
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuidadoOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '404':
+          description: Cuidado no encontrado con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - cuidados
+      summary: Modificar un cuidado existente
+      description: Actualiza los datos de un cuidado identificado por su ID.
+      parameters:
+        - name: cuidadoId
+          in: path
+          required: true
+          description: ID del cuidado a modificar
+          schema:
+            type: integer
             format: int64
       requestBody:
-        description: Nueva planta
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PlantaInDto'
+              $ref: '#/components/schemas/CuidadoInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuidadoOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Cuidado no encontrado con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Cuidado asociado a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - cuidados
+      summary: Eliminar un cuidado
+      description: Elimina un cuidado por su ID, siempre que no esté asociado a plantas.
+      parameters:
+        - name: cuidadoId
+          in: path
+          required: true
+          description: ID del cuidado a eliminar
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Cuidado no encontrado con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Cuidado asociado a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /categorias:            ###################################################################################################
+    get:
+      tags:
+        - categorias
+      summary: Obtención de listado de categorías
+      parameters:
+        - name: nombre
+          in: query
+          description: Filtrar por nombre
+          schema:
+            type: string
+          required: false
+        - name: nivelDificultad
+          in: query
+          description: Filtrar por nivel de dificultad
+          schema:
+            type: number
+            format: float
+          required: false
+        - name: paraPrincipiantes
+          in: query
+          description: Filtrar si es para principiantes
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoriaOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Categoría no encontrada con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - categorias
+      summary: Crear nueva categoría
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaInDto'
       responses:
         '201':
           description: Ok
           content:
             application/json:
               schema:
-                type: array
+                $ref: '#/components/schemas/CategoriaOutDto'
         '400':
-          description: Bad Request
+          description: El parámetro tiene un valor inválido
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
         '500':
-          description: Internal Server Error
+          description: Error interno del servidor
           content:
-            aplication/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 
+  /categorias/{categoriaId}:
+    get:
+      tags:
+        - categorias
+      summary: Obtener categoría por ID
+      parameters:
+        - name: categoriaId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaOutDto'
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - categorias
+      summary: Modificar categoría por ID
+      parameters:
+        - name: categoriaId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaOutDto'
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Coategoría asociada a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - categorias
+      summary: Eliminar categoría por ID
+      parameters:
+        - name: categoriaId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Categoría no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Categoría asociada a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+  /plagas:            ###################################################################################################
+    get:
+      tags:
+        - plagas
+      summary: Obtención de listado de plagas
+      parameters:
+        - name: nombre
+          in: query
+          description: Filtrar por nombre
+          schema:
+            type: string
+          required: false
+        - name: riesgo
+          in: query
+          description: Filtrar por nivel de riesgo par ala planta
+          schema:
+            type: number
+            format: float
+          required: false
+        - name: esLetal
+          in: query
+          description: Filtrar por su letalidad
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlagaOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Plaga no encontrada con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - plagas
+      summary: Crear nueva plaga
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlagaInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlagaOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /plagas/{plagaId}:
+      get:
+        tags:
+          - plagas
+        summary: Obtener plaga por ID
+        parameters:
+          - name: plagaId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Ok
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PlagaOutDto'
+          '404':
+            description: Plaga no encontrada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '400':
+            description: El parámetro tiene un valor inválido
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '500':
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/InternalServerError'
+
+      put:
+        tags:
+          - plagas
+        summary: Modificar plaga por ID
+        parameters:
+          - name: plagaId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlagaInDto'
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PlagaOutDto'
+          '404':
+            description: Plaga no encontrada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '409':
+            description: Plaga asociada a una planta
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Conflict'
+          '400':
+            description: El parámetro tiene un valor inválido
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '500':
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/InternalServerError'
+
+      delete:
+        tags:
+          - plagas
+        summary: Eliminar plaga por ID
+        parameters:
+          - name: plagaId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '204':
+            description: No Content
+          '404':
+            description: Plaga no encontrada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '409':
+            description: Plaga asociada a una planta
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Conflict'
+          '400':
+            description: El parámetro tiene un valor inválido
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '500':
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/InternalServerError'
+
+  /consejos: ###################################################################################################
+    get:
+      tags:
+        - consejos
+      summary: Obtención de listado de consejos
+      parameters:
+        - name: titulo
+          in: query
+          description: Filtrar por titulo
+          schema:
+            type: string
+          required: false
+        - name: importancia
+          in: query
+          description: Filtrar por nivel de importancia en la aplicación
+          schema:
+            type: number
+            format: float
+          required: false
+        - name: verificado
+          in: query
+          description: Filtrar por si el consejo esta verificado o no
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsejoOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: COnsejo no encontrado con esos parámetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - consejos
+      summary: Crear nuevo consejo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsejoInDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsejoOutDto'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /consejos/{consejoId}:
+    get:
+      tags:
+        - consejos
+      summary: Obtener consejo por ID
+      parameters:
+        - name: consejoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsejoOutDto'
+        '404':
+          description: Consejo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - consejos
+      summary: Modificar consejo por ID
+      parameters:
+        - name: consejoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsejoInDto'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsejoOutDto'
+        '404':
+          description: Consejo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Consejo asociado a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - consejos
+      summary: Eliminar consejo por ID
+      parameters:
+        - name: consejoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Consejo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '409':
+          description: Consejo asociado a una planta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '400':
+          description: El parámetro tiene un valor inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+#COMPONENTES
 components:
-
-
   schemas:
-    PlantaOutDto:
+    PlantaOutDto: #########################################################
       type: object
       properties:
         id_planta:
@@ -239,106 +1095,443 @@ components:
           format: int64
           description: Identificador de la planta
           example: 1
-        nombre:
+        genero:
           type: string
-          description: Nombre de la planta
-          example: Monstera adasonii
-        imagen:
+          description: Género de la planta
+          example: Monstera
+        especie:
           type: string
-          description: Url de la ubicación de la imagen de la planta
-          example:
+          description: Especie de la planta
+          example: Adansonii
+        esToxica:
+          type: boolean
+          description: Indicador de si la planta es tóxica para personas o animales
+          example: true
         alturaMaxima:
           type: number
           format: float
-          description: Altura máxima de la planta con desarrollo en maceta.
-          example: 1.50
-        esToxica:
-          type: boolean
-          description: Indicativo si la planta es tóxica o no
-          example: true
-        fechaRegistro:
+          description: Altura máxima aproximada que puede alcanzar la planta (en metros)
+          example: 1.5
+        tipoCrecimiento:
           type: string
-          format: date
-          description: Fecha de registro de la planta.
-          example: 2025-07-17
+          description: Tipo de crecimiento que presenta la planta (ej. arbusto, trepadora)
+          example: Trepadora
         cuidadoId:
-          type: number
+          type: integer #numeros sin decimales
           format: int64
-          description: Identificador del cuidado concreto que debe recibir la planta
+          description: Identificador del cuidado asignado a la planta
           example: 1
+        categoriaId:
+          type: integer
+          format: int64
+          description: Identificador de la categoría asignada a la planta
+          example: 1
+        plagaId:
+          type: array
+          format: int64
+          description: Lista de IDs de plagas que pueden afectar a la planta
+          example: [1,2]
+        consejoId:
+          type: array
+          format: int64
+          description: Lista de IDs de consjeosque asociados a la planta
+          example: [1,2]
 
-    PlantaInDto:
+    PlantaInDto: ###################################################
       type: object
+      required:
+        - genero
+        - especie
+        - esToxica
+        - alturaMaxima
+        - cuidadoId
+        - categoriaId
       properties:
-        nombre:
+        genero:
           type: string
-          description: Nombre de la planta
-          example: Monstera adasonii
-        imagen:
+          description: Género de la planta
+          example: Monstera
+        especie:
           type: string
-          description: Url de la ubicación de la imagen de la planta
-          example:
+          description: Especie de la planta
+          example: Adansonii
+        esToxica:
+          type: boolean
+          description: Indicador de si la planta es tóxica para personas o animales
+          example: true
         alturaMaxima:
           type: number
           format: float
-          description: Altura máxima de la planta con desarrollo en maceta.
-          example: 1.50
-        esToxica:
-          type: boolean
-          description: Indicativo si la planta es tóxica o no
-          example: true
+          description: Altura máxima aproximada que puede alcanzar la planta (en metros)
+          example: 1.5
+        tipoCrecimiento:
+          type: string
+          description: Tipo de crecimiento que presenta la planta (ej. arbusto, trepadora)
+          example: Trepadora
+        cuidadoId:
+          type: integer
+          format: int64
+          description: ID del cuidado asociado a esta planta
+          example: 2
+        categoriaId:
+          type: integer
+          format: int64
+          description: ID de la categoría botánica asociada a esta planta
+          example: 1
+        plagaIds:
+          type: array
+          description: Lista de IDs de plagas que afectan a la planta
+          items:
+            type: integer
+            format: int64
+          example: [ 1, 3 ]
+        consejoIds:
+          type: array
+          description: Lista de IDs de consejos útiles para el cuidado de esta planta
+          items:
+            type: integer
+            format: int64
+          example: [ 5, 7 ]
 
-
-    BadRequest:
+    CuidadoOutDto: ##################################################
       type: object
       properties:
-        code:
+        idCuidado:
+          type: integer
+          format: int64
+          description: Identificador del cuidado
+          example: 10
+        esInterior:
+          type: boolean
+          description: Indica si el cuidado es para interior
+          example: true
+        riego:
           type: string
-          description: Código de error
-          example: 400
-        message:
+          description: Frecuencia o tipo de riego
+          example: 1 vez por semana
+        sustrato:
           type: string
-          description: Código de error
-          example: Bad Request
-        errorMessage:
+          description: Tipo de sustrato recomendado
+          example: Tierra vegetal con drenaje
+        humedad:
+          type: number
+          format: float
+          description: Porcentaje de humedad recomendado
+          example: 70.0
+        plantaIds:
           type: array
           items:
-            $ref: '#/components/schemas/ErrorMessage'
+            type: integer
+            format: int64
+          description: Lista de IDs de plantas asociadas
+          example: [ 2, 5 ]
 
-    ErrorMessage:
+    CuidadoInDto: ######################################################
+      type: object
+      required:
+        - esInterior
+        - riego
+        - sustrato
+      properties:
+        esInterior:
+          type: boolean
+          description: Indica si el cuidado es para una planta de interior
+          example: true
+        riego:
+          type: string
+          description: Frecuencia o tipo de riego
+          example: Cada 3 días
+        sustrato:
+          type: string
+          description: Tipo de sustrato recomendado
+          example: Sustrato universal con perlita
+        humedad:
+          type: number
+          format: float
+          description: Porcentaje de humedad recomendado (0-100)
+          example: 60.0
+        plantaIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: Lista de IDs de plantas asociadas
+          example: [ 1, 3, 5 ]
+
+    CategoriaInDto:  #####################################################
+      type: object
+      required:
+        - nombre
+        - descripcion
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la categoría
+          example: Interior
+        descripcion:
+          type: string
+          description: Descripción de la categoría
+          example: Plantas ideales para espacios interiores con poca luz.
+        nivelDificultad:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 10
+          description: Nivel de dificultad para el cuidado de la categoría (0 a 10)
+          example: 5
+        paraPrincipiantes:
+          type: boolean
+          description: Indica si es adecuada para principiantes
+          example: true
+        plantaIds:
+          type: array
+          description: Lista de identificadores de plantas asociadas a la categoría
+          items:
+            type: integer
+            format: int64
+          example: [ 1, 2, 3 ]
+
+    CategoriaOutDto: #######################################################
+      type: object
+      properties:
+        idCategoria:
+          type: integer
+          format: int64
+          description: Identificador de la categoría
+          example: 1
+        nombre:
+          type: string
+          description: Nombre de la categoría
+          example: Interior
+        descripcion:
+          type: string
+          description: Descripción de la categoría
+          example: Plantas ideales para espacios interiores con poca luz.
+        nivelDificultad:
+          type: number
+          format: float
+          description: Nivel de dificultad para el cuidado de la categoría
+          example: 5
+        paraPrincipiantes:
+          type: boolean
+          description: Indica si es adecuada para principiantes
+          example: true
+        plantaIds:
+          type: array
+          description: Lista de IDs de plantas asociadas a la categoría
+          items:
+            type: integer
+            format: int64
+          example: [ 1, 2, 3 ]
+
+    PlagaInDto: ############################################################
+      type: object
+      required:
+        - nombre
+        - esLetal
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la plaga
+          example: Cochinilla algodonosa
+        sintomas:
+          type: string
+          description: Síntomas que produce la plaga
+          example: Manchas blancas y pegajosas en las hojas
+        riesgo:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 10
+          description: Nivel de riesgo que representa la plaga (de 0 a 10)
+          example: 7.5
+        esLetal:
+          type: boolean
+          description: Indica si la plaga es letal
+          example: false
+        tratamiento:
+          type: string
+          description: Tratamiento recomendado para combatir la plaga
+          example: Aplicación de jabón potásico cada 3 días
+        plantaIds:
+          type: array
+          description: Lista de IDs de plantas afectadas
+          items:
+            type: integer
+            format: int64
+          example: [ 1, 3, 5 ]
+
+
+    PlagaOutDto: #########################################################
+      type: object
+      properties:
+        idPlaga:
+          type: integer
+          format: int64
+          description: Identificador único de la plaga
+          example: 1
+        nombre:
+          type: string
+          description: Nombre de la plaga
+          example: Cochinilla algodonosa
+        sintomas:
+          type: string
+          description: Síntomas que produce la plaga
+          example: Manchas blancas y pegajosas en las hojas
+        riesgo:
+          type: number
+          format: float
+          description: Nivel de riesgo que representa la plaga
+          example: 7.5
+        esLetal:
+          type: boolean
+          description: Indica si la plaga es letal
+          example: false
+        tratamiento:
+          type: string
+          description: Tratamiento recomendado para combatir la plaga
+          example: Aplicación de jabón potásico cada 3 días
+        plantaIds:
+          type: array
+          description: Lista de IDs de plantas afectadas
+          items:
+            type: integer
+            format: int64
+          example: [ 1, 3, 5 ]
+
+
+    ConsejoInDto: ##################################################
+      type: object
+      required:
+        - titulo
+        - verificado
+      properties:
+        titulo:
+          type: string
+          description: Título del consejo
+          example: Riego temprano en la mañana
+        explicacion:
+          type: string
+          description: Explicación o detalle del consejo
+          example: El riego por la mañana evita la evaporación excesiva y reduce el riesgo de hongos.
+        verificado:
+          type: boolean
+          description: Indica si el consejo fue verificado por un experto
+          example: true
+        importancia:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 10
+          description: Nivel de importancia del consejo (de 0 a 10)
+          example: 8.5
+        plantaIds:
+          type: array
+          description: Lista de IDs de plantas asociadas al consejo
+          items:
+            type: integer
+            format: int64
+          example: [ 2, 4, 6 ]
+
+
+    ConsejoOutDto:  #################################################
+      type: object
+      properties:
+        idConsejo:
+          type: integer
+          format: int64
+          description: Identificador único del consejo
+          example: 1
+        titulo:
+          type: string
+          description: Título del consejo
+          example: Riego temprano en la mañana
+        explicacion:
+          type: string
+          description: Explicación o detalle del consejo
+          example: El riego por la mañana evita la evaporación excesiva y reduce el riesgo de hongos.
+        verificado:
+          type: boolean
+          description: Indica si el consejo fue verificado por un experto
+          example: true
+        importancia:
+          type: number
+          format: float
+          description: Nivel de importancia del consejo (de 0 a 10)
+          example: 8.5
+        plantaIds:
+          type: array
+          description: Lista de IDs de plantas asociadas al consejo
+          items:
+            type: integer
+            format: int64
+          example: [ 2, 4, 6 ]
+
+
+
+    ErrorMessage: ################################################################
       type: object
       properties:
         fieldName:
           type: string
-          description: campo donde está el error
-          example: model
+          description: Campo donde se produjo el error
+          example: genero
         message:
           type: string
-          description: mensaje de error asociado a campo
-          example: El dato es obligatorio
+          description: Mensaje descriptivo del error
+          example: El género es obligatorio
 
-    NotFound:
+    BadRequest: ################################################################
       type: object
       properties:
         code:
           type: string
-          description: Código de error
+          description: Código HTTP del error
+          example: 400
+        message:
+          type: string
+          description: Descripción general del error
+          example: Solicitud incorrecta
+        errorMessages:
+          type: array
+          description: Lista de errores de validación en campos concretos
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+
+    NotFound: ##########################################################
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código HTTP del error
           example: 404
         message:
           type: string
-          description: Código de error
-          example: Not found
+          description: Recurso no encontrado o inexistente
+          example: Planta con ID 99 no encontrada
 
-    InternalServerError:
+    Conflict: #######################################################
       type: object
       properties:
         code:
           type: string
-          description: Código de error
+          description: Código HTTP del error
+          example: 409
+        message:
+          type: string
+          description: Conflicto de datos, por ejemplo, una asociación no válida
+          example: No se puede eliminar la categoría porque está asociada a plantas
+
+    InternalServerError: ##########################################
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código HTTP del error
           example: 500
         message:
           type: string
-          description: Código de error
-          example: Internal Server Error
+          description: Error inesperado en el servidor
+          example: Error interno del servidor
 
 
