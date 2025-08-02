@@ -29,7 +29,6 @@ public class PlantaController {
     private PlantaService plantaService;
     @Autowired
     private static final Logger logger = LoggerFactory.getLogger(PlantaController.class);
-    /*añadir en cada enppoint ellogger.*/
 
     @GetMapping("/plantas")
     public ResponseEntity<List<PlantaOutDto>> getAll(
@@ -48,7 +47,6 @@ public class PlantaController {
             }
 
         logger.info("END getAll");
-
         return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
     }
 
@@ -85,7 +83,9 @@ public class PlantaController {
 
     @DeleteMapping ("/plantas/:plantaId")
     public ResponseEntity <Void> removePlanta (long plantaId) throws PlantaNotFoundException {
+        logger.info("BEGIN deletePlanta");
         plantaService.remove(plantaId);
+        logger.info("END deletePlanta");
         return ResponseEntity.noContent().build();
     }
 
