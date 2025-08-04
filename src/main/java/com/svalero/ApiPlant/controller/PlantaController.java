@@ -27,8 +27,8 @@ public class PlantaController {
 
     @Autowired
     private PlantaService plantaService;
-    @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(PlantaController.class);
+   /* @Autowired
+    private final Logger logger = LoggerFactory.getLogger(PlantaController.class);*/
     /*añadir en cada enppoint ellogger.*/
 
     @GetMapping("/plantas")
@@ -38,16 +38,12 @@ public class PlantaController {
             @RequestParam(value = "esToxica", required = false) Boolean esToxica,
             @RequestParam Map<String, String> allParams) throws PlantaNotFoundException {
 
-        logger.info("BEGIN getAll");
-
             Set<String> validParams = Set.of("genero", "especie", "esToxica");
             for (String param : allParams.keySet()) {
                 if (!validParams.contains(param)) {
                     throw new InvalidParameterException("Parámetro inválido: " + param);
                 }
             }
-
-        logger.info("END getAll");
 
         return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
     }
@@ -56,9 +52,7 @@ public class PlantaController {
 
     @GetMapping("/plantas/:plantaId")
     public ResponseEntity <PlantaOutDto> getPlanta(long plantaId) throws PlantaNotFoundException {
-        logger.info("BEGIN getById");
         PlantaOutDto plantaOutDto = plantaService.get(plantaId);
-        logger.info("END getById");
         return new ResponseEntity<>(plantaOutDto, HttpStatus.OK);
     }
 
@@ -66,9 +60,7 @@ public class PlantaController {
     @PostMapping("/plantas")
     public ResponseEntity<PlantaOutDto> addPlanta(@Valid @RequestBody PlantaInDto plantaInDto)
             throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
-        logger.info("BEGIN addPlanta");
         PlantaOutDto newPlanta = plantaService.add(plantaInDto);
-        logger.info("END addPlanta");
         return new ResponseEntity<>(newPlanta, HttpStatus.CREATED);
     }
 
@@ -76,9 +68,7 @@ public class PlantaController {
     @PutMapping("/plantas/:plantaId")
     public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @Valid @RequestBody PlantaInDto plantaInDto)
             throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
-        logger.info("BEGIN putPlanta");
         PlantaOutDto updatedPlanta = plantaService.modify(plantaId, plantaInDto);
-        logger.info("END putPlanta");
         return ResponseEntity.ok(updatedPlanta);
     }
 
