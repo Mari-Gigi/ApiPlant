@@ -33,6 +33,7 @@ public class Planta {
 
 
 
+
     //RELACIONES ENTRE ENTIDADES **********************
     @ManyToOne // relacion 1:1 - una planta tiene un cuidado
     @JoinColumn(name = "cuidado_id")

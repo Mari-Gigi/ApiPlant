@@ -1,12 +1,11 @@
 package com.svalero.ApiPlant.controller;
 
 import com.svalero.ApiPlant.domain.Consejo;
+import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.service.ConsejoService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,6 @@ public class ConsejoController {
 
     @Autowired
     private ConsejoService consejoService;
-    @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(ConsejoController.class);
 
     @GetMapping("/consejos")
     public ResponseEntity<List<ConsejoOutDto>> getAll(
@@ -38,8 +35,6 @@ public class ConsejoController {
             @RequestParam(value = "importancia", required = false) Float importancia,  /*la Exc que devuelve es de tipo 404 xq no convierte bien el float*/
             @RequestParam Map<String, String> allParams) throws ConsejoNotFoundException {
 
-        logger.info("BEGIN getAll");
-
             Set<String> validParams = Set.of("titulo", "verificado", "importancia");
             for (String param : allParams.keySet()) {
                 if (!validParams.contains(param)) {
@@ -47,44 +42,35 @@ public class ConsejoController {
                 }
             }
 
-        logger.info("END getAll");
             return new ResponseEntity<>(consejoService.getAll(titulo, verificado, importancia), HttpStatus.OK);
         }
 
 
     @GetMapping("/consejos/:consejoId")
     public ResponseEntity <ConsejoOutDto> getConsejo(long consejoId) throws ConsejoNotFoundException {
-        logger.info("BEGIN getById");
         ConsejoOutDto consejoOutDto = consejoService.get(consejoId);
-        logger.info("END getById");
         return new ResponseEntity<>(consejoOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/consejos")
     public ResponseEntity <Consejo> addConsejo (@Valid @RequestBody ConsejoInDto consejoInDto) {
-        logger.info("BEGIN postConsejo");
         Consejo consejo = consejoService.add(consejoInDto);
-        logger.info("END postConsejo");
         return ResponseEntity.status(HttpStatus.CREATED).body(consejoService.add(consejoInDto));
     }
 
 
+
     @PutMapping("/consejos/:consejoId")
-    public ResponseEntity<ConsejoOutDto> modifyConsejo(long consejoId, @Valid @RequestBody ConsejoInDto consejo)
-            throws  ConsejoNotFoundException, PlantaNotFoundException {
-        logger.info("BEGIN putConsejo");
+    public ResponseEntity<ConsejoOutDto> modifyConsejo(long consejoId, @Valid @RequestBody ConsejoInDto consejo) throws  ConsejoNotFoundException, PlantaNotFoundException {
         ConsejoOutDto modifiedConsejo = consejoService.modify(consejoId, consejo);
-        logger.info("END putConsejo");
         return new ResponseEntity<>(modifiedConsejo, HttpStatus.OK);
     }
 
 
     @DeleteMapping("/consejos/:consejoId")
     public ResponseEntity<Void> removeConsejo(long consejoId) throws ConsejoNotFoundException, ConsejoConflictException {
-        logger.info("BEGIN deleteConsejo");
-        consejoService.remove(consejoId);
-        logger.info("END deleteConsejo");
+            consejoService.remove(consejoId);
         return ResponseEntity.noContent().build();
     }
 

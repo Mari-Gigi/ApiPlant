@@ -1,6 +1,6 @@
 package com.svalero.ApiPlant.exception;
 
-public class PlantaNotFoundException extends RuntimeException {
+public class PlantaNotFoundException extends Exception {
 
     public PlantaNotFoundException() {
         super ();

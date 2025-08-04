@@ -88,12 +88,12 @@ public class CategoriaService {
 
 
     //AÑADE CATEGORIA CON INDTO *****************
-    public Categoria addCategoria(CategoriaInDto dto) {
+    public CategoriaOutDto addCategoria(CategoriaInDto dto) {
         Categoria categoria = modelMapper.map(dto, Categoria.class);
         categoria.setFechaRegistro(LocalDate.now());
 
         Categoria saved = categoriaRepository.save(categoria);
-        return modelMapper.map(saved, Categoria.class);
+        return modelMapper.map(saved, CategoriaOutDto.class);
 
     }
 

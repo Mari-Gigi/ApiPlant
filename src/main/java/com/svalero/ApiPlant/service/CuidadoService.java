@@ -94,12 +94,13 @@ public class CuidadoService {
         return dto;
     }
 
-    public Cuidado  addCuidado(CuidadoInDto dto) {
+
+    public CuidadoOutDto  addCuidado(CuidadoInDto dto) {
         Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
         cuidado.setFechaRegistro(LocalDate.now());
-        // Aquí puedes manejar relaciones con plantas, validaciones, etc.
+
         Cuidado saved = cuidadoRepository.save(cuidado);
-        return modelMapper.map(saved, Cuidado.class);
+        return modelMapper.map(saved, CuidadoOutDto.class);
     }
 
 

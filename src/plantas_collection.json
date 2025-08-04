@@ -1,0 +1,208 @@
+{
+  "v": 8,
+  "name": "plantas",
+  "folders": [],
+  "requests": [
+    {
+      "v": "14",
+      "name": "plantas",
+      "method": "GET",
+      "endpoint": "http://localhost:8080/plantas",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "plantas/:plantaId",
+      "method": "GET",
+      "endpoint": "http://localhost:8080/plantas/:plantaId",
+      "params": [
+        {
+          "key": "plantaId",
+          "value": "33",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "cuidados/:cuidadoId/plantas",
+      "method": "POST",
+      "endpoint": "http://localhost:8080/cuidados/:cuidadoId/plantas",
+      "params": [
+        {
+          "key": "cuidadoId",
+          "value": "2",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": " {\n    \"nombre\": \"Mostera thai\",\n    \"esToxica\": false,\n    \"alturaMaxima\": 2.0\n  }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "plantas/:plantaId",
+      "method": "DELETE",
+      "endpoint": "http://localhost:8080/plantas/:plantaId",
+      "params": [
+        {
+          "key": "plantaId",
+          "value": "2",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": ""
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "cuidados",
+      "method": "GET",
+      "endpoint": "http://localhost:8080/cuidados",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "cuidados",
+      "method": "POST",
+      "endpoint": "http://localhost:8080/cuidados",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"esInterior\": true,\n  \"riego\": \"moderado\",\n  \"sustrato\": \"suelto, aireado, drenante y con buena retencion de humedad\",\n  \"humedad\": 70,\n  \"fechaAbono\": \"2025-03-21\"\n}\n"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "cuidados/:cuidadoId",
+      "method": "DELETE",
+      "endpoint": "http://localhost:8080/cuidados/:cuidadoId",
+      "params": [
+        {
+          "key": "cuidadoId",
+          "value": "1",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "plantas/:plantaId",
+      "method": "PUT",
+      "endpoint": "http://localhost:8080/plantas/:plantaId",
+      "params": [
+        {
+          "key": "plantaId",
+          "value": "38",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "  {\n    \"id_planta\": 38,\n    \"nombre\": \"Monstera adansonii\",\n    \"esToxica\": false,\n    \"alturaMaxima\": 0.0,\n    \"imagen\": null,\n    \"cuidadoId\": 3\n  }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "headers": [],
+  "_ref_id": "coll_md4n0hkb_76ab4904-11d9-4de8-9d30-8d6efe59f141"
+}
