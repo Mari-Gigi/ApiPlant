@@ -66,11 +66,11 @@ public class CuidadoController {
 
 
     @PostMapping("/cuidados")
-    public ResponseEntity<CuidadoOutDto> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) {
+    public ResponseEntity<Cuidado> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) {
         logger.info("BEGIN addCuidado");
-        CuidadoOutDto nuevoCuidado = cuidadoService.addCuidado(cuidadoInDto);
+        Cuidado cuidado = cuidadoService.addCuidado(cuidadoInDto);
         logger.info("END addCuidado");
-        return new ResponseEntity<>(nuevoCuidado, HttpStatus.CREATED);
+        return new ResponseEntity<>(cuidado, HttpStatus.CREATED);
     }
 
 
@@ -98,7 +98,7 @@ public class CuidadoController {
 
     @ExceptionHandler  (CuidadoNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCuidadoNotFoundException(CuidadoNotFoundException exception) {
-        ErrorResponse error = ErrorResponse.generalError(404, "Cuidado no encontrada con esos parámetros.");
+        ErrorResponse error = ErrorResponse.generalError(404, "Cuidado no encontrado con esos parámetros.");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 

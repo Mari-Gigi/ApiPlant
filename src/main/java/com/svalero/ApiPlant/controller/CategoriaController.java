@@ -68,11 +68,11 @@ public class CategoriaController {
 
 
     @PostMapping ("/categorias")
-    public ResponseEntity <CategoriaOutDto> addCategoria (@Valid @RequestBody CategoriaInDto categoriaInDto) {
+    public ResponseEntity <Categoria> addCategoria (@Valid @RequestBody CategoriaInDto categoriaInDto) {
         logger.info("BEGIN postCategoria");
-        CategoriaOutDto newCategoria = categoriaService.addCategoria(categoriaInDto);
+        Categoria categoria = categoriaService.addCategoria(categoriaInDto);
         logger.info("END postCategoria");
-        return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
+        return new ResponseEntity<>(categoria, HttpStatus.CREATED);
     }
 
 

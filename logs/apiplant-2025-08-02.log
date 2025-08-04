@@ -1,0 +1,497 @@
+2025-08-02 09:35:24,462 WARN c.z.h.p.HikariPool$HouseKeeper {run} [HikariPool-1 housekeeper] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5d19h34m59s90ms153µs800ns).
+2025-08-02 09:37:21,385 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 09:37:21,448 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 14476 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 09:37:21,448 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 09:37:21,902 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 09:37:21,951 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 42 ms. Found 5 JPA repository interfaces.
+2025-08-02 09:37:22,400 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 09:37:22,413 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 09:37:22,413 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 09:37:22,413 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 09:37:22,469 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 09:37:22,472 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 974 ms
+2025-08-02 09:37:22,577 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 09:37:22,638 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 09:37:22,672 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 09:37:22,892 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 09:37:22,924 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 09:37:23,141 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 09:37:23,143 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 09:37:23,165 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 09:37:23,186 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 09:37:24,036 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 09:37:24,093 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 09:37:24,410 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 09:37:24,615 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 09:37:24,654 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 09:37:24,675 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 09:37:24,684 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.639 seconds (process running for 3.866)
+2025-08-02 09:37:34,937 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 09:37:34,938 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 09:37:34,939 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-08-02 12:19:32,860 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 12:19:32,949 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 12:19:32,967 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 12:19:32,971 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 12:19:32,973 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 12:25:14,104 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 12:25:14,151 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 14240 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 12:25:14,151 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 12:25:14,632 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 12:25:14,689 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 52 ms. Found 5 JPA repository interfaces.
+2025-08-02 12:25:15,108 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 12:25:15,118 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 12:25:15,118 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 12:25:15,118 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 12:25:15,160 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 12:25:15,171 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 968 ms
+2025-08-02 12:25:15,282 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 12:25:15,315 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 12:25:15,339 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 12:25:15,508 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 12:25:15,534 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 12:25:15,715 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 12:25:15,719 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 12:25:15,749 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 12:25:15,772 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 12:25:16,490 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 12:25:16,563 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 12:25:16,898 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 12:25:17,083 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 12:25:17,126 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 12:25:17,150 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 12:25:17,159 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.384 seconds (process running for 3.625)
+2025-08-02 12:39:22,651 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 12:39:22,652 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 12:39:22,654 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-08-02 12:50:38,061 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 12:50:38,151 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 12:50:38,167 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 12:50:38,167 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 12:50:38,167 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 12:50:49,707 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 12:50:49,792 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 5980 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 12:50:49,792 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 12:50:50,654 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 12:50:50,746 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 78 ms. Found 5 JPA repository interfaces.
+2025-08-02 12:50:51,438 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 12:50:51,446 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 12:50:51,456 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 12:50:51,456 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 12:50:51,505 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 12:50:51,511 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 1657 ms
+2025-08-02 12:50:51,643 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 12:50:51,691 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 12:50:51,715 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 12:50:51,912 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 12:50:51,945 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 12:50:52,117 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 12:50:52,118 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 12:50:52,132 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 12:50:52,151 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 12:50:52,935 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 12:50:52,989 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 12:50:53,362 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 12:50:53,600 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 12:50:53,649 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 12:50:53,671 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 12:50:53,679 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 4.57 seconds (process running for 4.913)
+2025-08-02 12:51:00,010 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 12:51:00,011 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 12:51:00,013 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 2 ms
+2025-08-02 13:08:18,660 WARN c.z.h.p.HikariPool$HouseKeeper {run} [HikariPool-1 housekeeper] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m26s416ms726µs600ns).
+2025-08-02 14:27:37,760 WARN c.z.h.p.HikariPool$HouseKeeper {run} [HikariPool-1 housekeeper] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h3m48s869ms167µs600ns).
+2025-08-02 14:44:30,665 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 14:44:30,758 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 14:44:30,795 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:44:30,801 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 14:44:30,804 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 14:44:43,261 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 14:44:43,372 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 12964 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 14:44:43,372 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 14:44:43,935 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 14:44:43,990 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 50 ms. Found 5 JPA repository interfaces.
+2025-08-02 14:44:44,392 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 14:44:44,400 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:44:44,407 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 14:44:44,407 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 14:44:44,456 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 14:44:44,456 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 1015 ms
+2025-08-02 14:44:44,564 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 14:44:44,602 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 14:44:44,623 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 14:44:44,814 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 14:44:44,839 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 14:44:45,012 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 14:44:45,013 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 14:44:45,031 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 14:44:45,054 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 14:44:45,763 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 14:44:45,812 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:44:46,164 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 14:44:46,373 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 14:44:46,416 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:44:46,437 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 14:44:46,445 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.953 seconds (process running for 4.328)
+2025-08-02 14:44:59,820 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 14:44:59,821 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 14:44:59,825 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 4 ms
+2025-08-02 14:48:49,123 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 14:48:49,269 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 14:48:49,271 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:48:49,271 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 14:48:49,271 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 14:49:00,788 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 14:49:00,844 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 19112 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 14:49:00,844 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 14:49:01,306 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 14:49:01,365 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 46 ms. Found 5 JPA repository interfaces.
+2025-08-02 14:49:01,753 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 14:49:01,768 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:49:01,774 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 14:49:01,774 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 14:49:01,813 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 14:49:01,813 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 929 ms
+2025-08-02 14:49:01,941 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 14:49:01,974 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 14:49:02,000 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 14:49:02,224 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 14:49:02,248 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 14:49:02,410 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 14:49:02,413 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 14:49:02,434 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 14:49:02,457 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 14:49:03,173 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 14:49:03,222 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:49:03,554 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 14:49:03,759 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 14:49:03,812 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:49:03,830 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 14:49:03,837 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.381 seconds (process running for 3.6)
+2025-08-02 14:49:10,908 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 14:49:10,909 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 14:49:10,910 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-08-02 14:50:41,231 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 14:50:41,331 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 14:50:41,333 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:50:41,335 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 14:50:41,335 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 14:50:51,596 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 14:50:51,648 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 5512 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 14:50:51,648 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 14:50:52,171 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 14:50:52,250 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 50 ms. Found 5 JPA repository interfaces.
+2025-08-02 14:50:52,695 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 14:50:52,710 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:50:52,710 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 14:50:52,715 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 14:50:52,760 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 14:50:52,760 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 1074 ms
+2025-08-02 14:50:52,878 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 14:50:52,911 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 14:50:52,940 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 14:50:53,136 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 14:50:53,166 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 14:50:53,372 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 14:50:53,374 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 14:50:53,396 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 14:50:53,413 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 14:50:54,155 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 14:50:54,206 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 14:50:54,586 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 14:50:54,852 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 14:50:54,907 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 14:50:54,933 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 14:50:54,949 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.716 seconds (process running for 3.986)
+2025-08-02 14:53:04,087 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 14:53:04,088 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 14:53:04,091 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 2 ms
+2025-08-02 15:04:38,436 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 15:04:38,513 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 15:04:38,523 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:04:38,529 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 15:04:38,532 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 15:04:51,613 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 15:04:51,665 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 3684 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 15:04:51,665 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 15:04:52,107 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 15:04:52,157 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 44 ms. Found 5 JPA repository interfaces.
+2025-08-02 15:04:52,532 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 15:04:52,550 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 15:04:52,550 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 15:04:52,550 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 15:04:52,587 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 15:04:52,587 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 889 ms
+2025-08-02 15:04:52,694 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 15:04:52,750 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 15:04:52,779 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 15:04:52,995 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 15:04:53,015 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 15:04:53,166 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 15:04:53,168 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 15:04:53,185 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 15:04:53,206 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 15:04:54,003 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 15:04:54,052 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:04:54,385 WARN o.s.c.s.AbstractApplicationContext {refresh} [main] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'plantaController': Unsatisfied dependency expressed through field 'logger': No qualifying bean of type 'org.slf4j.Logger' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2025-08-02 15:04:54,386 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [main] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:04:54,387 INFO c.z.h.HikariDataSource {close} [main] HikariPool-1 - Shutdown initiated...
+2025-08-02 15:04:54,437 INFO c.z.h.HikariDataSource {close} [main] HikariPool-1 - Shutdown completed.
+2025-08-02 15:04:54,439 INFO o.a.j.l.DirectJDKLog {log} [main] Stopping service [Tomcat]
+2025-08-02 15:04:54,441 INFO o.s.b.a.l.ConditionEvaluationReportLogger {logMessage} [main] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-08-02 15:04:54,453 ERROR o.s.b.d.LoggingFailureAnalysisReporter {report} [main] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field logger in com.svalero.ApiPlant.controller.PlantaController required a bean of type 'org.slf4j.Logger' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'org.slf4j.Logger' in your configuration.
+
+2025-08-02 15:06:49,348 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 15:06:49,396 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 10880 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 15:06:49,396 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 15:06:49,834 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 15:06:49,881 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 44 ms. Found 5 JPA repository interfaces.
+2025-08-02 15:06:50,260 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 15:06:50,276 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 15:06:50,276 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 15:06:50,276 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 15:06:50,326 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 15:06:50,326 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 901 ms
+2025-08-02 15:06:50,437 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 15:06:50,477 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 15:06:50,504 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 15:06:50,680 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 15:06:50,712 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 15:06:50,876 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 15:06:50,877 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 15:06:50,892 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 15:06:50,909 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 15:06:51,583 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 15:06:51,626 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:06:51,920 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlantaController.logger
+2025-08-02 15:06:51,942 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 15:06:52,139 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 15:06:52,207 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 15:06:52,239 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 15:06:52,247 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.194 seconds (process running for 3.408)
+2025-08-02 15:08:01,870 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 15:08:01,871 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 15:08:01,873 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 2 ms
+2025-08-02 15:08:01,923 INFO c.s.A.c.PlantaController {getAll} [http-nio-8080-exec-1] BEGIN getAll
+2025-08-02 15:08:01,925 INFO c.s.A.c.PlantaController {getAll} [http-nio-8080-exec-1] END getAll
+2025-08-02 15:53:47,386 INFO o.s.b.w.e.t.GracefulShutdown {shutDownGracefully} [SpringApplicationShutdownHook] Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-02 15:53:47,549 INFO o.s.b.w.e.t.GracefulShutdown {doShutdown} [tomcat-shutdown] Graceful shutdown complete
+2025-08-02 15:53:47,549 INFO o.s.o.j.AbstractEntityManagerFactoryBean {destroy} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:53:47,560 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-08-02 15:53:47,565 INFO c.z.h.HikariDataSource {close} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-08-02 15:54:01,735 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 15:54:01,840 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 21120 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 15:54:01,840 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 15:54:02,676 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 15:54:02,786 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 101 ms. Found 5 JPA repository interfaces.
+2025-08-02 15:54:03,672 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 15:54:03,693 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 15:54:03,698 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 15:54:03,698 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 15:54:03,798 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 15:54:03,798 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 1898 ms
+2025-08-02 15:54:04,020 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 15:54:04,083 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 15:54:04,122 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 15:54:04,499 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 15:54:04,544 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 15:54:04,885 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 15:54:04,888 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 15:54:04,924 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 15:54:04,959 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 15:54:06,421 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 15:54:06,522 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 15:54:07,166 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlantaController.logger
+2025-08-02 15:54:07,212 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 15:54:07,583 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 15:54:07,653 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 15:54:07,687 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 15:54:07,702 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 6.536 seconds (process running for 6.891)
+2025-08-02 15:54:19,638 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 15:54:19,639 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 15:54:19,643 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 3 ms
+2025-08-02 15:54:19,730 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-1] BEGIN getById
+2025-08-02 16:02:14,405 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-4] BEGIN getById
+2025-08-02 16:02:24,229 INFO c.s.A.c.PlantaController {getAll} [http-nio-8080-exec-5] BEGIN getAll
+2025-08-02 16:02:24,231 INFO c.s.A.c.PlantaController {getAll} [http-nio-8080-exec-5] END getAll
+2025-08-02 16:02:35,989 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-3] BEGIN getById
+2025-08-02 16:02:35,997 INFO c.s.A.c.PlantaController {getPlanta} [http-nio-8080-exec-3] END getById
+2025-08-02 16:48:09,158 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 16:48:09,208 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 24280 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 16:48:09,212 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 16:48:09,635 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 16:48:09,682 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 40 ms. Found 5 JPA repository interfaces.
+2025-08-02 16:48:10,087 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 16:48:10,095 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 16:48:10,137 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 16:48:10,137 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 892 ms
+2025-08-02 16:48:10,245 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 16:48:10,279 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 16:48:10,304 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 16:48:10,492 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 16:48:10,516 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 16:48:10,694 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 16:48:10,696 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 16:48:10,713 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 16:48:10,735 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 16:48:11,468 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 16:48:11,512 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 16:48:11,520 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CategoriaController.logger
+2025-08-02 16:48:11,770 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.ConsejoController.logger
+2025-08-02 16:48:11,787 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CuidadoController.logger
+2025-08-02 16:48:11,801 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlagaController.logger
+2025-08-02 16:48:11,816 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlantaController.logger
+2025-08-02 16:48:11,841 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 16:48:12,044 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 16:48:12,084 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 16:48:12,105 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 16:48:12,115 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.261 seconds (process running for 3.461)
+2025-08-02 16:53:13,149 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 16:53:13,149 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-08-02 16:53:13,151 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-08-02 16:53:13,252 INFO c.s.A.c.CuidadoController {addCuidado} [http-nio-8080-exec-1] BEGIN addCuidado
+2025-08-02 16:53:13,323 INFO c.s.A.c.CuidadoController {addCuidado} [http-nio-8080-exec-1] END addCuidado
+2025-08-02 16:53:28,124 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-8] BEGIN deleteCuidado
+2025-08-02 16:53:28,221 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-8] END deleteCuidado
+2025-08-02 16:53:33,010 INFO c.s.A.c.ConsejoController {getAll} [http-nio-8080-exec-2] BEGIN getAll
+2025-08-02 16:53:33,010 INFO c.s.A.c.ConsejoController {getAll} [http-nio-8080-exec-2] END getAll
+2025-08-02 17:14:49,666 INFO o.h.v.i.u.Version {<clinit>} [background-preinit] HV000001: Hibernate Validator 8.0.2.Final
+2025-08-02 17:14:49,715 INFO o.s.b.StartupInfoLogger {logStarting} [main] Starting ApiPlantApplication using Java 17.0.12 with PID 8580 (C:\Users\maria\OneDrive\Desktop\ApiPlant\target\classes started by maria in C:\Users\maria\OneDrive\Desktop\ApiPlant)
+2025-08-02 17:14:49,715 INFO o.s.b.SpringApplication {logStartupProfileInfo} [main] No active profile set, falling back to 1 default profile: "default"
+2025-08-02 17:14:50,134 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-02 17:14:50,183 INFO o.s.d.r.c.RepositoryConfigurationDelegate {registerRepositoriesIn} [main] Finished Spring Data repository scanning in 42 ms. Found 5 JPA repository interfaces.
+2025-08-02 17:14:50,548 INFO o.s.b.w.e.t.TomcatWebServer {initialize} [main] Tomcat initialized with port 8080 (http)
+2025-08-02 17:14:50,548 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing ProtocolHandler ["http-nio-8080"]
+2025-08-02 17:14:50,548 INFO o.a.j.l.DirectJDKLog {log} [main] Starting service [Tomcat]
+2025-08-02 17:14:50,564 INFO o.a.j.l.DirectJDKLog {log} [main] Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-02 17:14:50,596 INFO o.a.j.l.DirectJDKLog {log} [main] Initializing Spring embedded WebApplicationContext
+2025-08-02 17:14:50,596 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {prepareWebApplicationContext} [main] Root WebApplicationContext: initialization completed in 844 ms
+2025-08-02 17:14:50,706 INFO o.h.j.i.u.LogHelper {logPersistenceUnitInformation} [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-02 17:14:50,739 INFO o.h.Version {logVersion} [main] HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-02 17:14:50,754 INFO o.h.c.i.RegionFactoryInitiator {initiateService} [main] HHH000026: Second-level cache disabled
+2025-08-02 17:14:50,945 INFO o.s.o.j.p.SpringPersistenceUnitInfo {addTransformer} [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-02 17:14:50,963 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Starting...
+2025-08-02 17:14:51,144 INFO c.z.h.p.HikariPool {checkFailFast} [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:~/apiplant.db user=SA
+2025-08-02 17:14:51,146 INFO c.z.h.HikariDataSource {getConnection} [main] HikariPool-1 - Start completed.
+2025-08-02 17:14:51,163 WARN o.h.e.j.d.i.DialectFactoryImpl {constructDialect} [main] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-02 17:14:51,182 INFO o.h.e.j.e.i.JdbcEnvironmentInitiator {logConnectionInfo} [main] HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-02 17:14:51,874 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {initiateService} [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-02 17:14:51,922 INFO o.s.o.j.AbstractEntityManagerFactoryBean {buildNativeEntityManagerFactory} [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-02 17:14:51,930 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CategoriaController.logger
+2025-08-02 17:14:52,173 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.ConsejoController.logger
+2025-08-02 17:14:52,186 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.CuidadoController.logger
+2025-08-02 17:14:52,198 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlagaController.logger
+2025-08-02 17:14:52,210 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor {lambda$buildAutowiringMetadata$1} [main] Autowired annotation is not supported on static fields: private static final org.slf4j.Logger com.svalero.ApiPlant.controller.PlantaController.logger
+2025-08-02 17:14:52,233 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {openEntityManagerInViewInterceptor} [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-02 17:14:52,415 INFO o.s.b.a.h.H2ConsoleAutoConfiguration$H2ConsoleLogger {log} [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:~/apiplant.db'
+2025-08-02 17:14:52,453 INFO o.a.j.l.DirectJDKLog {log} [main] Starting ProtocolHandler ["http-nio-8080"]
+2025-08-02 17:14:52,475 INFO o.s.b.w.e.t.TomcatWebServer {start} [main] Tomcat started on port 8080 (http) with context path '/'
+2025-08-02 17:14:52,483 INFO o.s.b.StartupInfoLogger {logStarted} [main] Started ApiPlantApplication in 3.1 seconds (process running for 3.291)
+2025-08-02 17:15:04,258 INFO o.a.j.l.DirectJDKLog {log} [http-nio-8080-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-02 17:15:04,259 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-2] Initializing Servlet 'dispatcherServlet'
+2025-08-02 17:15:04,261 INFO o.s.w.s.FrameworkServlet {initServletBean} [http-nio-8080-exec-2] Completed initialization in 0 ms
+2025-08-02 17:15:04,372 INFO c.s.A.c.PlantaController {addPlanta} [http-nio-8080-exec-2] BEGIN addPlanta
+2025-08-02 17:16:56,241 INFO c.s.A.c.PlantaController {addPlanta} [http-nio-8080-exec-3] BEGIN addPlanta
+2025-08-02 17:16:56,492 INFO c.s.A.c.PlantaController {addPlanta} [http-nio-8080-exec-3] END addPlanta
+2025-08-02 17:17:05,150 INFO c.s.A.c.PlantaController {addPlanta} [http-nio-8080-exec-4] BEGIN addPlanta
+2025-08-02 17:17:21,102 INFO c.s.A.c.CuidadoController {getAll} [http-nio-8080-exec-5] BEGIN getAll
+2025-08-02 17:17:21,102 INFO c.s.A.c.CuidadoController {getAll} [http-nio-8080-exec-5] END getAll
+2025-08-02 17:17:42,026 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-6] BEGIN deleteCuidado
+2025-08-02 17:17:42,077 INFO c.s.A.c.CuidadoController {deleteCuidado} [http-nio-8080-exec-6] END deleteCuidado
