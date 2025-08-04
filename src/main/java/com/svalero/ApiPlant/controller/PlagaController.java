@@ -1,13 +1,10 @@
 package com.svalero.ApiPlant.controller;
 
-import com.svalero.ApiPlant.domain.Consejo;
 import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.service.PlagaService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +26,6 @@ public class PlagaController {
 
     @Autowired
     private PlagaService plagaService;
-    @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(PlagaController.class);
 
 
     @GetMapping("/plagas")
@@ -40,8 +35,6 @@ public class PlagaController {
             @RequestParam(value = "esLetal", required = false) Boolean esLetal,  /*la Exc que devuelve es de tipo 404 xq no convierte bien el float*/
             @RequestParam Map<String, String> allParams) throws PlagaNotFoundException {
 
-        logger.info("BEGIN getAll");
-
         Set<String> validParams = Set.of("nombre", "riesgo", "esLetal");
         for (String param : allParams.keySet()) {
             if (!validParams.contains(param)) {
@@ -49,48 +42,37 @@ public class PlagaController {
             }
         }
 
-        logger.info("END getAll");
         return new ResponseEntity<>(plagaService.getAll(nombre, riesgo, esLetal), HttpStatus.OK);
     }
 
     @GetMapping("/plagas/:plagaId")
     public ResponseEntity <PlagaOutDto> getPlaga(long plagaId) throws PlagaNotFoundException {
-        logger.info("BEGIN getById");
         PlagaOutDto plagaOutDto = plagaService.get(plagaId);
-        logger.info("END getById");
         return new ResponseEntity<>(plagaOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/plagas")
     public ResponseEntity<Plaga> addPlaga(@Valid @RequestBody PlagaInDto plagaInDto) {
-        logger.info("BEGIN addPlaga");
-        Plaga plaga = plagaService.add(plagaInDto);
-        logger.info("END addPlaga");
         return ResponseEntity.status(HttpStatus.CREATED).body(plagaService.add(plagaInDto));
     }
 
 
 
     @PutMapping("/plagas/:plagaId")
-    public ResponseEntity<PlagaOutDto> modifyPlaga(long plagaId, @Valid @RequestBody PlagaInDto plaga)
-            throws  PlagaNotFoundException, PlantaNotFoundException {
-        logger.info("BEGIN putPlaga");
+    public ResponseEntity<PlagaOutDto> modifyPlaga(long plagaId, @Valid @RequestBody PlagaInDto plaga) throws  PlagaNotFoundException, PlantaNotFoundException {
         PlagaOutDto modifiedPlaga = plagaService.modify(plagaId, plaga);
-        logger.info("END putPlaga");
         return new ResponseEntity<>(modifiedPlaga, HttpStatus.OK);
     }
 
     @DeleteMapping("/plagas/:plagaId")
     public ResponseEntity<Void> removePlaga(long plagaId) throws PlagaConflictException, PlagaNotFoundException {
-        logger.info("BEGIN deletePlaga");
-        plagaService.remove(plagaId);
-        logger.info("END deletePlaga");
-        return ResponseEntity.noContent().build();
+            plagaService.remove(plagaId);
+            return ResponseEntity.noContent().build();
     }
 
 
-//CONTROL DE EXCEPCIONES ******************
+    //CONTROL DE EXCEPCIONES ******************
 
     @ExceptionHandler  (PlagaNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlagaNotFoundException(PlagaNotFoundException exception) {

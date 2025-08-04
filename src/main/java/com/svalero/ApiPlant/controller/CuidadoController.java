@@ -9,8 +9,6 @@ import com.svalero.ApiPlant.service.CuidadoService;
 import com.svalero.ApiPlant.service.PlantaService;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +30,11 @@ public class CuidadoController {
     @Autowired
     private CuidadoService cuidadoService;
     @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(CuidadoController.class);
+    private CuidadoRepository cuidadoRepository;
+    @Autowired
+    private PlantaRepository plantaRepository;
+    @Autowired
+    private PlantaService plantaService;
 
 
     @GetMapping("/cuidados")
@@ -42,8 +44,6 @@ public class CuidadoController {
             @RequestParam(value = "esInterior", required = false) Boolean esInterior,
             @RequestParam Map<String, String> allParams) throws CuidadoNotFoundException {
 
-        logger.info("BEGIN getAll");
-
         Set<String> validParams = Set.of("riego", "sustrato", "esInterior");
         for (String param : allParams.keySet()) {
             if (!validParams.contains(param)) {
@@ -51,46 +51,37 @@ public class CuidadoController {
             }
         }
 
-        logger.info("END getAll");
         return new ResponseEntity<>(cuidadoService.getAll(riego, sustrato, esInterior), HttpStatus.OK);
     }
 
 
     @GetMapping("/cuidados/:cuidadoId")
     public ResponseEntity<CuidadoOutDto> getCuidado(long cuidadoId) throws CuidadoNotFoundException {
-        logger.info("BEGIN getById");
         CuidadoOutDto cuidadoOutDto = cuidadoService.get(cuidadoId);
-        logger.info("END getById");
         return new ResponseEntity<>(cuidadoOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/cuidados")
     public ResponseEntity<CuidadoOutDto> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) {
-        logger.info("BEGIN addCuidado");
         CuidadoOutDto nuevoCuidado = cuidadoService.addCuidado(cuidadoInDto);
-        logger.info("END addCuidado");
         return new ResponseEntity<>(nuevoCuidado, HttpStatus.CREATED);
     }
 
 
     @PutMapping("/cuidados/:cuidadoId")
-    public ResponseEntity<CuidadoOutDto> modifyCuidado(long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado)
-            throws CuidadoNotFoundException, CuidadoConflictException {
-        logger.info("BEGIN putCuidado");
+    public ResponseEntity<CuidadoOutDto> modifyCuidado(long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado) throws CuidadoNotFoundException, CuidadoConflictException {
         CuidadoOutDto modifiedCuidado = cuidadoService.modify(cuidadoId, cuidado);
-        logger.info("END putCuidado");
         return new ResponseEntity<>(modifiedCuidado, HttpStatus.NOT_FOUND);
     }
 
 
     @DeleteMapping("/cuidados/{cuidadoId}")
     public ResponseEntity<Void> deleteCuidado(Long cuidadoId) throws CuidadoNotFoundException, CuidadoConflictException {
-        logger.info("BEGIN deleteCuidado");
         cuidadoService.remove(cuidadoId);
-        logger.info("END deleteCuidado");
         return ResponseEntity.noContent().build();
     }
+
 
 
 

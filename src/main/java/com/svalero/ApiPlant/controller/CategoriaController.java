@@ -12,8 +12,6 @@ import com.svalero.ApiPlant.service.CuidadoService;
 import com.svalero.ApiPlant.service.PlantaService;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +33,11 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
     @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(CategoriaController.class);
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private PlantaRepository plantaRepository;
+    @Autowired
+    private PlantaService plantaService;
 
 
     @GetMapping("/categorias")
@@ -45,33 +47,26 @@ public class CategoriaController {
             @RequestParam(value = "paraPrincipiantes", required = false) Boolean paraPrincipiantes,
             @RequestParam Map<String, String> allParams) throws CategoriaNotFoundException {
 
-        logger.info("BEGIN getAll");
-
         Set<String> validParams = Set.of("nombre", "nivelDificultad", "paraPrincipiantes");
         for (String param : allParams.keySet()) {
             if (!validParams.contains(param)) {
                 throw new InvalidParameterException("Parámetro inválido: " + param);
             }
         }
-        logger.info("END getAll");
         return new ResponseEntity<>(categoriaService.getAll(nombre, nivelDificultad, paraPrincipiantes), HttpStatus.OK);
     }
 
 
     @GetMapping("/categorias/:categoriaId")
     public ResponseEntity <CategoriaOutDto> getCategoria(long categoriaId) throws CategoriaNotFoundException {
-        logger.info("BEGIN getById");
         CategoriaOutDto categoriaOutDto = categoriaService.get(categoriaId);
-        logger.info("END getById");
         return new ResponseEntity<>(categoriaOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping ("/categorias")
     public ResponseEntity <CategoriaOutDto> addCategoria (@Valid @RequestBody CategoriaInDto categoriaInDto) {
-        logger.info("BEGIN postCategoria");
         CategoriaOutDto newCategoria = categoriaService.addCategoria(categoriaInDto);
-        logger.info("END postCategoria");
         return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
     }
 
@@ -79,18 +74,14 @@ public class CategoriaController {
     @PutMapping ("/categorias/:categoriaId")
     public ResponseEntity<CategoriaOutDto> modifyCategoria (long categoriaId, @Valid @RequestBody CategoriaInDto categoria)
             throws  CategoriaNotFoundException, CategoriaConflictException {
-        logger.info("BEGIN putCategoria");
         CategoriaOutDto modifiedCategoria = categoriaService.modify(categoriaId, categoria);
-        logger.info("END putCategoria");
         return new ResponseEntity<>(modifiedCategoria, HttpStatus.NOT_FOUND);
     }
 
 
     @DeleteMapping ("/categorias/:categoriaId")
     public ResponseEntity<Void> deleteCategoria(long categoriaId) throws CategoriaNotFoundException, CategoriaConflictException {
-        logger.info("BEGIN deleteCategoria");
        categoriaService.remove(categoriaId);
-        logger.info("END deleteCategoria");
        return  ResponseEntity.noContent().build();
     }
 
