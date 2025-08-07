@@ -17,6 +17,7 @@ import java.util.List;
 
 public class Cuidado {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idCuidado;
@@ -31,12 +32,17 @@ public class Cuidado {
     @Column (name="fecha_registro")  //normalizacion del nombre de la columna de la tabla
     private LocalDate fechaRegistro;
 
+    public Cuidado(long idCuidado) { //para que funcione el idPlanta en los test
+        this.idCuidado = idCuidado;
+    }
 
-   /* @OneToMany(mappedBy = "cuidado")*/
+    /* @OneToMany(mappedBy = "cuidado")*/
     @OneToMany(mappedBy = "cuidado", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference (value = "cuidados_plantas") //para el bucle que se genera xq el cuidado apunta a una planta, qeu apunta a un cuidado...
     @ToString.Exclude
     private List<Planta> plantas;
+
+
 
 }
 

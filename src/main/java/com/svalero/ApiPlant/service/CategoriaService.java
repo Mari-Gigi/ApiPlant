@@ -1,9 +1,12 @@
 package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.Categoria;
+import com.svalero.ApiPlant.domain.Cuidado;
 import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.CategoriaInDto;
 import com.svalero.ApiPlant.domain.dto.CategoriaOutDto;
+import com.svalero.ApiPlant.domain.dto.CuidadoInDto;
+import com.svalero.ApiPlant.domain.dto.CuidadoOutDto;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.CategoriaRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
@@ -18,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.util.stream.StreamSupport.*;
 
@@ -59,7 +63,7 @@ public class CategoriaService {
         }
 
         if (categoriaList.isEmpty()) { throw new CategoriaNotFoundException(); }
-        return modelMapper.map(categoriaList, new TypeToken<List<Categoria>>() {}.getType());
+        return categoriaList;
     }
 
 
@@ -88,13 +92,31 @@ public class CategoriaService {
 
 
     //AÑADE CATEGORIA CON INDTO *****************
-    public CategoriaOutDto addCategoria(CategoriaInDto dto) {
+    public CategoriaOutDto addCategoria(CategoriaInDto dto) throws PlantaNotFoundException {
         Categoria categoria = modelMapper.map(dto, Categoria.class);
         categoria.setFechaRegistro(LocalDate.now());
 
-        Categoria saved = categoriaRepository.save(categoria);
-        return modelMapper.map(saved, CategoriaOutDto.class);
+        if (dto.getPlantaIds() != null && !dto.getPlantaIds().isEmpty()) {
+            Iterable<Planta> iterablePlantas = plantaRepository.findAllById(dto.getPlantaIds());
+            List<Planta> plantas = StreamSupport.stream(iterablePlantas.spliterator(), false)
+                    .collect(Collectors.toList());
+            if (plantas.isEmpty()){
+                throw new PlantaNotFoundException();
+            }
+            categoria.setPlantas(plantas);
+        }
 
+        Categoria saved = categoriaRepository.save(categoria);
+
+        //mapeado manual porque sino devuelve null es plantaIds
+        CategoriaOutDto dtoOut = modelMapper.map(saved, CategoriaOutDto.class);
+
+        List<Long> plantaIds = saved.getPlantas().stream()
+                .map(Planta::getId_planta)
+                .collect(Collectors.toList());
+        dtoOut.setPlantaIds(plantaIds);
+
+        return dtoOut;
     }
 
 

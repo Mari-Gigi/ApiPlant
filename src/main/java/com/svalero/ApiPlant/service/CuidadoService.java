@@ -40,38 +40,33 @@ public class CuidadoService {
 
     // MUESTRA CUIDADOS CON FILTROS ***********************
     public List<Cuidado> getAll(String riego, String sustrato, Boolean esInterior) throws CuidadoNotFoundException {
-        List<Cuidado> cuidadoList;
-
         boolean riegoVacio = (riego == null || riego.isEmpty());
         boolean sustratoVacio = (sustrato == null || sustrato.isEmpty());
 
+        List<Cuidado> cuidadoList;
+
         if (riegoVacio && sustratoVacio && esInterior == null) {
             cuidadoList = cuidadoRepository.findAll();
-        } else if (!riegoVacio && sustratoVacio && esInterior == null) {
-            cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCase(riego);
-        } else if (riegoVacio && !sustratoVacio && esInterior == null) {
-            cuidadoList = cuidadoRepository.findBySustratoContainingIgnoreCase(sustrato);
-        } else if (riegoVacio && sustratoVacio) {
-            // Solo filtro por esInterior
-            cuidadoList = cuidadoRepository.findByEsInterior(esInterior);
-        } else if (!riegoVacio && sustratoVacio) {
-            cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCaseAndEsInterior(riego, esInterior);
-        } else if (riegoVacio) {
-            cuidadoList = cuidadoRepository.findBySustratoContainingIgnoreCaseAndEsInterior(sustrato, esInterior);
-        } else if (esInterior != null) {
+        } else if (!riegoVacio && !sustratoVacio && esInterior != null) {
             cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCaseAndSustratoContainingIgnoreCaseAndEsInterior(riego, sustrato, esInterior);
-        } else {
-            // Caso: riego y sustrato definidos pero esInterior == null
-            cuidadoList = cuidadoRepository.findAll().stream()
-                    .filter(c -> c.getRiego().toLowerCase().contains(riego.toLowerCase()))
-                    .filter(c -> c.getSustrato().toLowerCase().contains(sustrato.toLowerCase()))
-                    .collect(Collectors.toList());
+        } else if (!riegoVacio && !sustratoVacio) {
+            cuidadoList = cuidadoRepository.findByRiegoContainingIgnoreCaseAndSustratoContainingIgnoreCase(riego, sustrato);
+        } else if (!riegoVacio) {
+            cuidadoList = (esInterior == null)
+                    ? cuidadoRepository.findByRiegoContainingIgnoreCase(riego)
+                    : cuidadoRepository.findByRiegoContainingIgnoreCaseAndEsInterior(riego, esInterior);
+        } else if (!sustratoVacio) {
+            cuidadoList = (esInterior == null)
+                    ? cuidadoRepository.findBySustratoContainingIgnoreCase(sustrato)
+                    : cuidadoRepository.findBySustratoContainingIgnoreCaseAndEsInterior(sustrato, esInterior);
+        } else { // solo esInterior no nulo
+            cuidadoList = cuidadoRepository.findByEsInterior(esInterior);
         }
 
-        if (cuidadoList.isEmpty()) { throw new CuidadoNotFoundException(); }
-        return modelMapper.map(cuidadoList, new TypeToken<List<Cuidado>>() {}.getType());
-    }
+        if (cuidadoList.isEmpty()) throw new CuidadoNotFoundException();
 
+        return cuidadoList;
+    }
 
     //MUESTRA CUIDADOS POR ID CON OUTDTO ********************************
     public CuidadoOutDto get(long idCuidado) throws CuidadoNotFoundException {
@@ -94,18 +89,36 @@ public class CuidadoService {
         return dto;
     }
 
-
-    public CuidadoOutDto  addCuidado(CuidadoInDto dto) {
+    public CuidadoOutDto  addCuidado(CuidadoInDto dto) throws PlantaNotFoundException {
         Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
         cuidado.setFechaRegistro(LocalDate.now());
 
+        // Si plantaIds no es null ni vacío, carga las plantas
+        if (dto.getPlantaIds() != null && !dto.getPlantaIds().isEmpty()) {
+            Iterable<Planta> iterablePlantas = plantaRepository.findAllById(dto.getPlantaIds());
+            List<Planta> plantas = StreamSupport.stream(iterablePlantas.spliterator(), false)
+                    .collect(Collectors.toList());
+            if (plantas.isEmpty()) {
+                throw new PlantaNotFoundException();
+            }
+            cuidado.setPlantas(plantas);
+        }
+
         Cuidado saved = cuidadoRepository.save(cuidado);
-        return modelMapper.map(saved, CuidadoOutDto.class);
+
+        //mapeado manual porque sino devuelve null es plantaIds
+        CuidadoOutDto dtoOut = modelMapper.map(saved, CuidadoOutDto.class);
+
+            List<Long> plantaIds = saved.getPlantas().stream()
+                    .map(Planta::getId_planta)
+                    .collect(Collectors.toList());
+            dtoOut.setPlantaIds(plantaIds);
+
+        return dtoOut;
     }
 
-
     // MODIFICA CUIDADO POR ID  CON REVISION DE OCNFLICTO POR PLANTA**********************
-   public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException, CuidadoConflictException {
+    public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException, CuidadoConflictException {
        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
                .orElseThrow(CuidadoNotFoundException::new);
        //recupero los actuales plantaIds asociados
@@ -146,7 +159,6 @@ public class CuidadoService {
        return outDto;
    }
 
-
     //BORRA CUIDADO POR ID CON REVISION DE CONFLICTO CON PLANTA **********************
     public void remove(Long idCuidado) throws CuidadoNotFoundException, CuidadoConflictException {
         cuidadoRepository.findById(idCuidado).orElseThrow(CuidadoNotFoundException::new);
@@ -158,7 +170,6 @@ public class CuidadoService {
 
         cuidadoRepository.deleteById(idCuidado);
     }
-
 
 
 }

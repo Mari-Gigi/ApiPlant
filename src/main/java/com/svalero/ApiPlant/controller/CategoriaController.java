@@ -65,7 +65,7 @@ public class CategoriaController {
 
 
     @PostMapping ("/categorias")
-    public ResponseEntity <CategoriaOutDto> addCategoria (@Valid @RequestBody CategoriaInDto categoriaInDto) {
+    public ResponseEntity <CategoriaOutDto> addCategoria (@Valid @RequestBody CategoriaInDto categoriaInDto) throws PlantaNotFoundException{
         CategoriaOutDto newCategoria = categoriaService.addCategoria(categoriaInDto);
         return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
     }

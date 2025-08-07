@@ -31,7 +31,7 @@ public class PlagaService {
     private ModelMapper modelMapper;
 
     //MUESTRA PLAGAS CON FILTROS **************************
-    public List<PlagaOutDto> getAll(String nombre, Float riesgo, Boolean esLetal) throws PlagaNotFoundException {
+    public List<Plaga> getAll(String nombre, Float riesgo, Boolean esLetal) throws PlagaNotFoundException {
         List<Plaga> plagaList;
 
         boolean nombreVacio = (nombre == null || nombre.isEmpty());
@@ -56,18 +56,12 @@ public class PlagaService {
             plagaList = plagaRepository.findByNombreContainingIgnoreCaseAndRiesgoAndEsLetal(nombre, riesgo, esLetal);
         }
 
-        if (plagaList.isEmpty()) { throw new PlagaNotFoundException(); }
-        return plagaList.stream().map(plaga -> {
-            PlagaOutDto dto = modelMapper.map(plaga, PlagaOutDto.class);
-            List<Long> plantaIds = Optional.ofNullable(plaga.getPlantas())
-                    .orElseGet(Collections::emptyList)
-                    .stream()
-                    .map(Planta::getId_planta)
-                    .toList();
-            dto.setPlantaIds(plantaIds);
-            return dto;
-        }).toList();
+        if (plagaList.isEmpty()) throw new PlagaNotFoundException();
+
+        return plagaList;
+
     }
+
 
     //MUESTRA PLAGAS POR ID CON OUTDTO ********************************
     public PlagaOutDto get(long idPlaga) throws PlagaNotFoundException {
@@ -103,6 +97,7 @@ public class PlagaService {
         return plagaRepository.save(plaga);
 
     }
+
 
     //MODIFICA PLAGA POR ID CON OUTDTO *******************
 
@@ -145,7 +140,6 @@ public class PlagaService {
 
         return out;
     }
-
 
 
     //BORRA PLAGA POR ID ********************************

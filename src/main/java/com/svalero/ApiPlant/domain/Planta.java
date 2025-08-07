@@ -32,6 +32,9 @@ public class Planta {
     private Boolean esToxica; //con mayuscula consigo que el valor del booleano pueda ser tambien  null
 
 
+    public Planta(long id_planta) {    //para que funcione el idPlanta en los test de Cuidado GETBYID
+        this.id_planta = id_planta;
+    }
 
 
     //RELACIONES ENTRE ENTIDADES **********************

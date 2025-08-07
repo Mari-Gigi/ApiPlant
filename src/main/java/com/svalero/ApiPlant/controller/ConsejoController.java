@@ -29,7 +29,7 @@ public class ConsejoController {
     private ConsejoService consejoService;
 
     @GetMapping("/consejos")
-    public ResponseEntity<List<ConsejoOutDto>> getAll(
+    public ResponseEntity<List<Consejo>> getAll(
             @RequestParam(value = "titulo", defaultValue = "") String titulo,
             @RequestParam(value = "verificado", required = false) Boolean verificado,
             @RequestParam(value = "importancia", required = false) Float importancia,  /*la Exc que devuelve es de tipo 404 xq no convierte bien el float*/

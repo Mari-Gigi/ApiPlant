@@ -35,6 +35,11 @@ public class Plaga {
    @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
 
+
+    public Plaga(long idPlaga) {    //para que funcione el idPlaga en los test de modifyPLanta
+        this.idPlaga = idPlaga;
+    }
+
     @ManyToMany(mappedBy = "plagas")
     @JsonBackReference
     @ToString.Exclude

@@ -29,7 +29,7 @@ public class PlagaController {
 
 
     @GetMapping("/plagas")
-    public ResponseEntity<List<PlagaOutDto>> getAll(
+    public ResponseEntity<List<Plaga>> getAll(
             @RequestParam(value = "nombre", defaultValue = "") String nombre,
             @RequestParam(value = "riesgo", required = false) Float riesgo,
             @RequestParam(value = "esLetal", required = false) Boolean esLetal,  /*la Exc que devuelve es de tipo 404 xq no convierte bien el float*/

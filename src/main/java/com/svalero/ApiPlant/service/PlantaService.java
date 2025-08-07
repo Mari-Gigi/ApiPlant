@@ -1,5 +1,3 @@
-//es la capa de la logica del proyecto
-
 package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.*;
@@ -13,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,20 +38,20 @@ public class PlantaService {
     // MUESTRA PLANTAS CON FILTROS ***********************
     /*devuelve el array de plagas como null xq el model mapper no lo reconoce */
     public List<PlantaOutDto> getAll(String genero, String especie, Boolean esToxica) throws PlantaNotFoundException{
-        List<Planta> plantaList;
+        List<Planta> plantaList; //lista de objetos Planta que contendra la consulta
 
         boolean generoVacio = (genero == null || genero.isEmpty());
         boolean especieVacio = (especie == null || especie.isEmpty());
 
-        if (generoVacio && especieVacio && esToxica == null) {
+        if (generoVacio && especieVacio && esToxica == null) { //sino hay filtro, devuelve todas.
             plantaList = plantaRepository.findAll();
-        } else if (!generoVacio && especieVacio && esToxica == null) {
+        } else if (!generoVacio && especieVacio && esToxica == null) { //solo se pasa genero
             plantaList = plantaRepository.findByGeneroContainingIgnoreCase(genero);
-        } else if (generoVacio && !especieVacio && esToxica == null) {
+        } else if (generoVacio && !especieVacio && esToxica == null) { //solo por especie
             plantaList = plantaRepository.findByEspecieContainingIgnoreCase(especie);
-        } else if (generoVacio && especieVacio) {
+        } else if (generoVacio && especieVacio) { //solo por toxica
             plantaList = esToxica ? plantaRepository.findByEsToxicaTrue() : plantaRepository.findByEsToxicaFalse();
-        } else if (!generoVacio && especieVacio) {
+        } else if (!generoVacio && especieVacio) { //genero y toicidad
             plantaList = esToxica ? plantaRepository.findByGeneroContainingIgnoreCaseAndEsToxicaTrue(genero)
                     : plantaRepository.findByGeneroContainingIgnoreCaseAndEsToxicaFalse(genero);
         } else if (generoVacio) {
@@ -64,21 +61,22 @@ public class PlantaService {
             plantaList = esToxica ? plantaRepository.findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCaseAndEsToxicaTrue(genero, especie)
                     : plantaRepository.findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCaseAndEsToxicaFalse(genero, especie);
         } else {
-            plantaList = plantaRepository.findAll().stream()
-                    .filter(p -> p.getGenero().toLowerCase().contains(genero.toLowerCase()))
-                    .filter(p -> p.getEspecie().toLowerCase().contains(especie.toLowerCase()))
-                    .collect(Collectors.toList());
+            plantaList = plantaRepository.findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCase(genero, especie);
         }
 
-        if (plantaList.isEmpty()) { throw new PlantaNotFoundException(); }
-
-        return plantaList.stream()
+        List<PlantaOutDto> dtoList = plantaList.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
+        if (dtoList.isEmpty()) {
+            throw new PlantaNotFoundException();
+        }
+
+        return dtoList;
+
     }
 
-    //CONVIERTE LA LISTA DE PLAGAS EN UNA LISTA DE PLAGAIDS
+    //VERIFICA SI HAY REGISTRO DE PLAGASIDS Y CONSEJOSIDS Y LOS DEVUELVE COMO LISTA (O COMO LISTA VACIA)
     private PlantaOutDto convertToDto(Planta planta) {
         PlantaOutDto dto = modelMapper.map(planta, PlantaOutDto.class);
 
@@ -104,45 +102,36 @@ public class PlantaService {
     //DEVUELVE PLANTA POR ID CON OUTDTO ******************************
     public PlantaOutDto get(long id_planta) throws PlantaNotFoundException {
         Planta planta = plantaRepository.findById(id_planta).orElseThrow(PlantaNotFoundException::new);
-
-        PlantaOutDto dto = new PlantaOutDto();
-        dto.setId_planta(planta.getId_planta());
-        dto.setGenero(planta.getGenero());
-        dto.setEspecie(planta.getEspecie());
-        dto.setEsToxica(planta.getEsToxica());
-        dto.setAlturaMaxima(planta.getAlturaMaxima());
-        dto.setTipoCrecimiento(planta.getTipoCrecimiento());
-
-        // Mapear ID de cuidado y categoría
-        if (planta.getCuidado() != null) {
-            dto.setCuidadoId(planta.getCuidado().getIdCuidado());
-        }
-
-        if (planta.getCategoria() != null) {
-            dto.setCategoriaId(planta.getCategoria().getIdCategoria());
-        }
-
-        // Obtener solo los IDs de las plagas
-        List<Long> plagaIds = planta.getPlagas() != null
-                ? planta.getPlagas().stream()
-                .map(Plaga::getIdPlaga)
-                .collect(Collectors.toList())
-                : new ArrayList<>();
-
-        dto.setPlagaIds(plagaIds);
-
-        // Obtener solo los IDs de los consejos
-        List<Long> consejoIds = planta.getConsejos() != null
-                ? planta.getConsejos().stream()
-                .map(Consejo::getIdConsejo)
-                .collect(Collectors.toList())
-                : new ArrayList<>();
-
-        dto.setConsejoIds(consejoIds);
-
-        return dto;
+        return convertToDto(planta);
     }
 
+    //ASIGNAR PLAGAS Y CONSEJOS ********************************
+    private void asignarPlagasYConsejos(Planta planta, PlantaInDto plantaInDto)
+            throws PlagaNotFoundException, ConsejoNotFoundException {
+
+
+        if (plantaInDto.getPlagaIds() != null && !plantaInDto.getPlagaIds().isEmpty()) {
+            List<Plaga> plagas = StreamSupport.stream(
+                            plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false)
+                    .collect(Collectors.toList());
+
+            if (plagas.size() != plantaInDto.getPlagaIds().size()) { throw new PlagaNotFoundException();}
+            planta.setPlagas(plagas);
+        } else {
+            planta.setPlagas(new ArrayList<>());
+        }
+
+        if (plantaInDto.getConsejoIds() != null && !plantaInDto.getConsejoIds().isEmpty()) {
+            List<Consejo> consejos = StreamSupport.stream(
+                            consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false)
+                    .collect(Collectors.toList());
+
+            if (consejos.size() != plantaInDto.getConsejoIds().size()) {throw new ConsejoNotFoundException();}
+            planta.setConsejos(consejos);
+        } else {
+            planta.setConsejos(new ArrayList<>());
+        }
+    }
 
     // AÑADE PLANTA CON INDTO **********************************
     public PlantaOutDto add(PlantaInDto plantaInDto) throws
@@ -158,48 +147,10 @@ public class PlantaService {
         planta.setCuidado(cuidado);
         planta.setCategoria(categoria);
 
-        // PLagas: revisa si existen (sino tira Excep) y añade
-        if (plantaInDto.getPlagaIds() != null && !plantaInDto.getPlagaIds().isEmpty()) {
-            List<Plaga> plagas = StreamSupport.stream(
-                            plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false)
-                    .collect(Collectors.toList());
+        asignarPlagasYConsejos(planta, plantaInDto);
 
-            if (plagas.size() != plantaInDto.getPlagaIds().size())
-                throw new PlagaNotFoundException();
-
-            planta.setPlagas(plagas);
-        } else {
-            planta.setPlagas(new ArrayList<>());
-        }
-
-        // Consejos: revisa si existen (sino tira Excep) y añde
-        if (plantaInDto.getConsejoIds() != null && !plantaInDto.getConsejoIds().isEmpty()) {
-            List<Consejo> consejos = StreamSupport.stream(
-                            consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false)
-                    .collect(Collectors.toList());
-
-            if (consejos.size() != plantaInDto.getConsejoIds().size())
-                throw new ConsejoNotFoundException();
-
-            planta.setConsejos(consejos);
-        } else {
-            planta.setConsejos(new ArrayList<>());
-        }
-
-        // Guardar planta y mapea el outdto
-        Planta newPlanta = plantaRepository.save(planta);
-        PlantaOutDto plantaOutDto = modelMapper.map(newPlanta, PlantaOutDto.class);
-
-        // Asegurar que los IDs de plagas y consejos estén en el DTO de salida (sin esto devuelve null!!!!!!!!!!!!!)
-        plantaOutDto.setPlagaIds(
-                newPlanta.getPlagas().stream().map(Plaga::getIdPlaga).collect(Collectors.toList()));
-
-        plantaOutDto.setConsejoIds(
-                newPlanta.getConsejos().stream().map(Consejo::getIdConsejo).collect(Collectors.toList()));
-
-        return plantaOutDto;
+        return convertToDto(plantaRepository.save(planta));
     }
-
 
     //MODIFICA PLANTA POR ID ***********
     public PlantaOutDto modify(long plantaId, @Valid @RequestBody PlantaInDto plantaInDto)
@@ -214,20 +165,7 @@ public class PlantaService {
         modelMapper.map(plantaInDto, planta);
 
         // Asigna plagas y consejos si los ha recibido
-        if (plantaInDto.getPlagaIds() != null) {
-            List<Plaga> plagas = StreamSupport.stream(
-                            plagaRepository.findAllById(plantaInDto.getPlagaIds()).spliterator(), false)
-                    .collect(Collectors.toList());
-            planta.setPlagas(plagas);
-        }
-
-        if (plantaInDto.getConsejoIds() != null) {
-            List<Consejo> consejos = StreamSupport.stream(
-                            consejoRepository.findAllById(plantaInDto.getConsejoIds()).spliterator(), false)
-                    .collect(Collectors.toList());
-            planta.setConsejos(consejos);
-        }
-
+        asignarPlagasYConsejos(planta, plantaInDto);
         plantaRepository.save(planta);
 
         // Mapear la entidad modificada al DTO de salida
@@ -247,13 +185,11 @@ public class PlantaService {
         return plantaOutDto;
     }
 
-
     //BORRA PLANTA POR ID ***********************
     public void remove (long id_planta) throws PlantaNotFoundException{
 
         plantaRepository.findById(id_planta).orElseThrow(PlantaNotFoundException::new);
         plantaRepository.deleteById(id_planta);
     }
-
 
 }

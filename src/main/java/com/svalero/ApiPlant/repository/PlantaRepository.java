@@ -29,6 +29,8 @@ public interface PlantaRepository extends CrudRepository<Planta,Long> {
     List<Planta> findByEspecieContainingIgnoreCaseAndEsToxicaFalse(String especie);
     List<Planta> findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCaseAndEsToxicaTrue(String genero, String especie);
     List<Planta> findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCaseAndEsToxicaFalse(String genero, String especie);
+    List <Planta>findByGeneroContainingIgnoreCaseAndEspecieContainingIgnoreCase(String genero, String especie);
+
 
 
 

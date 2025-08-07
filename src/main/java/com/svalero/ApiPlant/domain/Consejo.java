@@ -31,8 +31,12 @@ public class Consejo {
     private boolean verificado;
     @Column
     private float importancia;
-   @Column (name="fecha_registro")
+    @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
+
+    public Consejo(long idConsejo) {    //para que funcione el idConsejo en los test de modifyPLanta
+        this.idConsejo = idConsejo;
+    }
 
     @ManyToMany(mappedBy = "consejos")
     @JsonBackReference

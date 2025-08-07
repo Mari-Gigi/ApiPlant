@@ -30,7 +30,7 @@ public class ConsejoService {
 
 
     //MUESTRA CONSEJOS CON FILTROS SIN OUTDTO************************
-    public List<ConsejoOutDto> getAll(String titulo, Boolean verificado, Float importancia) throws ConsejoNotFoundException{
+    public List<Consejo> getAll(String titulo, Boolean verificado, Float importancia) throws ConsejoNotFoundException{
         List<Consejo> consejoList;
 
         boolean tituloVacio = (titulo == null || titulo.isEmpty());
@@ -56,16 +56,7 @@ public class ConsejoService {
 
         if (consejoList.isEmpty()) { throw new ConsejoNotFoundException(); }
 
-        // Convertir a DTOs
-        return consejoList.stream().map(consejo -> {
-            ConsejoOutDto dto = modelMapper.map(consejo, ConsejoOutDto.class);
-            dto.setPlantaIds(Optional.ofNullable(consejo.getPlantas())
-                    .orElse(List.of())
-                    .stream()
-                    .map(Planta::getId_planta)
-                    .toList());
-            return dto;
-        }).toList();
+        return consejoList;
     }
 
 
@@ -101,7 +92,6 @@ public class ConsejoService {
         return consejoRepository.save(consejo);
 
     }
-
 
 
     // MODIFICA CONSEJO POR ID CON OUTDTO *******************

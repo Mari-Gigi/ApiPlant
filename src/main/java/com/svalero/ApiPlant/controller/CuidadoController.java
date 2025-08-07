@@ -63,7 +63,7 @@ public class CuidadoController {
 
 
     @PostMapping("/cuidados")
-    public ResponseEntity<CuidadoOutDto> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) {
+    public ResponseEntity<CuidadoOutDto> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) throws PlantaNotFoundException {
         CuidadoOutDto nuevoCuidado = cuidadoService.addCuidado(cuidadoInDto);
         return new ResponseEntity<>(nuevoCuidado, HttpStatus.CREATED);
     }

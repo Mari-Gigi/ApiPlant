@@ -32,10 +32,16 @@ public class Categoria {
     @Column (name="fecha_registro")
     private LocalDate fechaRegistro;
 
+
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference(value = "categoria_plantas")
     @ToString.Exclude
     private List<Planta> plantas;
+
+    // ✅ Constructor para usar en los tests unitarios
+    public Categoria(long idCategoria) {
+        this.idCategoria = idCategoria;
+    }
 
 }
 
