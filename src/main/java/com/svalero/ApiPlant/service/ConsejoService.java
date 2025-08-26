@@ -28,6 +28,10 @@ public class ConsejoService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
 
     //MUESTRA CONSEJOS CON FILTROS SIN OUTDTO************************
     public List<Consejo> getAll(String titulo, Boolean verificado, Float importancia) throws ConsejoNotFoundException{
@@ -84,11 +88,29 @@ public class ConsejoService {
 
 
     //AÑADE CONSEJO CON INDTO *****************
-    public Consejo add(ConsejoInDto consejoInDto) {
+    public Consejo add(ConsejoInDto consejoInDto) throws PlantaNotFoundException{
 
         Consejo consejo= modelMapper.map(consejoInDto, Consejo.class);
         consejo.setFechaRegistro(LocalDate.now());
 
+        // Verificar que todas las plantas existen si se enviaron IDs
+        if (consejoInDto.getPlantaIds() != null && !consejoInDto.getPlantaIds().isEmpty()) {
+            List<Planta> plantas = StreamSupport
+                    .stream(plantaRepository.findAllById(consejoInDto.getPlantaIds()).spliterator(), false)
+                    .toList();
+
+            if (plantas.size() != consejoInDto.getPlantaIds().size()) {
+                // Detectar qué IDs no existen
+                List<Long> existentes = plantas.stream().map(Planta::getId_planta).toList();
+                List<Long> faltantes = consejoInDto.getPlantaIds().stream()
+                        .filter(id -> !existentes.contains(id))
+                        .toList();
+                throw new PlantaNotFoundException("No se encontraron plantas con IDs: " + faltantes);
+            }
+
+            // Asignar plantas a la plaga
+            consejo.setPlantas(plantas);
+        }
         return consejoRepository.save(consejo);
 
     }

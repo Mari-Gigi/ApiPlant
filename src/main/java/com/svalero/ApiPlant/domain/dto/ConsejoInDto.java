@@ -19,7 +19,7 @@ public class ConsejoInDto {
     @NotNull(message = "El título es obligado")
     private String titulo;
     private String explicacion;
-    @NotNull (message = "Explicación obligatoria")
+    @NotNull (message = "Verificación obligatoria")
     private Boolean verificado;
     @Min(value = 0, message = "Debe estar entre 0 y 10")
     @Max(value = 10, message = "Debe estar entre 0 y 10")

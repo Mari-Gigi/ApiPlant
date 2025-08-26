@@ -36,6 +36,10 @@ public class CategoriaService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
 
     //MUESTRA CATEGORIAS CON FILTROS SIN OUTDTO************************
     public List<Categoria> getAll(String nombre, Float nivelDificultad, Boolean paraPrincipiantes) throws CategoriaNotFoundException {
@@ -92,30 +96,30 @@ public class CategoriaService {
 
 
     //AÑADE CATEGORIA CON INDTO *****************
-    public CategoriaOutDto addCategoria(CategoriaInDto dto) throws PlantaNotFoundException {
+        //añade sin plantaIds o revisando si la plantaId indicada existe
+    public CategoriaOutDto addCategoria(CategoriaInDto dto) throws PlantaNotFoundException{
         Categoria categoria = modelMapper.map(dto, Categoria.class);
         categoria.setFechaRegistro(LocalDate.now());
 
         if (dto.getPlantaIds() != null && !dto.getPlantaIds().isEmpty()) {
-            Iterable<Planta> iterablePlantas = plantaRepository.findAllById(dto.getPlantaIds());
-            List<Planta> plantas = StreamSupport.stream(iterablePlantas.spliterator(), false)
+            List<Planta> plantas = StreamSupport.stream(plantaRepository.findAllById(dto.getPlantaIds()).spliterator(), false)
                     .collect(Collectors.toList());
-            if (plantas.isEmpty()){
-                throw new PlantaNotFoundException();
+
+            if (plantas.size() != dto.getPlantaIds().size()) {
+                throw new PlantaNotFoundException("PlantaIds indicado inexistente");
             }
+
             categoria.setPlantas(plantas);
         }
 
         Categoria saved = categoriaRepository.save(categoria);
-
-        //mapeado manual porque sino devuelve null es plantaIds
         CategoriaOutDto dtoOut = modelMapper.map(saved, CategoriaOutDto.class);
 
-        List<Long> plantaIds = saved.getPlantas().stream()
-                .map(Planta::getId_planta)
-                .collect(Collectors.toList());
-        dtoOut.setPlantaIds(plantaIds);
-
+        if (saved.getPlantas() != null && !saved.getPlantas().isEmpty()) {
+            dtoOut.setPlantaIds(saved.getPlantas().stream()
+                    .map(Planta::getId_planta)
+                    .collect(Collectors.toList()));
+        }
         return dtoOut;
     }
 
@@ -175,6 +179,5 @@ public class CategoriaService {
 
         categoriaRepository.deleteById(idCategoria);
     }
-
 
 }

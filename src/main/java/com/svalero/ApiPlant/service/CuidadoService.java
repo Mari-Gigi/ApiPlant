@@ -1,25 +1,16 @@
 package com.svalero.ApiPlant.service;
 
 import com.svalero.ApiPlant.domain.Cuidado;
-import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
-import com.svalero.ApiPlant.exception.CuidadoConflictException;
-import com.svalero.ApiPlant.exception.CuidadoNotFoundException;
-import com.svalero.ApiPlant.exception.PlagaNotFoundException;
-import com.svalero.ApiPlant.exception.PlantaNotFoundException;
+import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.CuidadoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +22,14 @@ public class CuidadoService {
 
     @Autowired
     private CuidadoRepository cuidadoRepository;
-
     @Autowired
     private PlantaRepository plantaRepository;
-
     @Autowired
     private ModelMapper modelMapper;
+
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     // MUESTRA CUIDADOS CON FILTROS ***********************
     public List<Cuidado> getAll(String riego, String sustrato, Boolean esInterior) throws CuidadoNotFoundException {
@@ -89,62 +82,58 @@ public class CuidadoService {
         return dto;
     }
 
-    public CuidadoOutDto  addCuidado(CuidadoInDto dto) throws PlantaNotFoundException {
+    //AÑADE CUIDADO CON INDTO *****************
+    //añade sin plantaIds o revisando si la plantaId indicada existe
+    public CuidadoOutDto addCuidado(CuidadoInDto dto) throws PlantaNotFoundException {
         Cuidado cuidado = modelMapper.map(dto, Cuidado.class);
         cuidado.setFechaRegistro(LocalDate.now());
 
-        // Si plantaIds no es null ni vacío, carga las plantas
         if (dto.getPlantaIds() != null && !dto.getPlantaIds().isEmpty()) {
-            Iterable<Planta> iterablePlantas = plantaRepository.findAllById(dto.getPlantaIds());
-            List<Planta> plantas = StreamSupport.stream(iterablePlantas.spliterator(), false)
+            List<Planta> plantas = StreamSupport.stream(plantaRepository.findAllById(dto.getPlantaIds()).spliterator(), false)
                     .collect(Collectors.toList());
-            if (plantas.isEmpty()) {
-                throw new PlantaNotFoundException();
+
+            if (plantas.size() != dto.getPlantaIds().size()) {
+                throw new PlantaNotFoundException("PlantaIds indicado inexistente");
             }
+
             cuidado.setPlantas(plantas);
         }
 
         Cuidado saved = cuidadoRepository.save(cuidado);
-
-        //mapeado manual porque sino devuelve null es plantaIds
         CuidadoOutDto dtoOut = modelMapper.map(saved, CuidadoOutDto.class);
 
-            List<Long> plantaIds = saved.getPlantas().stream()
+        if (saved.getPlantas() != null && !saved.getPlantas().isEmpty()) {
+            dtoOut.setPlantaIds(saved.getPlantas().stream()
                     .map(Planta::getId_planta)
-                    .collect(Collectors.toList());
-            dtoOut.setPlantaIds(plantaIds);
+                    .collect(Collectors.toList()));
+        }
 
         return dtoOut;
     }
 
-    // MODIFICA CUIDADO POR ID  CON REVISION DE OCNFLICTO POR PLANTA**********************
+
+    // MODIFICA CUIDADO POR ID  CON REVISION DE OCNFLICTO POR PLANTA  **********************
+                // puedo modificar cualquier campo menos los plantasIds. Si el cuidado ya est aasociado a plantas, modifica los campos
     public CuidadoOutDto modify(long idCuidado, CuidadoInDto cuidadoInDto) throws CuidadoNotFoundException, CuidadoConflictException {
+
+        //buscame el idCuidado qeu te doy para modificar y sino  esta, lanza excep
        Cuidado cuidado = cuidadoRepository.findById(idCuidado)
                .orElseThrow(CuidadoNotFoundException::new);
-       //recupero los actuales plantaIds asociados
-       List<Long> actualesIds = Optional.ofNullable(cuidado.getPlantas())
+
+       //recupero los actuales plantaIds asociados al idCuidado seleccionado
+       List<Long> actualesPlantaIds = Optional.ofNullable(cuidado.getPlantas())
                .orElseGet(Collections::emptyList)
                .stream()
                .map(Planta::getId_planta)
                .toList();
-       //agrupo los nuevos plantaIds
-       List<Long> nuevosIds = Optional.ofNullable(cuidadoInDto.getPlantaIds())
+       //agrupo los nuevos plantaIds (en el caso de que se hayan modificado (añadido) el en json de entrada)
+       List<Long> nuevosPlantaIds = Optional.ofNullable(cuidadoInDto.getPlantaIds())
                .orElseGet(Collections::emptyList);
 
-       // Reviso los nuevos plantaIds para ver si hay conflicto
-       if (actualesIds.stream().anyMatch(id -> !nuevosIds.contains(id))) {throw new CuidadoConflictException();}
-
-       // Incluye los nuevos plantaIds a ese cuidado
-       List<Long> idsParaAnadir = nuevosIds.stream()
-               .filter(id -> !actualesIds.contains(id))
-               .toList();
-
-       if (!idsParaAnadir.isEmpty()) {
-           List<Planta> plantasParaAnadir = StreamSupport.stream(plantaRepository.findAllById(idsParaAnadir).spliterator(), false)
-                   .toList();
-           if (cuidado.getPlantas() == null) cuidado.setPlantas(new ArrayList<>());
-           cuidado.getPlantas().addAll(plantasParaAnadir);
-       }
+       // Reviso los nuevos plantaIds para ver si se ha quitado/añadido alguna para que salte excep (cuidados solo modificables desde PLanta)
+        if (!actualesPlantaIds.equals(nuevosPlantaIds)) {
+            throw new CuidadoConflictException();
+        }
 
        modelMapper.map(cuidadoInDto, cuidado);
        cuidadoRepository.save(cuidado);

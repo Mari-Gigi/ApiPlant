@@ -30,6 +30,10 @@ public class PlagaService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
     //MUESTRA PLAGAS CON FILTROS **************************
     public List<Plaga> getAll(String nombre, Float riesgo, Boolean esLetal) throws PlagaNotFoundException {
         List<Plaga> plagaList;
@@ -89,10 +93,29 @@ public class PlagaService {
 
 
     //AÑADE PLAGA CON INDTO *******************************
-    public Plaga add(PlagaInDto plagaInDto) {
+    public Plaga add(PlagaInDto plagaInDto) throws PlantaNotFoundException{
 
         Plaga plaga = modelMapper.map(plagaInDto, Plaga.class);
         plaga.setFechaRegistro(LocalDate.now());
+
+        // Verificar que todas las plantas existen si se enviaron IDs
+        if (plagaInDto.getPlantaIds() != null && !plagaInDto.getPlantaIds().isEmpty()) {
+            List<Planta> plantas = StreamSupport
+                    .stream(plantaRepository.findAllById(plagaInDto.getPlantaIds()).spliterator(), false)
+                    .toList();
+
+            if (plantas.size() != plagaInDto.getPlantaIds().size()) {
+                // Detectar qué IDs no existen
+                List<Long> existentes = plantas.stream().map(Planta::getId_planta).toList();
+                List<Long> faltantes = plagaInDto.getPlantaIds().stream()
+                        .filter(id -> !existentes.contains(id))
+                        .toList();
+                throw new PlantaNotFoundException("No se encontraron plantas con IDs: " + faltantes);
+            }
+
+            // Asignar plantas a la plaga
+            plaga.setPlantas(plantas);
+        }
 
         return plagaRepository.save(plaga);
 
@@ -100,7 +123,7 @@ public class PlagaService {
 
 
     //MODIFICA PLAGA POR ID CON OUTDTO *******************
-
+            //recoge plaga por Id, modifica toda la informacion(incluida los plantaids) y te devuelve el dto actualizado
     public PlagaOutDto modify(long idPlaga, PlagaInDto dto) throws PlagaNotFoundException, PlantaNotFoundException {
         // Buscar la plaga por ID, lanzar excepción si no existe
         Plaga plaga = plagaRepository.findById(idPlaga).orElseThrow(PlagaNotFoundException::new);
@@ -108,7 +131,7 @@ public class PlagaService {
         // Copiar los campos del DTO a la entidad Plaga
         modelMapper.map(dto, plaga);
 
-        // Eliminar la relación actual con las plantas (en ambos sentidos)
+        // Eliminar la relación actual con las plantas (en ambos sentidos) para qeu se sincronicen los nuevos Ids en ambos sentidos
         if (plaga.getPlantas() != null)
             plaga.getPlantas().forEach(p -> p.getPlagas().remove(plaga));
 

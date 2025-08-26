@@ -6,10 +6,12 @@ import com.svalero.ApiPlant.domain.dto.CuidadoOutDto;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.*;
 import com.svalero.ApiPlant.service.CuidadoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -34,13 +36,20 @@ public class CuidadoServiceTests {
     @Mock
     private ModelMapper modelMapper;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        cuidadoService.setModelMapper(modelMapper);
+    }
+
     private final List<Cuidado> mockCuidadoList = List.of(
             new Cuidado(1L, true, "frecuente", "Tierra ácida", 80.0f, null, List.of(new Planta(1L))),
             new Cuidado(2L, false, "moderado", "Tierra neutra", 60.0f, null, null)
     );
 
     private final List<CuidadoOutDto> mockCuidadoOutDtoList = List.of(
-            new CuidadoOutDto(1L, true, "frecuente", "Tierra ácida", 80.0f, List.of(99L))
+            new CuidadoOutDto(1L, true, "frecuente", "Tierra ácida", 80.0f, List.of(1L)),
+            new CuidadoOutDto (2L, false, "moderado", "Tierra neutra", 60.0f, List.of(2L))
     );
 
     @Test
@@ -159,6 +168,8 @@ public class CuidadoServiceTests {
         verify(cuidadoRepository, times(1)).findByEsInterior(esInterior);
     }
 
+
+
     @Test
     public void testGetById() throws CuidadoNotFoundException {
 
@@ -188,7 +199,24 @@ public class CuidadoServiceTests {
     }
 
     @Test
-    public void testAdd() throws PlantaNotFoundException {
+    public void testGetById_CuidadoNotFound(){
+        long id = 99L;
+
+        // Simular que no existe esa planta en el repositorio
+        when(cuidadoRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Verificar que lanza la excepción, por eso no hace falta declarar la exc en el throws
+        assertThrows(CuidadoNotFoundException.class, () -> {
+            cuidadoService.get(id);
+        });
+
+        verify(cuidadoRepository, times(1)).findById(id);
+    }
+
+
+
+    @Test
+    public void testAdd() throws PlantaNotFoundException{
 
         //DEFINO EL OBJETO DE ENTRADA (cuidadoINDTO)
         CuidadoInDto cuidadoInDto = new CuidadoInDto(true, "frecuente", "Tierra ácida", 80.0f, List.of(1L));
@@ -230,63 +258,68 @@ public class CuidadoServiceTests {
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
     public void testAdd_plantaNoExiste() throws PlantaNotFoundException {
 
-        //DEFINO EL OBJETO DE ENTRADA (cuidadoINDTO)
+        // DEFINO EL OBJETO DE ENTRADA CON UN ID DE PLANTA QUE NO EXISTE
         CuidadoInDto cuidadoInDto = new CuidadoInDto(true, "frecuente", "Tierra ácida", 80.0f, List.of(99L));
+        Cuidado cuidadoMock = new Cuidado();
 
-        //CREO MOCK mapeado (FICTICIOS) QUE ACTUARAN COMO "BD"
-        Cuidado cuidadoMapped = new Cuidado(99, true, "frecuente", "Tierra ácida", 80.0f, null, null);
+        when(modelMapper.map(cuidadoInDto, Cuidado.class)).thenReturn(cuidadoMock);
+        when(plantaRepository.findAllById(List.of(99L))).thenReturn(List.of());
 
-        when(modelMapper.map(cuidadoInDto, Cuidado.class)).thenReturn(cuidadoMapped);
-        when(plantaRepository.findAllById(List.of(99L))).thenReturn(Collections.emptyList());
+        // EJECUTO EL METODO Y ESPERO LA EXCEPCION
+        PlantaNotFoundException thrown = assertThrows(
+                PlantaNotFoundException.class,
+                () -> cuidadoService.addCuidado(cuidadoInDto)
+        );
 
-        assertThrows(PlantaNotFoundException.class, () -> {
-            cuidadoService.addCuidado(cuidadoInDto);
-        });
+        assertEquals("PlantaIds indicado inexistente", thrown.getMessage());
 
-        verify(modelMapper).map(cuidadoInDto, Cuidado.class);
         verify(plantaRepository).findAllById(List.of(99L));
+        verify(cuidadoRepository, never()).save(any());
+
     }
 
- /*   @Test
+
+
+    @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testModify() throws CuidadoNotFoundException, CuidadoConflictException {
 
-        Planta plantaMock = new Planta(1L);
-        long idCuidado = 1L;
+        ModelMapper realModelMapper = new ModelMapper();
+        realModelMapper.getConfiguration().setSkipNullEnabled(true);
+        cuidadoService.setModelMapper(realModelMapper); // si tienes setter
 
+        long idCuidado = 1L;
+        Planta plantaMock = new Planta(1L);
+
+        //creo el cuidado de la bd
+        Cuidado cuidadoToModify = new Cuidado (1L, true, "frecuente", "Tierra ácida",
+                80.0f, null, List.of(new Planta(1L)));
         //definicion de los nuevos datos qeu quiero introducir
         CuidadoInDto cuidadoInDto = new CuidadoInDto(true, "frecuente", "Arcilloso", 80f, List.of(1L));
 
-        // simulacion de la planta que hemos definido arriba, indicandole que la inicial el la posicion 0 de mockPlantList
-        when(cuidadoRepository.findById(idCuidado)).thenReturn(Optional.of(mockCuidadoList.get(0)));
-        when(plantaRepository.findById(1L)).thenReturn(Optional.of(mock(Planta.class)));
 
-        //le indico qeu dto (el de posicion 0 con id=1) quiero que me devuelva el repositorio
-        CuidadoOutDto expectedDto = mockCuidadoOutDtoList.get(0);
-        when(modelMapper.map(any(Cuidado.class), ArgumentMatchers.eq(CuidadoOutDto.class))).thenReturn(expectedDto); //cuando llames al map con cualqueir objeto de tipo planta
-        //que se quiera convertir a plantaOutDto, devuelveme el expectedDto (el que quiero que me devuelva el repositorio)
+        when(cuidadoRepository.findById(idCuidado)).thenReturn(Optional.of(cuidadoToModify));
+        when(plantaRepository.findAllById(List.of(1L))).thenReturn(List.of(plantaMock));
 
-        // Ejecuta el modify
         CuidadoOutDto result = cuidadoService.modify(idCuidado, cuidadoInDto);
 
         // Comporbamos si el resultado coincide con lo esperado
         assertEquals(1, result.getIdCuidado());
         assertTrue(result.isEsInterior());
         assertEquals("frecuente", result.getRiego());
-        assertEquals("arcilloso", result.getSustrato());
+        assertEquals("Arcilloso", result.getSustrato());
         assertEquals(80f, result.getHumedad());
         assertEquals(List.of(1L), result.getPlantaIds());
 
         // Verificaciones
         verify(cuidadoRepository).findById(idCuidado);
-        verify(plantaRepository).findById(1L);
-        verify(modelMapper).map(cuidadoInDto, mockCuidadoList.get(0));
-        verify(cuidadoRepository).save(mockCuidadoList.get(0));
-        verify(modelMapper).map(mockCuidadoList.get(0), CuidadoOutDto.class);
-    }*/
+        verify(cuidadoRepository).save(any(Cuidado.class));
+
+    }
+
+
 
     @Test
     public void testDeleteOk() throws CuidadoNotFoundException, CuidadoConflictException {

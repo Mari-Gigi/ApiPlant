@@ -1,14 +1,12 @@
 package com.svalero.ApiPlant.controller;
 import com.svalero.ApiPlant.domain.Cuidado;
-import com.svalero.ApiPlant.domain.Planta;
 import com.svalero.ApiPlant.domain.dto.*;
 import com.svalero.ApiPlant.exception.*;
-import com.svalero.ApiPlant.repository.CuidadoRepository;
-import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.service.CuidadoService;
-import com.svalero.ApiPlant.service.PlantaService;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +27,8 @@ public class CuidadoController {
 
     @Autowired
     private CuidadoService cuidadoService;
-    @Autowired
-    private CuidadoRepository cuidadoRepository;
-    @Autowired
-    private PlantaRepository plantaRepository;
-    @Autowired
-    private PlantaService plantaService;
+
+    private static final Logger logger = LoggerFactory.getLogger(CuidadoController.class);
 
 
     @GetMapping("/cuidados")
@@ -44,6 +38,7 @@ public class CuidadoController {
             @RequestParam(value = "esInterior", required = false) Boolean esInterior,
             @RequestParam Map<String, String> allParams) throws CuidadoNotFoundException {
 
+        logger.info("BEGIN getAll");
         Set<String> validParams = Set.of("riego", "sustrato", "esInterior");
         for (String param : allParams.keySet()) {
             if (!validParams.contains(param)) {
@@ -51,34 +46,44 @@ public class CuidadoController {
             }
         }
 
+        logger.info("END getAll");
         return new ResponseEntity<>(cuidadoService.getAll(riego, sustrato, esInterior), HttpStatus.OK);
     }
 
 
-    @GetMapping("/cuidados/:cuidadoId")
-    public ResponseEntity<CuidadoOutDto> getCuidado(long cuidadoId) throws CuidadoNotFoundException {
+    @GetMapping("/cuidados/{cuidadoId}")
+    public ResponseEntity<CuidadoOutDto> getCuidado(@PathVariable long cuidadoId) throws CuidadoNotFoundException {
+        logger.info("BEGIN getById");
         CuidadoOutDto cuidadoOutDto = cuidadoService.get(cuidadoId);
+        logger.info("END getById");
         return new ResponseEntity<>(cuidadoOutDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/cuidados")
     public ResponseEntity<CuidadoOutDto> addCuidado(@Valid @RequestBody CuidadoInDto cuidadoInDto) throws PlantaNotFoundException {
+        logger.info("BEGIN addCuidado");
         CuidadoOutDto nuevoCuidado = cuidadoService.addCuidado(cuidadoInDto);
+        logger.info("END addCuidado");
         return new ResponseEntity<>(nuevoCuidado, HttpStatus.CREATED);
     }
 
 
-    @PutMapping("/cuidados/:cuidadoId")
-    public ResponseEntity<CuidadoOutDto> modifyCuidado(long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado) throws CuidadoNotFoundException, CuidadoConflictException {
+    @PutMapping("/cuidados/{cuidadoId}")
+    public ResponseEntity<CuidadoOutDto> modifyCuidado(@PathVariable long cuidadoId, @Valid @RequestBody CuidadoInDto cuidado)
+            throws CuidadoNotFoundException, CuidadoConflictException {
+        logger.info("BEGIN putCuidado");
         CuidadoOutDto modifiedCuidado = cuidadoService.modify(cuidadoId, cuidado);
-        return new ResponseEntity<>(modifiedCuidado, HttpStatus.NOT_FOUND);
+        logger.info("END putCuidado");
+        return new ResponseEntity<>(modifiedCuidado, HttpStatus.CREATED);
     }
 
 
     @DeleteMapping("/cuidados/{cuidadoId}")
-    public ResponseEntity<Void> deleteCuidado(Long cuidadoId) throws CuidadoNotFoundException, CuidadoConflictException {
+    public ResponseEntity<Void> deleteCuidado(@PathVariable Long cuidadoId) throws CuidadoNotFoundException, CuidadoConflictException {
+        logger.info("BEGIN deleteCuidado");
         cuidadoService.remove(cuidadoId);
+        logger.info("END deleteCuidado");
         return ResponseEntity.noContent().build();
     }
 
@@ -97,6 +102,12 @@ public class CuidadoController {
     @ExceptionHandler(CuidadoConflictException.class)
     public ResponseEntity<ErrorResponse> handleCuidadoConflictException(CuidadoConflictException ex) {
         ErrorResponse error = ErrorResponse.generalError(409, "Cuidado asociado a una planta.");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PlantaConflictException.class)
+    public ResponseEntity<ErrorResponse> handlePlantaConflictException(PlantaConflictException ex) {
+        ErrorResponse error = ErrorResponse.generalError(409, "Planta asociada a otro cuidado.");
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 

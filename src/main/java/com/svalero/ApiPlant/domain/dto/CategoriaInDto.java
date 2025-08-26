@@ -25,5 +25,4 @@ public class CategoriaInDto {
     private Boolean paraPrincipiantes;
     private List<Long> plantaIds;
 
-
 }

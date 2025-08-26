@@ -34,6 +34,7 @@ public class PlantaService {
     @Autowired
     private ModelMapper modelMapper;  //para los Dto
 
+    public void setModelMapper(ModelMapper modelMapper) {this.modelMapper = modelMapper;}
 
     // MUESTRA PLANTAS CON FILTROS ***********************
     /*devuelve el array de plagas como null xq el model mapper no lo reconoce */

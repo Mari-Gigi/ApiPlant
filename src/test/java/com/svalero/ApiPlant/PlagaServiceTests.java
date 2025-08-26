@@ -15,6 +15,7 @@ import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +35,17 @@ public class PlagaServiceTests {
     private ModelMapper modelMapper;
 
     private final List<Plaga> mockPlagaList = List.of(
-            new Plaga(1, "Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f, true, "jabón potasico", null, List.of(new Planta(50L))),
-            new Plaga(2, "Araña roja", "Punteado amarillento o blanquecino en las hojas", 7.5f, true, "acaricida", null, List.of(new Planta(30L)))
+            new Plaga(1, "Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f,
+                    true, "jabón potasico", null, List.of(new Planta(50L))),
+            new Plaga(2, "Araña roja", "Punteado amarillento o blanquecino en las hojas", 7.5f,
+                    true, "acaricida", null, List.of(new Planta(30L)))
     );
 
     private final List<PlagaOutDto> mockPlagaOutDtoList = List.of(
-            new PlagaOutDto(1, "Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f, true, "jabón potasico",  List.of(50L)),
-            new PlagaOutDto(2, "Araña roja", "Punteado amarillento o blanquecino en las hojas", 7.5f, true, "acaricida",List.of(30L))
+            new PlagaOutDto(1, "Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f,
+                    true, "jabón potasico",  List.of(50L)),
+            new PlagaOutDto(2, "Araña roja", "Punteado amarillento o blanquecino en las hojas", 7.5f,
+                    true, "acaricida",List.of(30L))
     );
 
     @Test
@@ -157,6 +162,8 @@ public class PlagaServiceTests {
         verify(plagaRepository, times(1)).findByEsLetal(esLetal);
     }
 
+
+
     @Test
     public void testGetById() throws PlagaNotFoundException {
 
@@ -185,7 +192,24 @@ public class PlagaServiceTests {
     }
 
     @Test
-    public void testAdd()  {
+    public void testGetById_PlagaNotFound(){
+        long id = 99L;
+
+        // Simular que no existe esa plaga en el repositorio
+        when(plagaRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Verificar que lanza la excepción, por eso no hace falta declarar la exc en el throws
+        assertThrows(PlagaNotFoundException.class, () -> {
+            plagaService.get(id);
+        });
+
+        verify(plagaRepository, times(1)).findById(id);
+    }
+
+
+
+    @Test
+    public void testAdd() throws PlantaNotFoundException {
 
         //DEFINO EL OBJETO DE ENTRADA (plagaINDTO)
         PlagaInDto plagaInDto = new PlagaInDto("Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f, true,"jabón potasico",null);
@@ -222,43 +246,49 @@ public class PlagaServiceTests {
 
     }
 
- /*   @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    public void testModify() throws CuidadoNotFoundException, CuidadoConflictException {
 
-        Planta plantaMock = new Planta(1L);
-        long idCuidado = 1L;
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void testModify() throws PlagaNotFoundException, PlantaNotFoundException{
+
+        ModelMapper realModelMapper = new ModelMapper();
+        realModelMapper.getConfiguration().setSkipNullEnabled(true);
+        plagaService.setModelMapper(realModelMapper); // si tienes setter
+
+        long idPlaga = 1L;
+        Planta plantaMock = new Planta(50L);
+        plantaMock.setPlagas(new ArrayList<>());
+
+        //creo el cuidado de la bd
+        Plaga plagaToModify = new Plaga(1, "Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 6.5f,
+                true,  "jabón potasico", null, new ArrayList<>(List.of(plantaMock)));
 
         //definicion de los nuevos datos qeu quiero introducir
-        CuidadoInDto cuidadoInDto = new CuidadoInDto(true, "frecuente", "Arcilloso", 80f, List.of(1L));
+        PlagaInDto plagaInDto = new PlagaInDto("Cochinilla algodonosa", "Presencia de masas blancas y algodonosas con melaza", 7.0f,
+                true, "jabón potasico", List.of(50L));
 
-        // simulacion de la planta que hemos definido arriba, indicandole que la inicial el la posicion 0 de mockPlantList
-        when(cuidadoRepository.findById(idCuidado)).thenReturn(Optional.of(mockCuidadoList.get(0)));
-        when(plantaRepository.findById(1L)).thenReturn(Optional.of(mock(Planta.class)));
 
-        //le indico qeu dto (el de posicion 0 con id=1) quiero que me devuelva el repositorio
-        CuidadoOutDto expectedDto = mockCuidadoOutDtoList.get(0);
-        when(modelMapper.map(any(Cuidado.class), ArgumentMatchers.eq(CuidadoOutDto.class))).thenReturn(expectedDto); //cuando llames al map con cualqueir objeto de tipo planta
-        //que se quiera convertir a plantaOutDto, devuelveme el expectedDto (el que quiero que me devuelva el repositorio)
+        when(plagaRepository.findById(idPlaga)).thenReturn(Optional.of(plagaToModify));
+        when(plantaRepository.findAllById(List.of(50L))).thenReturn(List.of(plantaMock));
 
-        // Ejecuta el modify
-        CuidadoOutDto result = cuidadoService.modify(idCuidado, cuidadoInDto);
+       PlagaOutDto result = plagaService.modify(idPlaga, plagaInDto);
 
         // Comporbamos si el resultado coincide con lo esperado
-        assertEquals(1, result.getIdCuidado());
-        assertTrue(result.isEsInterior());
-        assertEquals("frecuente", result.getRiego());
-        assertEquals("arcilloso", result.getSustrato());
-        assertEquals(80f, result.getHumedad());
-        assertEquals(List.of(1L), result.getPlantaIds());
+        assertEquals(1, result.getIdPlaga());
+        assertEquals("Cochinilla algodonosa", result.getNombre());
+        assertEquals("Presencia de masas blancas y algodonosas con melaza", result.getSintomas());
+        assertEquals(7.0f, result.getRiesgo());
+        assertTrue(result.isEsLetal());
+        assertEquals(List.of(50L), result.getPlantaIds());
 
         // Verificaciones
-        verify(cuidadoRepository).findById(idCuidado);
-        verify(plantaRepository).findById(1L);
-        verify(modelMapper).map(cuidadoInDto, mockCuidadoList.get(0));
-        verify(cuidadoRepository).save(mockCuidadoList.get(0));
-        verify(modelMapper).map(mockCuidadoList.get(0), CuidadoOutDto.class);
-    }*/
+        verify(plagaRepository).findById(idPlaga);
+        verify(plagaRepository).save(any(Plaga.class));
+
+    }
+
+
 
     @Test
     public void testDeleteOk() throws PlagaNotFoundException, PlagaConflictException {
@@ -309,13 +339,5 @@ public class PlagaServiceTests {
         verify(plantaRepository).findByPlagas_IdPlaga(idPlaga);
         verify(plagaRepository, never()).deleteById(anyLong());
     }
-
-
-
-
-
-
-
-
 
 }

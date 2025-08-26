@@ -52,8 +52,8 @@ public class Planta {
     @ManyToMany // relacion N:N - muchas plantas pueden tener muchas plagas
     @JoinTable
             (name = "planta_plaga",
-            joinColumns = @JoinColumn(name = "planta_id"),
-            inverseJoinColumns = @JoinColumn(name = "plaga_id"))
+                    joinColumns = @JoinColumn(name = "planta_id"),
+                    inverseJoinColumns = @JoinColumn(name = "plaga_id"))
     @JsonBackReference
     @ToString.Exclude
     private List<Plaga> plagas;
@@ -62,8 +62,8 @@ public class Planta {
     @ManyToMany // relacion N:N - muchas plantas pueden tener muchos consejos
     @JoinTable
             (name = "planta_consejo",
-            joinColumns = @JoinColumn(name = "planta_id"),
-            inverseJoinColumns = @JoinColumn(name = "consejo_id"))
+                    joinColumns = @JoinColumn(name = "planta_id"),
+                    inverseJoinColumns = @JoinColumn(name = "consejo_id"))
     @JsonBackReference
     @ToString.Exclude
     private List<Consejo> consejos;

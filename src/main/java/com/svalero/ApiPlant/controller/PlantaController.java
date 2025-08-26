@@ -6,6 +6,7 @@ import com.svalero.ApiPlant.service.PlantaService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +15,42 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @RestController
+
 public class PlantaController {
 
 
     @Autowired
     private PlantaService plantaService;
-    @Autowired
+
     private static final Logger logger = LoggerFactory.getLogger(PlantaController.class);
 
 
+  /*  @GetMapping("/plantas")
+    public ResponseEntity<List<PlantaOutDto>> getAll (
+            @RequestParam(value = "genero", defaultValue = "") String genero,
+            @RequestParam(value = "especie", defaultValue = "") String especie,
+            @RequestParam(value = "esToxica", required = false) Boolean esToxica,
+            @RequestParam Map<String, String> allParams) throws PlantaNotFoundException {
+
+        logger.info("BEGIN getAll");
+        Set<String> validParams = Set.of("genero", "especie", "esToxica");
+        for (String param : allParams.keySet()) {
+            if (!validParams.contains(param)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parámetro inválido: " + param);
+            }
+        }
+
+        logger.info("END getAll");
+        return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
+    }*/
 
     @GetMapping("/plantas")
     public ResponseEntity<List<PlantaOutDto>> getAll(
@@ -40,23 +60,32 @@ public class PlantaController {
             @RequestParam Map<String, String> allParams) throws PlantaNotFoundException {
 
         logger.info("BEGIN getAll");
+
+        try {
+            // Validación de parámetros permitidos
             Set<String> validParams = Set.of("genero", "especie", "esToxica");
             for (String param : allParams.keySet()) {
                 if (!validParams.contains(param)) {
-                    throw new InvalidParameterException("Parámetro inválido: " + param);
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parámetro inválido: " + param);
                 }
             }
 
-        logger.info("END getAll");
-        return new ResponseEntity<>(plantaService.getAll(genero, especie, esToxica), HttpStatus.OK);
+            List<PlantaOutDto> result = plantaService.getAll(genero, especie, esToxica);
+
+            logger.info("END getAll");
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            logger.error("Error en getAll", e);
+            throw e;
+        }
     }
 
 
-
-    @GetMapping("/plantas/:plantaId")
-    public ResponseEntity <PlantaOutDto> getPlanta(long plantaId) throws PlantaNotFoundException {
-        logger.info("BEGIN getById");
-        PlantaOutDto plantaOutDto = plantaService.get(plantaId);
+    @GetMapping("/plantas/{plantaId}")
+    public ResponseEntity <PlantaOutDto> getPlanta(@PathVariable long plantaId) throws PlantaNotFoundException {
+        logger.info("BEGIN getById, plantaId=" + plantaId);
+            PlantaOutDto plantaOutDto = plantaService.get(plantaId);
         logger.info("END getById");
         return new ResponseEntity<>(plantaOutDto, HttpStatus.OK);
     }
@@ -72,18 +101,18 @@ public class PlantaController {
     }
 
 
-    @PutMapping("/plantas/:plantaId")
-    public ResponseEntity<PlantaOutDto> modifyPlanta(long plantaId, @Valid @RequestBody PlantaInDto plantaInDto)
+    @PutMapping("/plantas/{plantaId}")
+    public ResponseEntity<PlantaOutDto> modifyPlanta(@PathVariable long plantaId, @Valid @RequestBody PlantaInDto plantaInDto)
             throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
         logger.info("BEGIN putPlanta");
         PlantaOutDto updatedPlanta = plantaService.modify(plantaId, plantaInDto);
         logger.info("END putPlanta");
-        return ResponseEntity.ok(updatedPlanta);
+        return new ResponseEntity<>(updatedPlanta, HttpStatus.CREATED);
     }
 
 
-    @DeleteMapping ("/plantas/:plantaId")
-    public ResponseEntity <Void> removePlanta (long plantaId) throws PlantaNotFoundException {
+    @DeleteMapping ("/plantas/{plantaId}")
+    public ResponseEntity <Void> removePlanta (@PathVariable long plantaId) throws PlantaNotFoundException {
         logger.info("BEGIN deletePlanta");
         plantaService.remove(plantaId);
         logger.info("END deletePlanta");
@@ -158,6 +187,8 @@ public class PlantaController {
         ErrorResponse error = ErrorResponse.generalError(500, "Error interno del servidor.");
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 
 
 

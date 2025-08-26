@@ -100,6 +100,12 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
         '500':
           description: Error interno del servidor
           content:
@@ -142,7 +148,7 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-        '500': #PONIENDO UN XXX EN EL NOMBRE DEL PARAMETRO PLANTAID
+        '500': #PONIENDO UN XXX EN EL NOMBRE DEL PARAMETRO PLANTAID, o un valor de id "hgjfjk"
           description: Error interno del servidor
           content:
             application/json:
@@ -170,7 +176,7 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             schema:
               $ref: '#/components/schemas/PlantaInDto'
       responses:
-        '200':
+        '201':
           description: Ok
           content:
             application/json:
@@ -178,7 +184,7 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
                 type: array
                 items:
                   $ref: '#/components/schemas/PlantaOutDto'
-        '400': #NO PONIENDO UN VALOR DE PLANTAID ERRONEO
+        '400': # PONIENDO UN VALOR DE PLANTAID ERRONEO (abc)
           description: El parámetro tiene un valor inválido
           content:
             application/json:
@@ -315,6 +321,12 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Parámetro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
 
         '500':
           description: Error interno del servidor
@@ -532,6 +544,12 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Parámetro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
         '500':
           description: Error interno del servidor
           content:
@@ -742,6 +760,12 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Parámetro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
         '500':
           description: Error interno del servidor
           content:
@@ -817,12 +841,6 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-        '409':
-          description: Plaga asociada a una planta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Conflict'
         '400':
           description: El parámetro tiene un valor inválido
           content:
@@ -951,6 +969,12 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Parámetro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
         '500':
           description: Error interno del servidor
           content:
@@ -1026,12 +1050,6 @@ paths: #parametros de tipo Path porque se pasan en la URL. Son obligatorios
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-        '409':
-          description: Consejo asociado a una planta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Conflict'
         '400':
           description: El parámetro tiene un valor inválido
           content:

@@ -3,13 +3,17 @@ package com.svalero.ApiPlant;
 import com.svalero.ApiPlant.domain.*;
 import com.svalero.ApiPlant.domain.dto.CategoriaInDto;
 import com.svalero.ApiPlant.domain.dto.CategoriaOutDto;
+import com.svalero.ApiPlant.domain.dto.CuidadoInDto;
+import com.svalero.ApiPlant.domain.dto.CuidadoOutDto;
 import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.*;
 import com.svalero.ApiPlant.service.CategoriaService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -22,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
 public class CategoriaServiceTests {
 
 
@@ -34,6 +37,12 @@ public class CategoriaServiceTests {
     CategoriaRepository categoriaRepository;
     @Mock
     private ModelMapper modelMapper;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
 
     private final List<Categoria> mockCategoriaList = List.of(
             new Categoria(1L, "ornamental", "cultivadas por su valor estetico", 3.0f, false, null, List.of(new Planta(1L))),
@@ -159,6 +168,8 @@ public class CategoriaServiceTests {
         verify(categoriaRepository, times(1)).findByParaPrincipiantes(paraPrincipiantes);
     }
 
+
+
     @Test
     public void testGetById() throws CategoriaNotFoundException {
 
@@ -189,32 +200,48 @@ public class CategoriaServiceTests {
     }
 
     @Test
-    public void testAdd() throws PlantaNotFoundException {
+    public void testGetById_CategoriaNotFound(){
+        long id = 99L;
+
+        // Simular que no existe esa categoria en el repositorio
+        when(categoriaRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Verificar que lanza la excepción, por eso no hace falta declarar la exc en el throws
+        assertThrows(CategoriaNotFoundException.class, () -> {
+            categoriaService.get(id);
+        });
+
+        verify(categoriaRepository, times(1)).findById(id);
+    }
+
+
+
+   @Test
+    public void testAdd() throws PlantaNotFoundException{
 
         //DEFINO EL OBJETO DE ENTRADA (cuidadoINDTO)
         CategoriaInDto categoriaInDto = new CategoriaInDto("ornamental", "cultivadas por su valor estetico", 3.0f,
                 false, List.of(1L));
 
-        //CREO MOCK mapeado (FICTICIOS) QUE ACTUARAN COMO "BD"
         Categoria categoriaMapped = new Categoria(1, "ornamental", "cultivadas por su valor estetico", 3.0f,
                 false, null, null);
 
-        //CONFIGURO LOS MAPEOS
-        Planta mockPlanta = new Planta();
-        mockPlanta.setId_planta(1L);
-        Categoria mockCategoria = mockCategoriaList.get(0);
 
-        //INDICO QUE ESPERO A LA SALIDA (EL OBJETO ESPERADO cuidadoOUTDTO)
-        CategoriaOutDto expectedDto = mockCategoriaOutDtoList.get(0);
+       Planta mockPlanta = new Planta();
+       mockPlanta.setId_planta(1L);
+       Categoria mockCategoria = mockCategoriaList.get(0);
 
-        //CONFIGURACION DE LAS RESPUESTAS DEL REPOSITORIO Y DEL MODELMAPPER
-        when(modelMapper.map(categoriaInDto, Categoria.class)).thenReturn(categoriaMapped);
-        when(plantaRepository.findAllById(List.of(1L))).thenReturn(List.of(mockPlanta));
-        when(categoriaRepository.save(any(Categoria.class))).thenReturn(mockCategoria);
-        when(modelMapper.map(mockCategoria, CategoriaOutDto.class)).thenReturn(expectedDto);
+       //INDICO QUE ESPERO A LA SALIDA (EL OBJETO ESPERADO cuidadoOUTDTO)
+       CategoriaOutDto expectedDto = mockCategoriaOutDtoList.get(0);
 
-        //EJECUTO EL METODO ADD DEL SERVICIO
-        CategoriaOutDto result = categoriaService.addCategoria(categoriaInDto);
+       //CONFIGURACION DE LAS RESPUESTAS DEL REPOSITORIO Y DEL MODELMAPPER
+       when(modelMapper.map(categoriaInDto, Categoria.class)).thenReturn(categoriaMapped);
+       when(plantaRepository.findAllById(List.of(1L))).thenReturn(List.of(mockPlanta));
+       when(categoriaRepository.save(any(Categoria.class))).thenReturn(mockCategoria);
+       when(modelMapper.map(mockCategoria, CategoriaOutDto.class)).thenReturn(expectedDto);
+
+       //EJECUTO EL METODO ADD DEL SERVICIO
+       CategoriaOutDto result = categoriaService.addCategoria(categoriaInDto);
 
         //COMPROBACION DE QUE LA SALIDA ES LO QUE SE ESPERABA
         assertEquals(1, result.getIdCategoria());
@@ -239,59 +266,65 @@ public class CategoriaServiceTests {
         //DEFINO EL OBJETO DE ENTRADA (categoriaINDTO)
         CategoriaInDto categoriaInDto = new CategoriaInDto("ornamental", "cultivadas por su valor estetico", 3.0f,
                 false, List.of(99L));
+        Categoria categoriaMock = new Categoria();
 
-        //CREO MOCK mapeado (FICTICIOS) QUE ACTUARAN COMO "BD"
-        Categoria categoriaMapped = new Categoria(1,"ornamental", "cultivadas por su valor estetico", 3.0f,
-                false, null, null);
+        when(modelMapper.map(categoriaInDto, Categoria.class)).thenReturn(categoriaMock);
 
-        when(modelMapper.map(categoriaInDto, Categoria.class)).thenReturn(categoriaMapped);
-        when(plantaRepository.findAllById(List.of(99L))).thenReturn(Collections.emptyList());
 
-        assertThrows(PlantaNotFoundException.class, () -> {
-            categoriaService.addCategoria(categoriaInDto);
-        });
+        when(plantaRepository.findAllById(List.of(99L))).thenReturn(List.of());
 
-        verify(modelMapper).map(categoriaInDto, Categoria.class);
+        PlantaNotFoundException thrown = assertThrows(
+                PlantaNotFoundException.class,
+                () -> categoriaService.addCategoria(categoriaInDto)
+        );
+
+        assertEquals("PlantaIds indicado inexistente", thrown.getMessage());
+
         verify(plantaRepository).findAllById(List.of(99L));
+        verify(categoriaRepository, never()).save(any());
     }
 
- /*   @Test
+
+
+    @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    public void testModify() throws CuidadoNotFoundException, CuidadoConflictException {
+    public void testModify() throws CategoriaNotFoundException, CategoriaConflictException {
 
+        ModelMapper realModelMapper = new ModelMapper();
+        realModelMapper.getConfiguration().setSkipNullEnabled(true);
+        categoriaService.setModelMapper(realModelMapper); // si tienes setter
+
+        long idCategoria = 1L;
         Planta plantaMock = new Planta(1L);
-        long idCuidado = 1L;
 
+        //creo el cuidado de la bd
+        Categoria categoriaToModify = new Categoria(1L, "ornamental", "cultivadas por su valor estetico",
+                3.0f, false, null, List.of(new Planta(1L)));
         //definicion de los nuevos datos qeu quiero introducir
-        CuidadoInDto cuidadoInDto = new CuidadoInDto(true, "frecuente", "Arcilloso", 80f, List.of(1L));
+        CategoriaInDto categoriaInDto = new CategoriaInDto("ornamental", "cultivadas por su valor estetico",
+                4.0f, false, List.of((1L)));
 
-        // simulacion de la planta que hemos definido arriba, indicandole que la inicial el la posicion 0 de mockPlantList
-        when(cuidadoRepository.findById(idCuidado)).thenReturn(Optional.of(mockCuidadoList.get(0)));
-        when(plantaRepository.findById(1L)).thenReturn(Optional.of(mock(Planta.class)));
 
-        //le indico qeu dto (el de posicion 0 con id=1) quiero que me devuelva el repositorio
-        CuidadoOutDto expectedDto = mockCuidadoOutDtoList.get(0);
-        when(modelMapper.map(any(Cuidado.class), ArgumentMatchers.eq(CuidadoOutDto.class))).thenReturn(expectedDto); //cuando llames al map con cualqueir objeto de tipo planta
-        //que se quiera convertir a plantaOutDto, devuelveme el expectedDto (el que quiero que me devuelva el repositorio)
+        when(categoriaRepository.findById(idCategoria)).thenReturn(Optional.of(categoriaToModify));
+        when(plantaRepository.findAllById(List.of(1L))).thenReturn(List.of(plantaMock));
 
-        // Ejecuta el modify
-        CuidadoOutDto result = cuidadoService.modify(idCuidado, cuidadoInDto);
+        CategoriaOutDto result = categoriaService.modify(idCategoria, categoriaInDto);
 
         // Comporbamos si el resultado coincide con lo esperado
-        assertEquals(1, result.getIdCuidado());
-        assertTrue(result.isEsInterior());
-        assertEquals("frecuente", result.getRiego());
-        assertEquals("arcilloso", result.getSustrato());
-        assertEquals(80f, result.getHumedad());
+        assertEquals(1, result.getIdCategoria());
+        assertEquals("ornamental", result.getNombre());
+        assertEquals("cultivadas por su valor estetico", result.getDescripcion());
+        assertEquals(4.0f, result.getNivelDificultad());
+        assertFalse(result.isParaPrincipiantes());
         assertEquals(List.of(1L), result.getPlantaIds());
 
         // Verificaciones
-        verify(cuidadoRepository).findById(idCuidado);
-        verify(plantaRepository).findById(1L);
-        verify(modelMapper).map(cuidadoInDto, mockCuidadoList.get(0));
-        verify(cuidadoRepository).save(mockCuidadoList.get(0));
-        verify(modelMapper).map(mockCuidadoList.get(0), CuidadoOutDto.class);
-    }*/
+        verify(categoriaRepository).findById(idCategoria);
+        verify(categoriaRepository).save(any(Categoria.class));
+
+    }
+
+
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)

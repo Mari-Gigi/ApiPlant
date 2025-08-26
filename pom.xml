@@ -12,7 +12,7 @@
 	<artifactId>ApiPlant</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ApiPlant</name>
-	<description>Demo project for Spring Boot</description>
+	<description>ApiPlant for Happy Plants</description>
 	<url/>
 	<licenses>
 		<license/>

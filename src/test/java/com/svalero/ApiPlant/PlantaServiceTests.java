@@ -15,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +26,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 
 @ExtendWith(MockitoExtension.class)
 public class PlantaServiceTests {
@@ -51,7 +57,7 @@ public class PlantaServiceTests {
     );
 
     private final    List<PlantaOutDto> mockPlantaOutDtoList = List.of(
-            new PlantaOutDto(1, "Rosa", "Indica", true, 1.5f, "Herbácea", 1, 1, List.of(1L), List.of(1L)),
+            new PlantaOutDto(1, "Rosa", "Indica", true, 1.5f, "Herbácea",1, 1, List.of(1L), List.of(1L)),
             new PlantaOutDto(2, "Tulipa", "Gesneriana", false, 0.8f, "Bulbosa", 1, 2, List.of(), List.of()),
             new PlantaOutDto(3, "Lirio", "Niger", false, 1.0f, "Perenne", 2, 3, List.of(), List.of())
     );
@@ -180,6 +186,8 @@ public class PlantaServiceTests {
         verify(plantaRepository, times(1)).findByEsToxicaFalse();
     }
 
+
+
     @Test
     public void testGetById() throws PlantaNotFoundException {
 
@@ -210,6 +218,23 @@ public class PlantaServiceTests {
         verify(plantaRepository, times(1)).findById(id);
 
     }
+
+    @Test
+    public void testGetById_PlantaNotFound(){
+        long id = 99L;
+
+        // Simular que no existe esa planta en el repositorio
+        when(plantaRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Verificar que lanza la excepción, por eso no hace falta declarar la exc en el throws
+        assertThrows(PlantaNotFoundException.class, () -> {
+            plantaService.get(id);
+        });
+
+        verify(plantaRepository, times(1)).findById(id);
+    }
+
+
 
     @Test
     public void testAdd() throws CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
@@ -305,78 +330,85 @@ public class PlantaServiceTests {
         verifyNoInteractions(plagaRepository, consejoRepository, plantaRepository);
     }
 
-  /*  @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    public void testModify() throws PlantaNotFoundException, CuidadoNotFoundException, CategoriaNotFoundException, PlagaNotFoundException, ConsejoNotFoundException {
 
-        List<Planta> mockPlantaList = List.of(
-                new Planta(1, "Rosa", "Indica", 1.5f, "Herbácea", null, true, new Cuidado(1), new Categoria(1), List.of(new Plaga(1L)), List.of(new Consejo(1L))),
-                new Planta(2, "Tulipa", "Gesneriana", 0.8f, "Bulbosa", null, false, new Cuidado(1), new Categoria(2), null, null),
-                new Planta(3, "Lirio", "Niger", 1.0f, "Perenne", null, false, new Cuidado(2), new Categoria(3), null, null)
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void testModify() throws Exception {
+
+        ModelMapper realModelMapper = new ModelMapper();
+        realModelMapper.getConfiguration().setSkipNullEnabled(true);
+        plantaService.setModelMapper(realModelMapper);
+
+        long id = 3;
+        Plaga plagaMock = new Plaga(1L);
+        Consejo consejoMock = new Consejo(10L);
+
+        // Creo la planta existente en la BD
+        Planta plantaToModify = new Planta(3,"Lirio", "Niger", 1.0f, "Perenne", null, false, new Cuidado(2), new Categoria(3), null, null);
+
+        // Planta modificada que quiero guardar
+        PlantaInDto plantaInDto = new PlantaInDto(
+                "Lirio", "Niger", false, 1.0f, "Perenne",
+                2L, 3L, List.of(1L), List.of(10L)
         );
 
-        Plaga plagaMock = new Plaga(1L);
-        Consejo consejoMock = new Consejo(1L);
-        long id = 1L;
-
-        // Nuevos datos
-        PlantaInDto plantaInDto = new PlantaInDto("Margarita", "Indica", true, 1.5f, "Herbácea",
-                1L, 1L, List.of(1L), List.of(1L));
-
         // Mocks de repositorios
-        when(plantaRepository.findById(id)).thenReturn(Optional.of(mockPlantaList.get(0)));
-        when(cuidadoRepository.findById(1L)).thenReturn(Optional.of(new Cuidado(1L)));
-        when(categoriaRepository.findById(1L)).thenReturn(Optional.of(new Categoria(1L)));
+        when(plantaRepository.findById(id)).thenReturn(Optional.of(plantaToModify));
+        when(plantaRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(cuidadoRepository.findById(2L)).thenReturn(Optional.of(new Cuidado(2L)));
+        when(categoriaRepository.findById(3L)).thenReturn(Optional.of(new Categoria(3L)));
         when(plagaRepository.findAllById(List.of(1L))).thenReturn(List.of(plagaMock));
-        when(consejoRepository.findAllById(List.of(1L))).thenReturn(List.of(consejoMock));
+        when(consejoRepository.findAllById(List.of(10L))).thenReturn(List.of(consejoMock));
 
-        // Map de Planta a PlantaOutDto dinámico
-        when(modelMapper.map(any(Planta.class), eq(PlantaOutDto.class)))
-                .thenAnswer(invocation -> {
-                    Planta planta = invocation.getArgument(0);
-                    return new PlantaOutDto(
-                            planta.getId_planta(),
-                            planta.getGenero(),
-                            planta.getEspecie(),
-                            planta.getEsToxica(),
-                            planta.getAlturaMaxima(),
-                            planta.getTipoCrecimiento(),
-                            planta.getCuidado().getIdCuidado(),
-                            planta.getCategoria().getIdCategoria(),
-                            planta.getPlagas().stream().map(Plaga::getIdPlaga).toList(),
-                            planta.getConsejos().stream().map(Consejo::getIdConsejo).toList()
-                    );
-                });
-
-        // Ejecuta el método
         PlantaOutDto result = plantaService.modify(id, plantaInDto);
 
-        // Assertions
-        assertEquals(1, result.getId_planta());
-        assertEquals("Margarita", result.getGenero());
-        assertEquals("Indica", result.getEspecie());
-        assertEquals(true, result.getEsToxica());
-        assertEquals(1.5f, result.getAlturaMaxima());
-        assertEquals("Herbácea", result.getTipoCrecimiento());
-        assertEquals(1L, result.getCuidadoId());
-        assertEquals(1L, result.getCategoriaId());
+        // Verificamos que la respuesta es la esperada (los datos introducidos en plantaInDto)
+        assertEquals(3L, result.getId_planta());
+        assertEquals("Lirio", result.getGenero());
+        assertEquals("Niger", result.getEspecie());
+        assertFalse(result.getEsToxica());
+        assertEquals(1.0f, result.getAlturaMaxima());
+        assertEquals("Perenne", result.getTipoCrecimiento());
+        assertEquals(2L, result.getCuidadoId());
+        assertEquals(3L, result.getCategoriaId());
         assertEquals(List.of(1L), result.getPlagaIds());
-        assertEquals(List.of(1L), result.getConsejoIds());
+        assertEquals(List.of(10L), result.getConsejoIds());
 
-        // Verificaciones
+        // Verificaciones de interacción
         verify(plantaRepository).findById(id);
-        verify(cuidadoRepository).findById(1L);
-        verify(categoriaRepository).findById(1L);
+        verify(plantaRepository).save(any(Planta.class));
+        verify(cuidadoRepository).findById(2L);
+        verify(categoriaRepository).findById(3L);
         verify(plagaRepository).findAllById(List.of(1L));
-        verify(consejoRepository).findAllById(List.of(1L));
-        verify(plantaRepository).save(mockPlantaList.get(0));
-        verify(modelMapper).map(mockPlantaList.get(0), PlantaOutDto.class);
-
-        // 👇 Elimina esta línea si no tienes un map explícito de InDto a entidad existente
-        // verify(modelMapper).map(plantaInDto, mockPlantaList.get(0)); // ⚠️ probablemente innecesaria
+        verify(consejoRepository).findAllById(List.of(10L));
     }
 
-*/
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void testModify_PlantaNotFound() throws PlantaNotFoundException {
+
+        long id = 99L;
+        // Simular que no hay planta con ese id
+        when(plantaRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Planta modificada que quiero guardar
+        PlantaInDto plantaInDto = new PlantaInDto(
+                "Lirio", "Niger", false, 1.0f, "Perenne",
+                2L, 3L, List.of(1L), List.of(10L));
+
+        // sino encuentra el id, lanza excep
+        assertThrows(PlantaNotFoundException.class, () -> {
+            plantaService.modify(id, plantaInDto);
+        });
+
+        verify(plantaRepository).findById(id);
+        verify(plantaRepository, never()).save(any());
+
+    }
+
+
+
     @Test
     public void testdelete() throws PlantaNotFoundException {
 
@@ -390,6 +422,20 @@ public class PlantaServiceTests {
         verify(plantaRepository).deleteById(id);
 }
 
+    @Test
+    public void testDelete_PlantaNotFound() {
+        long id = 99L;
+
+        // Simular que no existe la planta
+        when(plantaRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(PlantaNotFoundException.class, () -> {
+            plantaService.remove(id);
+        });
+
+        verify(plantaRepository).findById(id);
+        verify(plantaRepository, never()).deleteById(anyLong());
+    }
 
 
 

@@ -1,29 +1,27 @@
 package com.svalero.ApiPlant;
 
+import com.svalero.ApiPlant.domain.Categoria;
 import com.svalero.ApiPlant.domain.Consejo;
 import com.svalero.ApiPlant.domain.Plaga;
 import com.svalero.ApiPlant.domain.Planta;
-import com.svalero.ApiPlant.domain.dto.ConsejoInDto;
-import com.svalero.ApiPlant.domain.dto.ConsejoOutDto;
-import com.svalero.ApiPlant.domain.dto.PlagaInDto;
-import com.svalero.ApiPlant.domain.dto.PlagaOutDto;
-import com.svalero.ApiPlant.exception.ConsejoConflictException;
-import com.svalero.ApiPlant.exception.ConsejoNotFoundException;
-import com.svalero.ApiPlant.exception.PlagaConflictException;
-import com.svalero.ApiPlant.exception.PlagaNotFoundException;
+import com.svalero.ApiPlant.domain.dto.*;
+import com.svalero.ApiPlant.exception.*;
 import com.svalero.ApiPlant.repository.ConsejoRepository;
 import com.svalero.ApiPlant.repository.PlantaRepository;
 import com.svalero.ApiPlant.service.ConsejoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +39,12 @@ public class ConsejoServiceTests {
     PlantaRepository plantaRepository;
     @Mock
     private ModelMapper modelMapper;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        consejoService.setModelMapper(modelMapper);
+    }
 
     private final List<Consejo> mockConsejoList = List.of(
             new Consejo(1, "Riego", "Riega por inmersión durante varias horas", true,6.5f,  null, List.of(new Planta(50L))),
@@ -169,6 +173,8 @@ public class ConsejoServiceTests {
         verify(consejoRepository, times(1)).findByImportancia(importancia);
     }
 
+
+
     @Test
     public void testGetById() throws ConsejoNotFoundException {
 
@@ -198,7 +204,63 @@ public class ConsejoServiceTests {
     }
 
     @Test
-    public void testAdd()  {
+    public void testGetById_ConsejoNotFound(){
+        long id = 99L;
+
+        // Simular que no existe ese consejo en el repositorio
+        when(consejoRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Verificar que lanza la excepción, por eso no hace falta declarar la exc en el throws
+        assertThrows(ConsejoNotFoundException.class, () -> {
+            consejoService.get(id);
+        });
+
+        verify(consejoRepository, times(1)).findById(id);
+    }
+
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void testModify() throws ConsejoNotFoundException, PlantaNotFoundException{
+
+        ModelMapper realModelMapper = new ModelMapper();
+        realModelMapper.getConfiguration().setSkipNullEnabled(true);
+        consejoService.setModelMapper(realModelMapper); // si tienes setter
+
+        long idConsejo = 1L;
+        Planta plantaMock = new Planta(50L);
+        plantaMock.setConsejos(new ArrayList<>());
+
+        //creo el cuidado de la bd
+        Consejo consejoToModify = new Consejo(1, "Riego", "Riega por inmersión durante varias horas", true,
+                6.5f,  null, new ArrayList<>(List.of(plantaMock)));
+        //definicion de los nuevos datos qeu quiero introducir
+        ConsejoInDto consejoInDto = new ConsejoInDto("Riego", "Riega por inmersión durante 12 horas", true,
+                6.5f, List.of(50L));
+
+
+        when(consejoRepository.findById(idConsejo)).thenReturn(Optional.of(consejoToModify));
+        when(plantaRepository.findAllById(List.of(50L))).thenReturn(List.of(plantaMock));
+
+        ConsejoOutDto result = consejoService.modify(idConsejo, consejoInDto);
+
+        // Comporbamos si el resultado coincide con lo esperado
+        assertEquals(1, result.getIdConsejo());
+        assertEquals("Riego", result.getTitulo());
+        assertEquals("Riega por inmersión durante 12 horas", result.getExplicacion());
+        assertTrue(result.isVerificado());
+        assertEquals(6.5f, result.getImportancia());
+        assertEquals(List.of(50L), result.getPlantaIds());
+
+        // Verificaciones
+        verify(consejoRepository).findById(idConsejo);
+        verify(consejoRepository).save(any(Consejo.class));
+
+    }
+
+
+    @Test
+    public void testAdd() throws PlantaNotFoundException {
 
         //DEFINO EL OBJETO DE ENTRADA (consejoINDTO)
         ConsejoInDto consejoInDto = new ConsejoInDto("Riego", "Riega por inmersión durante varias horas", true,6.5f,  null);
@@ -233,6 +295,8 @@ public class ConsejoServiceTests {
 
 
     }
+
+
 
     @Test
     public void testDeleteOk() throws ConsejoNotFoundException, ConsejoConflictException {
@@ -283,8 +347,6 @@ public class ConsejoServiceTests {
         verify(plantaRepository).findByConsejos_IdConsejo(idConsejo);
         verify(consejoRepository, never()).deleteById(anyLong());
     }
-
-
 
 
 }
