@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/categorias/abc"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "putCategoria-400.json"
+  }
+}

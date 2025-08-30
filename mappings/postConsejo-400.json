@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/consejos"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postConsejo-400.json"
+  }
+}

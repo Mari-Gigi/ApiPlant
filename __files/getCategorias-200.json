@@ -1,0 +1,18 @@
+[
+  {
+    "idCategoria": 1,
+    "nombre": "tropical",
+    "descripcion": "Típicas de regiones tropicales con ambientes húmedos",
+    "nivelDificultad": 2.5,
+    "paraPrincipiantes": false,
+    "fechaRegistro": "2025-07-21"
+  },
+  {
+    "idCategoria": 2,
+    "nombre": "desertica",
+    "descripcion": "Plantas adaptadas a condiciones áridas y secas, con poca agua disponible.",
+    "nivelDificultad": 2.0,
+    "paraPrincipiantes": false,
+    "fechaRegistro": "2025-07-21"
+  }
+]

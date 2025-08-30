@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/plantas"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postPlanta-404.json"
+  }
+}

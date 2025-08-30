@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/cuidados/8"
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "deleteCuidado-204.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/cuidados/9999"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "putCuidado-404.json"
+  }
+}

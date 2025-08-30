@@ -1,0 +1,12 @@
+{
+  "id_planta": 127,
+  "genero": "granado",
+  "especie": "bonito",
+  "esToxica": true,
+  "alturaMaxima": 3.0,
+  "tipoCrecimiento": "arbol",
+  "cuidadoId": 8,
+  "categoriaId": 1,
+  "plagaIds": [],
+  "consejoIds": []
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/consejos/9999"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getConsejoId-404.json"
+  }
+}

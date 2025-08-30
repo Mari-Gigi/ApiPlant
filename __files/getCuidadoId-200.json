@@ -1,0 +1,10 @@
+[
+  {
+    "idCuidado": 8,
+    "esInterior": true,
+    "riego": "moderado",
+    "sustrato": "mezcla rica en materia orgánica, aireada, con buen drenaje y retención de humedad",
+    "humedad": 60.0,
+    "fechaRegistro": "2025-07-20"
+  }
+]

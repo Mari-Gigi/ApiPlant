@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/plagas/abc"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getPlagaId-400.json"
+  }
+}

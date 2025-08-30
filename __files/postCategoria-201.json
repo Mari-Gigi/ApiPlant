@@ -1,0 +1,7 @@
+{
+  "nombre": "ornamental",
+  "descripcion": "Plantas cultivadas principalmente por su valor estético, ya sea por flores, follaje o forma. Incluyen variedades como rosas, geranios y helechos. Requieren cuidados específicos para mantener su belleza y salud.",
+  "nivelDificultad": 3.0,
+  "paraPrincipiantes": false,
+  "plantaIds":[1]
+}

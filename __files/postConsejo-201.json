@@ -1,0 +1,10 @@
+[
+  {
+    "idConsejo": 1,
+    "titulo": "Poca luz solar",
+    "explicacion": "Coloca tus plantas en un lugar donde no reciban demasiada luz.",
+    "verificado": true,
+    "importancia": 7.0,
+    "fechaRegistro": "2025-08-14"
+  }
+  ]

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/plantas/89"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getPlantasId-200.json"
+  }
+}

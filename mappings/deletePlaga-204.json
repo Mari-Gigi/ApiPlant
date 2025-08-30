@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/plagas/3"
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "deletePlaga-204.json"
+  }
+}

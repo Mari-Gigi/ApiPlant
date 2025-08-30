@@ -1,0 +1,26 @@
+[
+  {
+    "id_planta": 89,
+    "genero": "lavanda",
+    "especie": "inglesa",
+    "esToxica": false,
+    "alturaMaxima": 0.3,
+    "tipoCrecimiento": "arbusto",
+    "cuidadoId": 8,
+    "categoriaId": 1,
+    "plagaIds": [],
+    "consejoIds": []
+  },
+  {
+    "id_planta": 90,
+    "genero": "Rosa",
+    "especie": "Silvestre",
+    "esToxica": false,
+    "alturaMaxima": 1.5,
+    "tipoCrecimiento": "Arbusto",
+    "cuidadoId": 8,
+    "categoriaId": 2,
+    "plagaIds": [],
+    "consejoIds": []
+  }
+]

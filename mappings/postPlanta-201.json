@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/cuidados"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postCuidado-404.json"
+  }
+}

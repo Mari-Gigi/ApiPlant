@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/cuidados"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getCuidados-404.json"
+  }
+}

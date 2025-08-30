@@ -1,0 +1,34 @@
+[
+  {
+    "idConsejo": 1,
+    "titulo": "Poca luz solar",
+    "explicacion": "Coloca tus plantas en un lugar donde no reciban demasiada luz.",
+    "verificado": true,
+    "importancia": 7.0,
+    "fechaRegistro": "2025-08-14"
+  },
+  {
+    "idConsejo": 2,
+    "titulo": "Poca luz solar",
+    "explicacion": "Coloca tus plantas en un lugar donde no reciban demasiada luz.",
+    "verificado": true,
+    "importancia": 7.0,
+    "fechaRegistro": "2025-08-14"
+  },
+  {
+    "idConsejo": 3,
+    "titulo": "Luz directa",
+    "explicacion": "Coloca la planta con un mínimo de 2 horas de sol directo.",
+    "verificado": false,
+    "importancia": 6.5,
+    "fechaRegistro": "2025-08-14"
+  },
+  {
+    "idConsejo": 4,
+    "titulo": "Luz directa",
+    "explicacion": "Coloca la planta con un mínimo de 3 horas de sol directo.",
+    "verificado": false,
+    "importancia": 6.5,
+    "fechaRegistro": "2025-08-14"
+  }
+]

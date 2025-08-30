@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/plantas"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getPlantas-400.json"
+  }
+}

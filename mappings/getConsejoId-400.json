@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/consejos/abc"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getConsejoId-400.json"
+  }
+}

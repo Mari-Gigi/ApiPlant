@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/plantas/abc"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getPlantasId-400.json"
+  }
+}

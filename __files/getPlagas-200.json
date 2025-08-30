@@ -1,0 +1,86 @@
+[
+  {
+    "idPlaga": 3,
+    "nombre": "Ácaro rojo",
+    "sintomas": "Manchas amarillas y telarañas en hojas",
+    "riesgo": 7.5,
+    "esLetal": false,
+    "tratamiento": "Aplicar insecticidas específicos y aumentar la humedad",
+    "plantaIds": []
+  },
+  {
+    "idPlaga": 4,
+    "nombre": "Pulgón verde",
+    "sintomas": "Hojas enrolladas y presencia de insectos pequeños",
+    "riesgo": 5.0,
+    "esLetal": false,
+    "tratamiento": "Uso de jabón potásico y depredadores naturales",
+    "plantaIds": [
+      92,
+      93,
+      94
+    ]
+  },
+  {
+    "idPlaga": 5,
+    "nombre": "Gorgojo de la raíz",
+    "sintomas": "Marchitez y daño en raíces",
+    "riesgo": 9.0,
+    "esLetal": true,
+    "tratamiento": "Aplicación de nematodos entomopatógenos y rotación de cultivos",
+    "plantaIds": [
+      92,
+      95
+    ]
+  },
+  {
+    "idPlaga": 8,
+    "nombre": "Acaro rojo",
+    "sintomas": "Manchas amarillas y telarañas en hojas",
+    "riesgo": 7.5,
+    "esLetal": false,
+    "tratamiento": "Aplicar insecticidas específicos y aumentar la humedad",
+    "plantaIds": [
+      93,
+      94
+    ]
+  },
+  {
+    "idPlaga": 9,
+    "nombre": "Cochinilla algodonosa",
+    "sintomas": "Bolitas algodonosas blancas y melaza",
+    "riesgo": 8.0,
+    "esLetal": true,
+    "tratamiento": "jabón potasico",
+    "plantaIds": []
+  },
+  {
+    "idPlaga": 10,
+    "nombre": "Cochinilla algodonosa",
+    "sintomas": "Bolitas algodonosas blancas y melaza",
+    "riesgo": 8.0,
+    "esLetal": true,
+    "tratamiento": "jabón potasico",
+    "plantaIds": []
+  },
+  {
+    "idPlaga": 11,
+    "nombre": "Cochinilla algodonosa",
+    "sintomas": "Bolitas algodonosas blancas y melaza",
+    "riesgo": 8.0,
+    "esLetal": true,
+    "tratamiento": "jabón potasico",
+    "plantaIds": []
+  },
+  {
+    "idPlaga": 12,
+    "nombre": "Cochinilla algodonosa",
+    "sintomas": "Bolitas algodonosas blancas y melaza",
+    "riesgo": 8.0,
+    "esLetal": true,
+    "tratamiento": "jabón potasico",
+    "plantaIds": [
+      95
+    ]
+  }
+]

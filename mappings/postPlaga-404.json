@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/plagas"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postPlaga-404.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/categorias/9999"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getCategoriaId-404.json"
+  }
+}

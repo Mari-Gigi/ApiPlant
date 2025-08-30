@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/categorias"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postCategoria-201.json"
+  }
+}

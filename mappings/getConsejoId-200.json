@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/consejos/1"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "getConsejoId-200.json"
+  }
+}

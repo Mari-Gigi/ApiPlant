@@ -1,0 +1,26 @@
+[
+  {
+    "idCuidado": 8,
+    "esInterior": true,
+    "riego": "moderado",
+    "sustrato": "mezcla rica en materia orgánica, aireada, con buen drenaje y retención de humedad",
+    "humedad": 60.0,
+    "fechaRegistro": "2025-07-20"
+  },
+  {
+    "idCuidado": 10,
+    "esInterior": true,
+    "riego": "muy bajo (pulverización 2-3 veces por semana)",
+    "sustrato": "no requiere sustrato, puede colocarse sobre madera, piedra o colgarse",
+    "humedad": 60.0,
+    "fechaRegistro": "2025-07-20"
+  },
+  {
+    "idCuidado": 42,
+    "esInterior": true,
+    "riego": "riego por goteo",
+    "sustrato": "drenante",
+    "humedad": 45.0,
+    "fechaRegistro": "2025-08-10"
+  }
+]

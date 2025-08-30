@@ -1,0 +1,9 @@
+[
+  {
+    "idCategoria": 1,
+    "nombre": "tropical",
+    "descripcion": "Típicas de regiones tropicales con ambientes húmedos",
+    "nivelDificultad": 2.5,
+    "paraPrincipiantes": false,
+    "fechaRegistro": "2025-07-21"
+  }]

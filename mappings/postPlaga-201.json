@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/plagas"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "postPlaga-201.json"
+  }
+}

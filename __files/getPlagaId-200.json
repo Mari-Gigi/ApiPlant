@@ -1,0 +1,11 @@
+[
+  {
+    "idPlaga": 3,
+    "nombre": "Ácaro rojo",
+    "sintomas": "Manchas amarillas y telarañas en hojas",
+    "riesgo": 7.5,
+    "esLetal": false,
+    "tratamiento": "Aplicar insecticidas específicos y aumentar la humedad",
+    "plantaIds": []
+  }
+]
