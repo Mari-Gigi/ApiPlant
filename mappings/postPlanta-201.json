@@ -1,13 +1,13 @@
 {
   "request": {
     "method": "POST",
-    "url": "/cuidados"
+    "url": "/plantas/127"
   },
   "response": {
-    "status": 404,
+    "status": 201,
     "headers": {
       "Content-Type": "application/json"
     },
-    "bodyFileName": "postCuidado-404.json"
+    "bodyFileName": "postPlanta-201.json"
   }
 }

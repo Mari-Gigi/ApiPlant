@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/plagas"
+    "url": "/plagas/3"
   },
   "response": {
     "status": 201,

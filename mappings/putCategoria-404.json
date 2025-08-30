@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "/categorias/1"
+    "url": "/categorias/9999"
   },
   "response": {
     "status": 404,

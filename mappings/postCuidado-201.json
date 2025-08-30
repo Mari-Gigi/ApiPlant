@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/cuidados"
+    "url": "/cuidados/8"
   },
   "response": {
     "status": 201,

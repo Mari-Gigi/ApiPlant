@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/plantas"
+    "url": "/plantasabc"
   },
   "response": {
     "status": 400,

@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "/plagas/33"
+    "url": "/plagas/3"
   },
   "response": {
     "status": 201,

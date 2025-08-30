@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/consejos"
+    "url": "/consejosabc"
   },
   "response": {
     "status": 400,
