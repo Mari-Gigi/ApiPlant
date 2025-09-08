@@ -1,0 +1,685 @@
+{
+  "v": 10,
+  "name": "plantas",
+  "folders": [],
+  "requests": [
+    {
+      "v": "15",
+      "name": "plantas",
+      "method": "GET",
+      "endpoint": "http://localhost:8080/plantas",
+      "params": [
+        {
+          "key": "nombre",
+          "value": "",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "nivelDificultad",
+          "value": "3",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "paraPrincipiantes",
+          "value": "false",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "especie",
+          "value": "adasonni",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plantas/:plantaId",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/plantas/96",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plantas",
+      "method": "POST",
+      "endpoint": "http://localhost:8080/cuidados/:cuidadoId/plantas",
+      "params": [
+        {
+          "key": "cuidadoId",
+          "value": "2",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": " {\n    \"nombre\": \"Mostera thai\",\n    \"esToxica\": false,\n    \"alturaMaxima\": 2.0\n  }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plantas/:plantaId",
+      "method": "PUT",
+      "endpoint": "<<host>><<port>>/plantas/95",
+      "params": [
+        {
+          "key": "plantaId",
+          "value": "84",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(pw.response.body.method).toBe(\"GET\");\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": " {\n\n    \"genero\": \"granado\",\n    \"especie\": \"andaluz\",\n    \"esToxica\": true,\n    \"alturaMaxima\": 3.0,\n    \"tipoCrecimiento\": \"arbol\",\n    \"cuidadoId\": 8,\n    \"categoriaId\": 1,\n    \"plagaIds\": [5],\n    \"consejoIds\": []\n  }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plantas/:plantaId",
+      "method": "DELETE",
+      "endpoint": "<<host>><<port>>/plantas/:plantaId",
+      "params": [
+        {
+          "key": "plantaId",
+          "value": "91",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": ""
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "cuidados",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/cuidados",
+      "params": [
+        {
+          "key": "esInterior",
+          "value": "hfghfgh",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "sustrato",
+          "value": "arenoso",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "riego",
+          "value": "escaso",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "cuidados/:cuidadoId",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/cuidados/8",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "cuidados",
+      "method": "POST",
+      "endpoint": "<<host>><<port>>/cuidados",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": " {\n    \"esInterior\": true,\n    \"riego\": \"riego por goteo\",\n    \"sustrato\": \"drenante\",\n    \"humedad\": 45.0,\n     \"plantaIds\":[853257439]\n\n }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "cuidados/:cuidadoId",
+      "method": "PUT",
+      "endpoint": "<<host>><<port>>/cuidados/99",
+      "params": [
+        {
+          "key": "cuidadoId",
+          "value": "44",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "  {\n\n    \"esInterior\": true,\n    \"riego\": \"moderado\",\n    \"sustrato\": \"mezcla rica en materia orgánica, aireada, con drenaje y retención de humedad\",\n    \"humedad\": 60.0\n\n  }"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "cuidados/:cuidadoId",
+      "method": "DELETE",
+      "endpoint": "<<host>><<port>>/cuidados/:cuidadoId",
+      "params": [
+        {
+          "key": "cuidadoId",
+          "value": "130",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "categorias",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/categorias",
+      "params": [
+        {
+          "key": "nombre",
+          "value": "desertico",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "nivelDificultad",
+          "value": "2.5",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "paraPrincipiantes",
+          "value": "false",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "categorias/:categoriaId ",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/categorias/:categoriaId",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "categorias",
+      "method": "POST",
+      "endpoint": "<<host>><<port>>/categorias",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"nombre\": \"ornamental\",\n  \"descripcion\": \"Plantas cultivadas principalmente por su valor estético, ya sea por flores, follaje o forma. Incluyen variedades como rosas, geranios y helechos. Requieren cuidados específicos para mantener su belleza y salud.\",\n  \"nivelDificultad\": 3.0,\n  \"paraPrincipiantes\": false,\n       \"plantaIds\":[8955555]\n}\n"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "categorias/:categoriaId",
+      "method": "PUT",
+      "endpoint": "<<host>><<port>>/categorias/6",
+      "params": [
+        {
+          "key": "categoriaId",
+          "value": "6",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "\n  {\n    \"nombre\": \"frutal\",\n    \"descripcion\": \"Plantas leñosas, generalmente árboles o arbustos, cultivadas por sus frutos comestibles. Suelen requerir exposición solar directa.\",\n    \"nivelDificultad\": 2.5,\n    \"paraPrincipiantes\": 568568796\n\n  }\n"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "categorias/:categoriaId",
+      "method": "DELETE",
+      "endpoint": "<<host>><<port>>/categorias/:categoriaId",
+      "params": [
+        {
+          "key": "categoriaId",
+          "value": "2",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plagas",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/plagas",
+      "params": [
+        {
+          "key": "nombre",
+          "value": "acaro",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "riesgo",
+          "value": "2.5",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "esLetal",
+          "value": "true",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plagas/:plagaId ",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/plagas/12",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plagas",
+      "method": "POST",
+      "endpoint": "<<host>><<port>>/plagas",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"nombre\": \"Cochinilla algodonosa\",\n  \"sintomas\": \"Bolitas algodonosas blancas y melaza\",\n  \"tratamiento\": \"jabón potasico\",\n  \"riesgo\":8,\n  \"esLetal\": true,\n   \"plantaIds\": [\n    99999\n  ]\n  \n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plagas/:plagaId",
+      "method": "PUT",
+      "endpoint": "<<host>><<port>>/plagas/12",
+      "params": [
+        {
+          "key": "plagaId",
+          "value": "12",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n\n  \"nombre\": \"Cochinilla algodonosa\",\n  \"sintomas\": \"Bolitas algodonosas blancas y melaza\",\n  \"riesgo\": 8.0,\n  \"esLetal\": true,\n  \"tratamiento\": \"jabón potasico\",\n  \"plantaIds\": [95]\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "plagas/:plagaId",
+      "method": "DELETE",
+      "endpoint": "<<host>><<port>>/plagas/:plagaId",
+      "params": [
+        {
+          "key": "plagaId",
+          "value": "5",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "consejos",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/consejos",
+      "params": [
+        {
+          "key": "titulo",
+          "value": "riego",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "verificado",
+          "value": "false",
+          "active": false,
+          "description": ""
+        },
+        {
+          "key": "importancia",
+          "value": "3",
+          "active": false,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "consejos/:consejoId ",
+      "method": "GET",
+      "endpoint": "<<host>><<port>>/consejos/4",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "consejos",
+      "method": "POST",
+      "endpoint": "<<host>><<port>>/consejos",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"titulo\": \"Luz directa\",\n  \"explicacion\": \"Coloca la planta con un mínimo de 2 horas de sol directo.\",\n  \"verificado\": false,\n  \"importancia\": 6.5,\n  \"plantaIds\": [945461]\n}\n"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "consejos/:consejoId",
+      "method": "PUT",
+      "endpoint": "<<host>><<port>>/consejos/4",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n \n  \"titulo\": \"Luz directa\",\n  \"explicacion\": \"Coloca la planta con un mínimo de 3 horas de sol directo.\",\n  \"verificado\": false,\n  \"importancia\": 6.5,\n  \"plantaIds\": [95]\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "consejos/:consejoId",
+      "method": "DELETE",
+      "endpoint": "<<host>><<port>>/consejos/:consejoId",
+      "params": [
+        {
+          "key": "consejoId",
+          "value": "3",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "headers": [],
+  "variables": [],
+  "_ref_id": "coll_md4n0hkb_76ab4904-11d9-4de8-9d30-8d6efe59f141"
+}

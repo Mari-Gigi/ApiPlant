@@ -1,7 +1,7 @@
 # 🌿 ApiPlant - API para gestión de información sobre plantas
 
 **ApiPlant** es una API desarrollada en Java con Spring Boot que permite gestionar información sobre plantas (categorias, cuidados, plagas y consejos). 
-Está diseñada como backend.
+
 
 ---
 
@@ -22,7 +22,7 @@ H2 Console: [http://localhost:8080/h2-console](http://localhost:80/h2-console)
 
 ## 🧪 Pruebas de la API
 
-Existe una colección en **Hoppscotch** (alternativa ligera a Postman) para probar todos los endpoints de la API.
+Existe una colección en **Hoppscotch** para probar todos los endpoints de la API.
 
 🔗 [Acceder a la colección en Hoppscotch](https://hoppscotch.io)  
 
@@ -34,6 +34,9 @@ Existe una colección en **Hoppscotch** (alternativa ligera a Postman) para prob
 - Spring Boot  
 - Spring Data JPA  
 - H2 Database (entorno local / pruebas) -> puerto 8080
+- WireMock (Mock API para pruebas)
+- Hoppscotch (colección de tests de los casos de uso)
+- JUnit 5 + Spring Boot Test (tests unitarios e integración)
 
 ---
 
@@ -58,7 +61,9 @@ Existe una colección en **Hoppscotch** (alternativa ligera a Postman) para prob
 - 
 **Gestión de errores:**
 - 200 - Ok
-- 400 - HttpMessageNotReadable, HttpMessageNotReadable (Json o parámetro incorrectos)
+- 201 - Created
+- 204 - No content
+- 400 - Bad Request
 - 404 - Not Found
 - 409 - Conflict
 - 500 - Server Error
@@ -80,8 +85,55 @@ Si alguna dependencia no se ha instalado bien o algo no funciona correctamente c
   mvn clean install
 ~~~
 
+## 🧪 Testing
+
+En ApiPlant se han implementado tres capas de pruebas:
 
 ---
+
+### 🔹 1. Tests Unitarios
+- Realizados con **JUnit 5 y Mockito**.
+- Aíslan y validan la lógica de los servicios y controladores.
+- Ejemplo: comprobar que `PlantaService` devuelve la planta correcta al invocar `findById`.
+
+
+### 🔹 2. Tests de Integración
+- Usan `@SpringBootTest`.
+- Validan la interacción entre capas (**Controller + Service + Repository**).
+- Utilizan la base de datos en memoria **H2**.
+
+Para ejecutarlos:
+~~~  
+  mvn test
+~~~
+
+---
+
+### 🔹 3. Mock API con WireMock
+Se incluye una **MockAPI** para simular las respuestas de la API y poder validar los **casos de uso** sin necesidad de levantar toda la aplicación.
+
+**Arrancar WireMock:**
+
+~~~  
+  java -jar wiremock-jre8-standalone-2.32.0.jar
+~~~
+
+### 🔹 4. Casos de uso + Tests en Hoppscotch
+
+Se ha preparado una **colección de Hoppscotch** para probar los endpoints reales y mockeados.
+
+**Ejemplos de tests incluidos en cada request:**
+- Validación de códigos de estado (`200`, `201`, `204`, `400`, `404`).
+- Validación de cabeceras (ej: `Content-Type = application/json`).
+- Validación de propiedades del body JSON (ej: `id_planta` es numérico).
+- Respuestas vacías en `DELETE` (código `204` y body vacío).
+
+**La colección permite:**
+- Ejecutar los **casos de uso principales** en cada una de las clases de la API.
+- Validar automáticamente mediante scripts en **JavaScript embebido** que la API responde según lo esperado.
+
+---
+
 
 ✍️ Autoría
 Mari Gigi
